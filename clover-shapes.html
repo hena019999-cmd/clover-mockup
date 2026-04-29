@@ -269,6 +269,20 @@ function v6Four(palette) {
 }
 
 // ============================================================
+// V7: V1과 동일하지만 외곽선 제거 (V무늬 유지)
+// ============================================================
+function v7Leaflet(c) {
+  return `<path d="${V1_PATH}" fill="${c}"/>
+    <path d="M -4.5 -10 Q 0 -8 4.5 -10" stroke="${lighter(c)}" stroke-width="0.9" fill="none" opacity="0.7" stroke-linecap="round"/>`;
+}
+function v7Three(palette) {
+  return cloverSvg(60, palette, v7Leaflet, 3);
+}
+function v7Four(palette) {
+  return cloverSvg(60, palette, v7Leaflet, 4);
+}
+
+// ============================================================
 // Helpers
 // ============================================================
 function lighter(c) {
@@ -340,6 +354,10 @@ const variants = [
   {
     ver: 'V6', name: '미니멀 평면', desc: '외곽선·표식 없는 단색. 매우 깔끔, 토스 톤.',
     three: v6Three(PALETTE), four: v6Four(PALETTE),
+  },
+  {
+    ver: 'V7', name: '둥근 하트 + V무늬 (외곽선 X)', desc: 'V1에서 외곽선만 제거. 부드럽고 자연스러움.',
+    three: v7Three(PALETTE), four: v7Four(PALETTE),
   },
 ];
 
