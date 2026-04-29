@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>🍀 오늘의 행운 — 플레이</title>
+<title>🍀 오늘의 행운 — 플레이 (Real)</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
 <style>
   :root {
@@ -251,11 +251,12 @@
     position: relative;
     overflow: hidden;
     background:
-      radial-gradient(ellipse at 30% 20%, #7A9C68, transparent 55%),
-      radial-gradient(ellipse at 80% 80%, #4A6B3F, transparent 55%),
-      radial-gradient(ellipse at 10% 90%, #5C7D4D, transparent 60%),
-      linear-gradient(135deg, #6B8E5A 0%, #4A6B3F 100%);
+      radial-gradient(ellipse 60% 40% at 30% 25%, rgba(125, 168, 90, 0.35), transparent 60%),
+      radial-gradient(ellipse 70% 50% at 75% 80%, rgba(45, 74, 31, 0.4), transparent 60%),
+      radial-gradient(ellipse 50% 50% at 15% 85%, rgba(90, 122, 58, 0.3), transparent 60%),
+      linear-gradient(160deg, #2D4A1F 0%, #1F2D14 100%);
     touch-action: none;
+    cursor: crosshair;
   }
   .game::before {
     content: '';
@@ -319,81 +320,31 @@
     overflow: hidden;
     pointer-events: none;
   }
-  /* Default field: dense clovers — hard to distinguish 3-leaf vs 4-leaf without zoom */
-  .field-blurry {
-    pointer-events: none;
-  }
-  .field-blurry .clover { pointer-events: none !important; }
-  /* Crisp SVG rendering (no antialiasing fuzz at small sizes) */
+  /* Reference style: hover-highlight nearest clover (no magnifier, no zoom layer) */
   .clover svg { shape-rendering: geometricPrecision; }
-  /* Sharp field: zoomed-in (scale 2.5x) + masked to magnifier circle */
-  .field-sharp {
-    transform: scale(2.5);
-    transform-origin: 50% 50%;
-    -webkit-mask: radial-gradient(circle 0px at 50% 50%, black 100%, transparent 100%);
-            mask: radial-gradient(circle 0px at 50% 50%, black 100%, transparent 100%);
-    transition: -webkit-mask .15s ease, mask .15s ease;
-    will-change: transform;
-  }
-  .field-sharp .clover { pointer-events: auto; }
   .clover {
     position: absolute;
     transform-origin: center;
     pointer-events: none;
+    transition: transform .15s ease;
   }
   .clover svg {
-    filter: drop-shadow(0 1.5px 2px rgba(0, 0, 0, 0.35));
+    filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.5));
   }
-  .clover.lucky {
-    pointer-events: auto;
-    cursor: pointer;
+  .clover.hover {
+    z-index: 100;
+    transform: translate(-50%, -50%) scale(1.6) !important;
   }
-
-  .magnifier {
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    pointer-events: none;
-    z-index: 12;
-    transform: translate(-50%, -50%);
-    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.25));
-    transition: opacity .25s;
-    opacity: 0;
+  .clover.hover svg {
+    filter: drop-shadow(0 0 1px #FFFCF2) drop-shadow(0 0 2px #FFFCF2) drop-shadow(0 2px 6px rgba(0,0,0,0.6));
   }
-  .magnifier.active { opacity: 1; }
-  .magnifier .lens {
-    width: 100%; height: 100%;
-    border-radius: 50%;
-    border: 4px solid rgba(255, 252, 242, 0.95);
-    background: transparent;
-    box-shadow:
-      inset 0 0 0 1px rgba(255,252,242,0.4),
-      0 4px 16px rgba(0,0,0,0.2);
+  .clover.hover .leaflet-stroke {
+    stroke: #FFFCF2 !important;
+    stroke-width: 1.5 !important;
   }
-  /* Subtle highlight on lens for glassy look */
-  .magnifier .lens::after {
-    content: '';
-    position: absolute;
-    top: 14px; left: 24px;
-    width: 38px; height: 22px;
-    background: radial-gradient(ellipse, rgba(255,255,255,0.35), transparent 70%);
-    border-radius: 50%;
-    transform: rotate(-25deg);
-    pointer-events: none;
-  }
-  .magnifier .handle {
-    position: absolute;
-    bottom: -22px;
-    right: -10px;
-    width: 60px; height: 18px;
-    background: linear-gradient(135deg, #C4A572, #8B6F3F);
-    border-radius: 12px;
-    transform: rotate(40deg);
-    transform-origin: top left;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 8px rgba(0,0,0,0.2);
-  }
-  /* Dim overlay no longer needed (blur handles distance) */
-  .dim-overlay { display: none; }
+  /* Hide unused magnifier/sharp/dim elements */
+  .magnifier, .field-sharp, .dim-overlay, .field-blurry { display: none; }
+  .field { display: block !important; }
 
   .game-hint {
     position: absolute;
@@ -861,6 +812,16 @@
       <stop offset="50%" stop-color="#9DD460"/>
       <stop offset="100%" stop-color="#5C8430"/>
     </radialGradient>
+    <radialGradient id="leafG-5A8042" cx="0.3" cy="0.3" r="0.95">
+      <stop offset="0%" stop-color="#88B964"/>
+      <stop offset="50%" stop-color="#5A8042"/>
+      <stop offset="100%" stop-color="#2D4A1F"/>
+    </radialGradient>
+    <radialGradient id="leafG-4A6B3F" cx="0.3" cy="0.3" r="0.95">
+      <stop offset="0%" stop-color="#7A9C68"/>
+      <stop offset="50%" stop-color="#4A6B3F"/>
+      <stop offset="100%" stop-color="#1F2D17"/>
+    </radialGradient>
   </defs>
 </svg>
 
@@ -1045,28 +1006,14 @@ function renderGame() {
       <button class="quit-btn" data-action="confirm-quit">포기하기</button>
     </div>
 
-    <div class="field field-blurry" id="field-blur"
-      style="${view.magnifier.active
-        ? `-webkit-mask: radial-gradient(circle 90px at ${view.magnifier.x}% ${view.magnifier.y}%, transparent 84px, black 90px); mask: radial-gradient(circle 90px at ${view.magnifier.x}% ${view.magnifier.y}%, transparent 84px, black 90px);`
-        : ''}">
-      ${renderField()}
-    </div>
-    <div class="field field-sharp ${view.magnifier.active ? 'active' : ''}" id="field-sharp"
-      style="${view.magnifier.active
-        ? `-webkit-mask: radial-gradient(circle 34px at ${view.magnifier.x}% ${view.magnifier.y}%, black 32px, transparent 34px); mask: radial-gradient(circle 34px at ${view.magnifier.x}% ${view.magnifier.y}%, black 32px, transparent 34px);`
-        : ''}">
+    <div class="field" id="field" style="display:block; position:absolute; inset:0;">
       ${renderField()}
     </div>
 
-    <div class="magnifier ${view.magnifier.active ? 'active' : ''}" id="mag" style="left:${view.magnifier.x}%; top:${view.magnifier.y}%;">
-      <div class="lens"></div>
-      <div class="handle"></div>
-    </div>
-
-    ${view.phase === 'playing' && !view.magnifier.active ? `
+    ${view.phase === 'playing' ? `
       <div class="game-hint">
         <span class="pulse"></span>
-        <span>화면을 눌러서 돋보기를 움직여보세요</span>
+        <span>화면을 살펴보다 네잎클로버를 발견하면 탭!</span>
       </div>
     ` : ''}
   </div>`;
@@ -1074,15 +1021,11 @@ function renderGame() {
 
 function renderField() {
   return view.cloverPositions.map((c, i) => {
-    if (c.isLucky) {
-      return `<div class="clover lucky" data-lucky="1" data-i="${i}" style="left:${c.x}%; top:${c.y}%; transform:translate(-50%,-50%);">
-        ${fourLeafSvg(c.scale, c.rot)}
-      </div>`;
-    }
-    return `<div class="clover" style="left:${c.x}%; top:${c.y}%; transform:translate(-50%,-50%); opacity:${c.opacity};">
-      ${threeLeafSvg(c.c1, c.c2, c.scale, c.rot)}
+    const svg = c.isLucky ? fourLeafSvg(c.scale, c.rot) : threeLeafSvg(c.c1, c.c2, c.scale, c.rot);
+    return `<div class="clover" data-i="${i}" data-lucky="${c.isLucky ? 1 : 0}" style="left:${c.x}%; top:${c.y}%; transform:translate(-50%,-50%);${!c.isLucky ? `opacity:${c.opacity};` : ''}">
+      ${svg}
     </div>`;
-  }).join('') + renderDecorations();
+  }).join('');
 }
 
 function renderDecorations() {
@@ -1091,23 +1034,21 @@ function renderDecorations() {
   return view.decorations.map(d => `<div class="clover" style="left:${d.x}%; top:${d.y}%; transform:translate(-50%,-50%); pointer-events:none;">${d.svg}</div>`).join('');
 }
 
-// V7: V1(둥근 하트) + V-mark, NO outline — softer/natural look
+// V1 path (둥근 하트)
 const LEAFLET_PATH = "M 0 -2 C -3 -3 -8 -5 -10 -9 C -12 -13 -10 -17 -6 -17 C -3 -17 -1 -15 0 -12 C 1 -15 3 -17 6 -17 C 10 -17 12 -13 10 -9 C 8 -5 3 -3 0 -2 Z";
 
 function lighter(c) {
   const map = {
-    '#74B655': '#A8DC85',
-    '#8FCB68': '#BFE693',
-    '#A2D870': '#D4F0A0',
-    '#9DD460': '#C5EC92',
+    '#74B655': '#A8DC85', '#8FCB68': '#BFE693', '#A2D870': '#D4F0A0', '#9DD460': '#C5EC92',
+    '#5A8042': '#88B964', '#4A6B3F': '#7A9C68',
   };
-  return map[c] || '#C5EC92';
+  return map[c] || '#A8DC85';
 }
 
-// V7 leaflet — gradient fill + V-mark, NO outline
+// Leaflet with 3D gradient + V-mark + transparent stroke (turns white on hover)
 function leafletWithMark(c) {
   const gradId = 'leafG-' + c.slice(1);
-  return `<path d="${LEAFLET_PATH}" fill="url(#${gradId})"/>
+  return `<path class="leaflet-stroke" d="${LEAFLET_PATH}" fill="url(#${gradId})" stroke="transparent" stroke-width="0"/>
     <path d="M -4.5 -10 Q 0 -8 4.5 -10" stroke="${lighter(c)}" stroke-width="0.9" fill="none" opacity="0.65" stroke-linecap="round"/>`;
 }
 
@@ -1321,86 +1262,35 @@ function startGame() {
   persistedState.ticket -= 1;
   saveState(persistedState);
 
-  // Generate field — grid-based placement, no overlap (V7 bright palette)
-  const palette = ['#74B655', '#8FCB68', '#A2D870', '#9DD460'];
-  const COLS = 9;
-  const ROWS = 14;
-  const cellW = 100 / COLS;
-  const cellH = 100 / ROWS;
+  // Generate dense clover-only field (reference style: no grass, just packed clovers)
+  const COUNT = 380;
+  const palette = ['#74B655', '#8FCB68', '#A2D870', '#9DD460', '#5A8042', '#4A6B3F'];
   const positions = [];
 
-  // Pick a random cell for the lucky 4-leaf
-  const luckyCol = 1 + Math.floor(Math.random() * (COLS - 2));
-  const luckyRow = 1 + Math.floor(Math.random() * (ROWS - 2));
+  // 1 lucky 네잎클로버 (random position)
+  positions.push({
+    x: 12 + Math.random() * 76,
+    y: 10 + Math.random() * 80,
+    isLucky: true,
+    scale: 0.65 + Math.random() * 0.15,
+    rot: Math.random() * 30 - 15,
+  });
 
-  for (let r = 0; r < ROWS; r++) {
-    for (let c = 0; c < COLS; c++) {
-      // Center of cell + small jitter (within ±35% of cell)
-      const cx = (c + 0.5) * cellW + (Math.random() - 0.5) * cellW * 0.7;
-      const cy = (r + 0.5) * cellH + (Math.random() - 0.5) * cellH * 0.7;
-      const isLucky = (c === luckyCol && r === luckyRow);
-      if (isLucky) {
-        positions.push({
-          x: cx, y: cy, isLucky: true,
-          scale: 0.85 + Math.random() * 0.1,
-          rot: Math.random() * 30 - 15,
-        });
-      } else {
-        positions.push({
-          x: cx, y: cy, isLucky: false,
-          scale: 0.75 + Math.random() * 0.15,
-          rot: Math.random() * 360 - 180,
-          c1: palette[Math.floor(Math.random() * palette.length)],
-          c2: palette[Math.floor(Math.random() * palette.length)],
-          opacity: 0.95 + Math.random() * 0.05,
-        });
-      }
-    }
+  // 3-leaf clovers — fully random scatter, dense overlap allowed
+  for (let i = 0; i < COUNT; i++) {
+    positions.push({
+      x: -2 + Math.random() * 104,  // can extend slightly past edges
+      y: -2 + Math.random() * 104,
+      isLucky: false,
+      scale: 0.55 + Math.random() * 0.4,
+      rot: Math.random() * 360 - 180,
+      c1: palette[Math.floor(Math.random() * palette.length)],
+      c2: palette[Math.floor(Math.random() * palette.length)],
+      opacity: 0.92 + Math.random() * 0.08,
+    });
   }
   view.cloverPositions = positions;
-
-  // Decorations: grass blades + tufts + tiny pebbles for fuller field
-  const decorations = [];
-
-  // Tall grass blades (numerous for density)
-  for (let i = 0; i < 50; i++) {
-    const h = 16 + Math.random() * 22;
-    const tilt = Math.random() * 50 - 25;
-    const colors = ['#3A5530', '#4A6B3F', '#2D4A1F', '#5A8042'];
-    const c = colors[Math.floor(Math.random() * colors.length)];
-    decorations.push({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      svg: `<svg width="6" height="${h}" viewBox="0 0 6 ${h}" style="transform:rotate(${tilt}deg);transform-origin:bottom;"><path d="M 3 ${h} Q 1 ${h/2} 3 0" stroke="${c}" stroke-width="1.6" fill="none" opacity="${0.4 + Math.random() * 0.3}" stroke-linecap="round"/></svg>`,
-    });
-  }
-
-  // Grass tufts (small clumps of 3-4 blades)
-  for (let i = 0; i < 14; i++) {
-    const tilt = Math.random() * 30 - 15;
-    decorations.push({
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      svg: `<svg width="22" height="22" viewBox="0 0 22 22" style="transform:rotate(${tilt}deg);transform-origin:bottom;">
-        <path d="M 6 22 Q 5 12 8 2" stroke="#3A5530" stroke-width="1.4" fill="none" opacity="0.55" stroke-linecap="round"/>
-        <path d="M 11 22 Q 12 10 14 0" stroke="#4A6B3F" stroke-width="1.4" fill="none" opacity="0.55" stroke-linecap="round"/>
-        <path d="M 16 22 Q 15 14 18 4" stroke="#3A5530" stroke-width="1.3" fill="none" opacity="0.5" stroke-linecap="round"/>
-      </svg>`,
-    });
-  }
-
-  // Tiny earthy pebbles (subtle ground texture)
-  for (let i = 0; i < 18; i++) {
-    decorations.push({
-      x: 2 + Math.random() * 96,
-      y: 2 + Math.random() * 96,
-      svg: `<svg width="10" height="6" viewBox="0 0 10 6">
-        <ellipse cx="5" cy="3" rx="${2 + Math.random() * 1.5}" ry="${1.2 + Math.random() * 0.7}" fill="#3A2D1A" opacity="0.35"/>
-      </svg>`,
-    });
-  }
-
-  view.decorations = decorations;
+  view.decorations = [];  // no grass blades — reference style is clover-only
 
   // State
   view.phase = 'playing';
@@ -1408,7 +1298,7 @@ function startGame() {
   view.startedAt = Date.now();
   view.foundAt = null;
   view.extendedTime = false;
-  view.magnifier = { x: 50, y: 52, active: false };
+  view.hoveredIdx = -1;
 
   startTimer();
   render();
@@ -1522,73 +1412,66 @@ function attachHandlers() {
     });
   });
 
-  // Magnifier interaction (only when playing)
+  // Hover-highlight interaction (reference style)
   if (view.phase === 'playing') {
     const $game = document.getElementById('game-area');
     if ($game) {
-      const move = (e) => {
-        e.preventDefault();
+      const cloverEls = $game.querySelectorAll('.clover');
+
+      function findNearest(px, py) {
+        let bestIdx = -1, bestDist = Infinity;
+        for (let i = 0; i < view.cloverPositions.length; i++) {
+          const d = view.cloverPositions[i];
+          const dx = d.x - px, dy = d.y - py;
+          const dist = dx * dx + dy * dy;
+          if (dist < bestDist) { bestDist = dist; bestIdx = i; }
+        }
+        return bestIdx;
+      }
+
+      function setHover(idx) {
+        if (idx === view.hoveredIdx) return;
+        if (view.hoveredIdx >= 0 && cloverEls[view.hoveredIdx]) {
+          cloverEls[view.hoveredIdx].classList.remove('hover');
+        }
+        if (idx >= 0 && cloverEls[idx]) {
+          cloverEls[idx].classList.add('hover');
+        }
+        view.hoveredIdx = idx;
+      }
+
+      const updateFromEvent = (e) => {
         const rect = $game.getBoundingClientRect();
         const isTouch = e.touches && e.touches.length > 0;
         const cx = isTouch ? e.touches[0].clientX : e.clientX;
         const cy = isTouch ? e.touches[0].clientY : e.clientY;
         const px = ((cx - rect.left) / rect.width) * 100;
         const py = ((cy - rect.top) / rect.height) * 100;
-        view.magnifier.x = Math.max(8, Math.min(92, px));
-        view.magnifier.y = Math.max(8, Math.min(92, py));
-        view.magnifier.active = true;
-        // Direct DOM update for smoothness
-        const $m = document.getElementById('mag');
-        const $sharp = document.getElementById('field-sharp');
-        if ($m) {
-          $m.style.left = view.magnifier.x + '%';
-          $m.style.top = view.magnifier.y + '%';
-          $m.classList.add('active');
+        if (px < 0 || px > 100 || py < 0 || py > 100) {
+          setHover(-1);
+          return;
         }
-        if ($sharp) {
-          $sharp.classList.add('active');
-          // sharp layer is scaled 2x — mask radius in local coords = visible/2
-          const sharpMask = `radial-gradient(circle 34px at ${view.magnifier.x}% ${view.magnifier.y}%, black 32px, transparent 34px)`;
-          $sharp.style.webkitMask = sharpMask;
-          $sharp.style.mask = sharpMask;
-          // Zoom origin follows magnifier so the spot under lens enlarges
-          $sharp.style.transformOrigin = `${view.magnifier.x}% ${view.magnifier.y}%`;
-        }
-        // Inverse mask on blurry layer — punch a hole where magnifier sits
-        const $blur = document.getElementById('field-blur');
-        if ($blur) {
-          const blurMask = `radial-gradient(circle 90px at ${view.magnifier.x}% ${view.magnifier.y}%, transparent 84px, black 90px)`;
-          $blur.style.webkitMask = blurMask;
-          $blur.style.mask = blurMask;
-        }
-        // Hide hint
+        setHover(findNearest(px, py));
+        // Hide hint after first interaction
         const $hint = $game.querySelector('.game-hint');
         if ($hint) $hint.style.opacity = '0';
       };
-      const tap = (e) => {
-        // Position magnifier on tap
-        move(e);
-        // Check if tap is on lucky clover (within ~30px)
-        if (e.target.closest('.lucky')) {
-          found();
-          return;
-        }
-        // Also check distance to lucky position (for tap inside lens)
-        const lucky = view.cloverPositions[0];
-        if (lucky && lucky.isLucky) {
-          const dx = view.magnifier.x - lucky.x;
-          const dy = view.magnifier.y - lucky.y;
-          const dist = Math.sqrt(dx*dx + dy*dy);
-          if (dist < 6) {
-            // Within ~6% of viewport — close enough on tap
-            // Only count as "found" if user double-taps lucky directly
-          }
+
+      const tapHandler = (e) => {
+        e.preventDefault();
+        updateFromEvent(e);
+        // Check if hovered clover is lucky
+        if (view.hoveredIdx >= 0) {
+          const c = view.cloverPositions[view.hoveredIdx];
+          if (c.isLucky) found();
         }
       };
-      $game.addEventListener('mousedown', tap);
-      $game.addEventListener('mousemove', (e) => { if (e.buttons === 1) move(e); });
-      $game.addEventListener('touchstart', tap, { passive: false });
-      $game.addEventListener('touchmove', move, { passive: false });
+
+      $game.addEventListener('mousemove', updateFromEvent);
+      $game.addEventListener('mouseleave', () => setHover(-1));
+      $game.addEventListener('mousedown', tapHandler);
+      $game.addEventListener('touchstart', tapHandler, { passive: false });
+      $game.addEventListener('touchmove', (e) => { e.preventDefault(); updateFromEvent(e); }, { passive: false });
     }
   }
 }
@@ -1644,14 +1527,6 @@ function handleAction(action, e) {
       break;
   }
 }
-
-// Handle clicks on lucky clover (delegated)
-document.addEventListener('click', (e) => {
-  const lucky = e.target.closest('.lucky');
-  if (lucky && view.phase === 'playing') {
-    found();
-  }
-});
 
 // First render
 render();
