@@ -1016,12 +1016,15 @@ function renderGame() {
       <button class="quit-btn" data-action="confirm-quit">포기하기</button>
     </div>
 
-    <div class="field field-blurry" id="field-blur">
+    <div class="field field-blurry" id="field-blur"
+      style="${view.magnifier.active
+        ? `-webkit-mask: radial-gradient(circle 90px at ${view.magnifier.x}% ${view.magnifier.y}%, transparent 84px, black 90px); mask: radial-gradient(circle 90px at ${view.magnifier.x}% ${view.magnifier.y}%, transparent 84px, black 90px);`
+        : ''}">
       ${renderField()}
     </div>
     <div class="field field-sharp ${view.magnifier.active ? 'active' : ''}" id="field-sharp"
       style="${view.magnifier.active
-        ? `-webkit-mask: radial-gradient(circle 86px at ${view.magnifier.x}% ${view.magnifier.y}%, black 80px, transparent 86px); mask: radial-gradient(circle 86px at ${view.magnifier.x}% ${view.magnifier.y}%, black 80px, transparent 86px);`
+        ? `-webkit-mask: radial-gradient(circle 43px at ${view.magnifier.x}% ${view.magnifier.y}%, black 40px, transparent 43px); mask: radial-gradient(circle 43px at ${view.magnifier.x}% ${view.magnifier.y}%, black 40px, transparent 43px);`
         : ''}">
       ${renderField()}
     </div>
@@ -1450,11 +1453,19 @@ function attachHandlers() {
         }
         if ($sharp) {
           $sharp.classList.add('active');
-          const mask = `radial-gradient(circle 86px at ${view.magnifier.x}% ${view.magnifier.y}%, black 80px, transparent 86px)`;
-          $sharp.style.webkitMask = mask;
-          $sharp.style.mask = mask;
+          // sharp layer is scaled 2x — mask radius in local coords = visible/2
+          const sharpMask = `radial-gradient(circle 43px at ${view.magnifier.x}% ${view.magnifier.y}%, black 40px, transparent 43px)`;
+          $sharp.style.webkitMask = sharpMask;
+          $sharp.style.mask = sharpMask;
           // Zoom origin follows magnifier so the spot under lens enlarges
           $sharp.style.transformOrigin = `${view.magnifier.x}% ${view.magnifier.y}%`;
+        }
+        // Inverse mask on blurry layer — punch a hole where magnifier sits
+        const $blur = document.getElementById('field-blur');
+        if ($blur) {
+          const blurMask = `radial-gradient(circle 90px at ${view.magnifier.x}% ${view.magnifier.y}%, transparent 84px, black 90px)`;
+          $blur.style.webkitMask = blurMask;
+          $blur.style.mask = blurMask;
         }
         // Hide hint
         const $hint = $game.querySelector('.game-hint');
