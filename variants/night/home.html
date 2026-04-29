@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>🌙 밤 정원 — 홈</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root {
+    --bg-deep: #0E1A1F;
+    --bg-mid: #1B2D2F;
+    --bg-soft: #243A3C;
+    --moss-night: #2A4A3D;
+    --mint-glow: #B8E4C9;
+    --gold: #D4AF37;
+    --gold-soft: #E5C76B;
+    --firefly: #FFE066;
+    --cream: #FFFCF2;
+    --ink-night: #C9D4CC;
+    --ink-soft: #8AA39A;
+    --line: #2F4548;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: #050B0E;
+    color: var(--ink-night);
+    display: flex;
+    justify-content: center;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .frame {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(212,175,55,0.06), transparent 55%),
+      radial-gradient(ellipse at 50% 50%, rgba(184,228,201,0.04), transparent 65%),
+      linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 60%, var(--bg-soft) 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Stars */
+  .stars { position: absolute; inset: 0; pointer-events: none; }
+  .star {
+    position: absolute;
+    background: var(--cream);
+    border-radius: 50%;
+    animation: twinkle 3s ease-in-out infinite;
+    opacity: 0.7;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.9; }
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px 12px;
+    position: relative;
+    z-index: 2;
+  }
+  .header .brand {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .header .brand .moon { color: var(--gold-soft); margin-right: 6px; }
+  .icon-btn {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: rgba(184, 228, 201, 0.08);
+    border: 1px solid rgba(184, 228, 201, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--mint-glow);
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 32px 28px 0;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .hero .eyebrow {
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--gold-soft);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.45;
+    letter-spacing: -0.01em;
+    margin: 0 0 14px;
+    color: var(--cream);
+  }
+  .hero p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    margin: 0;
+    max-width: 290px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Glowing clover illustration */
+  .illust {
+    margin: 36px auto 8px;
+    width: 220px;
+    height: 220px;
+    position: relative;
+  }
+  .illust .glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(212,175,55,0.4), rgba(212,175,55,0.1) 35%, transparent 60%);
+    animation: pulse-glow 4s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.08); }
+  }
+  .illust svg { width: 100%; height: 100%; position: relative; z-index: 1; overflow: visible; }
+  .illust .floating-leaf {
+    animation: gentle-float 5s ease-in-out infinite;
+    transform-origin: center;
+    filter: drop-shadow(0 0 12px rgba(212,175,55,0.4));
+  }
+  .illust .leaf-2 { animation-delay: -1.5s; }
+  .illust .leaf-3 { animation-delay: -3s; }
+  .illust .leaf-4 { animation-delay: -2s; }
+  @keyframes gentle-float {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-5px) rotate(2deg); }
+  }
+
+  /* Fireflies */
+  .firefly {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--firefly);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--firefly), 0 0 6px var(--firefly);
+    animation: float-firefly 6s ease-in-out infinite;
+    opacity: 0.85;
+    z-index: 2;
+  }
+  .ff-1 { top: 20%; left: 12%; animation-delay: 0s; }
+  .ff-2 { top: 40%; right: 14%; animation-delay: -2s; }
+  .ff-3 { bottom: 35%; left: 8%; animation-delay: -4s; }
+  .ff-4 { top: 65%; right: 18%; animation-delay: -1s; }
+  @keyframes float-firefly {
+    0%, 100% { transform: translate(0, 0); opacity: 0.4; }
+    25% { transform: translate(8px, -10px); opacity: 0.9; }
+    50% { transform: translate(-5px, -18px); opacity: 0.7; }
+    75% { transform: translate(-10px, -8px); opacity: 1; }
+  }
+
+  /* Ticket */
+  .ticket {
+    margin: 16px 24px 0;
+    background: rgba(184, 228, 201, 0.06);
+    border: 1px solid rgba(184, 228, 201, 0.12);
+    border-radius: 18px;
+    padding: 18px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+    backdrop-filter: blur(8px);
+  }
+  .ticket .label {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+  }
+  .ticket .count {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--mint-glow);
+    letter-spacing: -0.01em;
+  }
+  .ticket .count .total {
+    color: var(--ink-soft);
+    font-weight: 300;
+    font-size: 16px;
+  }
+  .ticket .dots { display: flex; gap: 6px; }
+  .ticket .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--gold);
+    box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+  }
+
+  /* CTA */
+  .cta-wrap {
+    padding: 22px 24px 0;
+    position: relative;
+    z-index: 2;
+  }
+  .cta {
+    width: 100%;
+    height: 60px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-soft) 100%);
+    color: var(--bg-deep);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    box-shadow:
+      0 6px 24px rgba(212, 175, 55, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* Stats preview */
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    padding: 24px 24px 20px;
+    margin-top: auto;
+    position: relative;
+    z-index: 2;
+  }
+  .stat {
+    background: rgba(184, 228, 201, 0.05);
+    border: 1px solid rgba(184, 228, 201, 0.08);
+    border-radius: 14px;
+    padding: 14px 12px;
+    text-align: center;
+  }
+  .stat .v {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--mint-glow);
+  }
+  .stat .l {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+
+  .hint {
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-soft);
+    padding: 8px 24px 28px;
+    position: relative;
+    z-index: 2;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+  <!-- Stars -->
+  <div class="stars" id="stars"></div>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="brand"><span class="moon">🌙</span>오늘의 행운</div>
+    <button class="icon-btn" aria-label="도감 열기">📔</button>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="eyebrow">Tonight · 4 · 29</div>
+    <h1>오늘의 행운을<br/>찾아보세요</h1>
+    <p>달이 떠오른 풀숲에 4잎이 숨었어요.<br/>30초의 잔잔한 몰입을 시작해요.</p>
+  </div>
+
+  <!-- Glowing clover illustration -->
+  <div class="illust">
+    <div class="glow"></div>
+
+    <!-- Fireflies -->
+    <div class="firefly ff-1"></div>
+    <div class="firefly ff-2"></div>
+    <div class="firefly ff-3"></div>
+    <div class="firefly ff-4"></div>
+
+    <svg viewBox="0 0 220 220">
+      <g transform="translate(110,110)">
+        <path d="M 0 32 Q -3 60 5 92" fill="none" stroke="#5A8068" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+        <ellipse class="floating-leaf leaf-1" cx="0" cy="-30" rx="22" ry="28" fill="#3D6A52"/>
+        <ellipse class="floating-leaf leaf-2" cx="-30" cy="0" rx="28" ry="22" fill="#4A7B62"/>
+        <ellipse class="floating-leaf leaf-3" cx="30" cy="0" rx="28" ry="22" fill="#4A7B62"/>
+        <ellipse class="floating-leaf leaf-4" cx="0" cy="30" rx="22" ry="28" fill="#34594A"/>
+        <ellipse cx="-3" cy="-35" rx="6" ry="8" fill="#7BAA8A" opacity="0.5"/>
+        <ellipse cx="-33" cy="-3" rx="8" ry="6" fill="#7BAA8A" opacity="0.5"/>
+        <circle cx="0" cy="0" r="8" fill="#D4AF37"/>
+        <circle cx="0" cy="0" r="4" fill="#FFE066"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Ticket -->
+  <div class="ticket">
+    <div>
+      <div class="label">오늘의 도전권</div>
+      <div class="count">3 <span class="total">/ 3</span></div>
+    </div>
+    <div class="dots">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-wrap">
+    <button class="cta">
+      <span>✦</span>
+      <span>행운 찾기 시작</span>
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="v">12</div><div class="l">총 발견</div></div>
+    <div class="stat"><div class="v">4일</div><div class="l">연속 발견</div></div>
+    <div class="stat"><div class="v">14초</div><div class="l">최고 기록</div></div>
+  </div>
+
+  <div class="hint">매일 자정에 도전권 3장이 새로 충전돼요</div>
+
+</div>
+
+<script>
+// Generate stars
+(function() {
+  const stars = document.getElementById('stars');
+  for (let i = 0; i < 35; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2 + 0.6;
+    s.style.width = size + 'px';
+    s.style.height = size + 'px';
+    s.style.left = (Math.random() * 100) + '%';
+    s.style.top = (Math.random() * 70) + '%';
+    s.style.animationDelay = -(Math.random() * 3) + 's';
+    stars.appendChild(s);
+  }
+})();
+</script>
+
+</body>
+</html>
