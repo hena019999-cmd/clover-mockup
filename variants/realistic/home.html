@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>🌿 사실적 — 홈</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root {
+    --grass-deep: #2D4A1F;
+    --grass-mid: #4A6B3F;
+    --grass-light: #7A9C68;
+    --grass-sun: #C5DEA8;
+    --leaf-vein: #3A5530;
+    --earth: #5A4A30;
+    --beige: #F0E6D0;
+    --cream: #FFFCF2;
+    --gold: #D4AF37;
+    --gold-deep: #A8842B;
+    --ink: #1F2D17;
+    --ink-soft: #4A5A3F;
+    --glass: rgba(255, 252, 242, 0.85);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: var(--grass-deep);
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .frame {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    background: var(--grass-deep);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ====== Realistic grass background layered ====== */
+  .bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 0%, rgba(197, 222, 168, 0.35), transparent 70%),
+      radial-gradient(ellipse 100% 80% at 50% 50%, rgba(122, 156, 104, 0.5), transparent 80%),
+      radial-gradient(ellipse 100% 100% at 50% 100%, rgba(45, 74, 31, 0.7), transparent 70%),
+      linear-gradient(180deg, #5A7C42 0%, #3D5C28 50%, #2D4A1F 100%);
+  }
+  /* Photo-like grain texture */
+  .grain {
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 10% 30%, rgba(0,0,0,0.05) 0, transparent 1.5px),
+      radial-gradient(circle at 47% 67%, rgba(255,255,255,0.04) 0, transparent 1.5px),
+      radial-gradient(circle at 78% 32%, rgba(0,0,0,0.04) 0, transparent 1.5px),
+      radial-gradient(circle at 88% 88%, rgba(255,255,255,0.03) 0, transparent 1.5px);
+    background-size: 70px 70px, 110px 110px, 90px 90px, 130px 130px;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+  /* Out-of-focus foreground grass (top and bottom) */
+  .fog-top {
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 30%;
+    background: radial-gradient(ellipse at 50% 0%, rgba(197, 222, 168, 0.25), transparent 70%);
+    pointer-events: none;
+  }
+  .blur-fg {
+    position: absolute;
+    pointer-events: none;
+    filter: blur(4px);
+    opacity: 0.5;
+  }
+  .blur-fg.bottom-left { bottom: -10px; left: -20px; }
+  .blur-fg.bottom-right { bottom: 60px; right: -10px; }
+  .blur-fg.top-right { top: 10%; right: -10px; }
+
+  /* ====== Header ====== */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px 12px;
+    position: relative;
+    z-index: 10;
+  }
+  .header .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .icon-btn {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+    font-size: 16px;
+  }
+
+  /* ====== Hero text on glass card ====== */
+  .hero {
+    padding: 22px 24px 0;
+    text-align: center;
+    position: relative;
+    z-index: 10;
+  }
+  .hero .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--cream);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-weight: 600;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+    color: var(--cream);
+    text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+  .hero p {
+    font-size: 13px;
+    color: rgba(255, 252, 242, 0.85);
+    line-height: 1.65;
+    margin: 0;
+    max-width: 280px;
+    margin-left: auto;
+    margin-right: auto;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.4);
+  }
+
+  /* ====== Hero clover SVG ====== */
+  .illust {
+    margin: 24px auto 16px;
+    width: 230px;
+    height: 230px;
+    position: relative;
+    z-index: 5;
+  }
+  .illust .glow {
+    position: absolute;
+    inset: 10px;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.18), transparent 65%);
+    filter: blur(8px);
+  }
+  .illust svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.4));
+  }
+
+  /* ====== Ticket (frosted glass) ====== */
+  .ticket {
+    margin: 8px 24px 0;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border-radius: 18px;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 252, 242, 0.4);
+  }
+  .ticket .label {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+  .ticket .count {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--grass-deep);
+    letter-spacing: -0.01em;
+  }
+  .ticket .count .total {
+    color: var(--ink-soft);
+    font-weight: 400;
+    font-size: 16px;
+  }
+  .ticket .dots { display: flex; gap: 6px; }
+  .ticket .dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--grass-mid);
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.3);
+  }
+
+  /* ====== CTA ====== */
+  .cta-wrap {
+    padding: 18px 24px 0;
+    position: relative;
+    z-index: 10;
+  }
+  .cta {
+    width: 100%;
+    height: 60px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #DDB948 0%, #C99F2A 100%);
+    color: var(--ink);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    box-shadow:
+      0 6px 24px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* ====== Stats ====== */
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 18px 24px 14px;
+    margin-top: auto;
+    position: relative;
+    z-index: 10;
+  }
+  .stat {
+    background: rgba(255, 252, 242, 0.18);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 252, 242, 0.2);
+    border-radius: 14px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+  .stat .v {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--cream);
+    text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  }
+  .stat .l {
+    font-size: 11px;
+    color: rgba(255, 252, 242, 0.75);
+    margin-top: 4px;
+  }
+
+  .hint {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(255, 252, 242, 0.65);
+    padding: 4px 24px 24px;
+    position: relative;
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+  <!-- Background layers -->
+  <div class="bg"></div>
+  <div class="grain"></div>
+  <div class="fog-top"></div>
+
+  <!-- Out-of-focus foreground grass blades -->
+  <svg class="blur-fg bottom-left" width="180" height="200" viewBox="0 0 180 200">
+    <path d="M 30 200 Q 25 130 50 30" stroke="#5A8042" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.85"/>
+    <path d="M 60 200 Q 70 100 90 0" stroke="#6B9450" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <path d="M 100 200 Q 95 140 120 60" stroke="#4A6B3F" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.9"/>
+    <path d="M 140 200 Q 150 130 165 50" stroke="#5A8042" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.6"/>
+  </svg>
+  <svg class="blur-fg bottom-right" width="160" height="160" viewBox="0 0 160 160">
+    <path d="M 130 160 Q 100 100 110 20" stroke="#4A6B3F" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.8"/>
+    <path d="M 150 160 Q 140 80 130 0" stroke="#5A8042" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.7"/>
+  </svg>
+  <svg class="blur-fg top-right" width="140" height="140" viewBox="0 0 140 140">
+    <path d="M 120 0 Q 100 60 90 130" stroke="#7A9C68" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.5"/>
+    <path d="M 100 0 Q 110 40 90 110" stroke="#6B9450" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.5"/>
+  </svg>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="brand">🍀 오늘의 행운</div>
+    <button class="icon-btn" aria-label="도감 열기">📔</button>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="eyebrow">2026 · 4 · 29 수요일</div>
+    <h1>오늘의 행운을<br/>찾아보세요</h1>
+    <p>풀숲 어딘가에 숨어있는 4잎 클로버.<br/>30초의 잔잔한 몰입을 시작해요.</p>
+  </div>
+
+  <!-- Realistic Hero Clover -->
+  <div class="illust">
+    <div class="glow"></div>
+    <svg viewBox="0 0 230 230">
+      <defs>
+        <!-- leaf gradients with light from upper-left -->
+        <radialGradient id="leafTop" cx="0.35" cy="0.3" r="0.85">
+          <stop offset="0%" stop-color="#B8D89A"/>
+          <stop offset="40%" stop-color="#7CA362"/>
+          <stop offset="100%" stop-color="#3D5C28"/>
+        </radialGradient>
+        <radialGradient id="leafSide" cx="0.35" cy="0.35" r="0.85">
+          <stop offset="0%" stop-color="#A8C988"/>
+          <stop offset="45%" stop-color="#6B8E5A"/>
+          <stop offset="100%" stop-color="#34501F"/>
+        </radialGradient>
+        <radialGradient id="leafBottom" cx="0.4" cy="0.35" r="0.85">
+          <stop offset="0%" stop-color="#92B074"/>
+          <stop offset="50%" stop-color="#5A7E42"/>
+          <stop offset="100%" stop-color="#2D4A1F"/>
+        </radialGradient>
+        <linearGradient id="stemGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#5A7E42"/>
+          <stop offset="100%" stop-color="#2D4A1F"/>
+        </linearGradient>
+        <filter id="leafShadow">
+          <feDropShadow dx="2" dy="3" stdDeviation="2.5" flood-opacity="0.35"/>
+        </filter>
+      </defs>
+
+      <g transform="translate(115,118)" filter="url(#leafShadow)">
+        <!-- stem -->
+        <path d="M 0 28 Q 4 60 -2 95"
+              fill="none" stroke="url(#stemGrad)" stroke-width="4" stroke-linecap="round"/>
+
+        <!-- TOP leaflet (heart-shape) -->
+        <path d="M 0 0
+                 C -8 -12, -28 -22, -22 -42
+                 C -18 -56, -8 -62, 0 -54
+                 C 8 -62, 18 -56, 22 -42
+                 C 28 -22, 8 -12, 0 0 Z"
+              fill="url(#leafTop)"/>
+        <!-- top vein -->
+        <path d="M 0 -2 Q -2 -25 -3 -50" stroke="#3A5530" stroke-width="0.8" fill="none" opacity="0.5"/>
+        <path d="M -3 -20 Q -10 -28 -16 -32" stroke="#3A5530" stroke-width="0.5" fill="none" opacity="0.4"/>
+        <path d="M -1 -35 Q -8 -42 -12 -48" stroke="#3A5530" stroke-width="0.5" fill="none" opacity="0.4"/>
+
+        <!-- LEFT leaflet -->
+        <g transform="rotate(-90)">
+          <path d="M 0 0
+                   C -8 -12, -28 -22, -22 -42
+                   C -18 -56, -8 -62, 0 -54
+                   C 8 -62, 18 -56, 22 -42
+                   C 28 -22, 8 -12, 0 0 Z"
+                fill="url(#leafSide)"/>
+          <path d="M 0 -2 Q -2 -25 -3 -50" stroke="#3A5530" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <path d="M -3 -20 Q -10 -28 -16 -32" stroke="#3A5530" stroke-width="0.5" fill="none" opacity="0.4"/>
+        </g>
+
+        <!-- RIGHT leaflet -->
+        <g transform="rotate(90)">
+          <path d="M 0 0
+                   C -8 -12, -28 -22, -22 -42
+                   C -18 -56, -8 -62, 0 -54
+                   C 8 -62, 18 -56, 22 -42
+                   C 28 -22, 8 -12, 0 0 Z"
+                fill="url(#leafSide)"/>
+          <path d="M 0 -2 Q -2 -25 -3 -50" stroke="#3A5530" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <path d="M -3 -20 Q -10 -28 -16 -32" stroke="#3A5530" stroke-width="0.5" fill="none" opacity="0.4"/>
+        </g>
+
+        <!-- BOTTOM leaflet (4th = lucky) -->
+        <g transform="rotate(180)">
+          <path d="M 0 0
+                   C -8 -12, -28 -22, -22 -42
+                   C -18 -56, -8 -62, 0 -54
+                   C 8 -62, 18 -56, 22 -42
+                   C 28 -22, 8 -12, 0 0 Z"
+                fill="url(#leafBottom)"/>
+          <path d="M 0 -2 Q -2 -25 -3 -50" stroke="#3A5530" stroke-width="0.8" fill="none" opacity="0.5"/>
+          <path d="M -3 -20 Q -10 -28 -16 -32" stroke="#3A5530" stroke-width="0.5" fill="none" opacity="0.4"/>
+        </g>
+
+        <!-- center golden glow -->
+        <circle cx="0" cy="0" r="9" fill="#D4AF37" opacity="0.6"/>
+        <circle cx="-2" cy="-2" r="3" fill="#FFE066" opacity="0.9"/>
+
+        <!-- subtle dewdrop highlights -->
+        <ellipse cx="-12" cy="-38" rx="3" ry="4" fill="white" opacity="0.4"/>
+        <ellipse cx="-13" cy="-39" rx="1" ry="1.5" fill="white" opacity="0.8"/>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Ticket -->
+  <div class="ticket">
+    <div>
+      <div class="label">오늘의 도전권</div>
+      <div class="count">3 <span class="total">/ 3</span></div>
+    </div>
+    <div class="dots">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-wrap">
+    <button class="cta">
+      <span>✦</span>
+      <span>행운 찾기 시작</span>
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="v">12</div><div class="l">총 발견</div></div>
+    <div class="stat"><div class="v">4일</div><div class="l">연속 발견</div></div>
+    <div class="stat"><div class="v">14초</div><div class="l">최고 기록</div></div>
+  </div>
+
+  <div class="hint">매일 자정에 도전권 3장이 새로 충전돼요</div>
+
+</div>
+
+</body>
+</html>

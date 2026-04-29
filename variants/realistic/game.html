@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>🌿 사실적 — 게임</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root {
+    --grass-deep: #2D4A1F;
+    --grass-mid: #4A6B3F;
+    --grass-light: #7A9C68;
+    --grass-sun: #C5DEA8;
+    --leaf-vein: #3A5530;
+    --gold: #D4AF37;
+    --cream: #FFFCF2;
+    --ink-soft: #4A5A3F;
+    --glass: rgba(255, 252, 242, 0.85);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: #1F2D17;
+    display: flex;
+    justify-content: center;
+    -webkit-font-smoothing: antialiased;
+  }
+  .frame {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 30% 25%, #6B9450 0%, transparent 60%),
+      radial-gradient(ellipse at 75% 85%, #2D4A1F 0%, transparent 65%),
+      radial-gradient(ellipse at 15% 90%, #34501F 0%, transparent 60%),
+      linear-gradient(160deg, #5A8042 0%, #3D5C28 50%, #2D4A1F 100%);
+  }
+
+  /* Photo grain */
+  .grain {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 12% 22%, rgba(255,255,255,0.07) 0, transparent 1.5px),
+      radial-gradient(circle at 47% 67%, rgba(255,255,255,0.05) 0, transparent 1.5px),
+      radial-gradient(circle at 78% 32%, rgba(0,0,0,0.06) 0, transparent 1.5px),
+      radial-gradient(circle at 88% 88%, rgba(0,0,0,0.05) 0, transparent 1.5px);
+    background-size: 80px 80px, 110px 110px, 70px 70px, 130px 130px;
+    pointer-events: none;
+    opacity: 0.7;
+    z-index: 1;
+  }
+
+  /* Sun ray hint */
+  .sunray {
+    position: absolute;
+    top: 0; left: 30%;
+    width: 200px; height: 100%;
+    background: linear-gradient(180deg, rgba(255, 252, 220, 0.18), transparent 70%);
+    transform: rotate(15deg) translateY(-10%);
+    pointer-events: none;
+    z-index: 2;
+    filter: blur(20px);
+  }
+
+  /* HUD */
+  .hud {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 18px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 25;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.18), transparent);
+  }
+  .timer {
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    border-radius: 999px;
+    padding: 8px 18px 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 252, 242, 0.4);
+  }
+  .timer .ring {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--grass-mid);
+    border-right-color: rgba(74, 107, 63, 0.2);
+    border-bottom-color: rgba(74, 107, 63, 0.2);
+  }
+  .timer .time {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--grass-deep);
+    font-variant-numeric: tabular-nums;
+  }
+  .ticket-mini {
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--grass-deep);
+    font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 252, 242, 0.4);
+  }
+
+  /* Field */
+  .field {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 3;
+  }
+  .clover { position: absolute; transform-origin: center; }
+  .clover.depth-far { filter: blur(2.5px); opacity: 0.6; }
+  .clover.depth-mid { filter: blur(0.8px); opacity: 0.85; }
+  .clover.depth-near { opacity: 1; }
+  .deco { position: absolute; pointer-events: none; }
+
+  /* Foreground out-of-focus blades */
+  .blur-front {
+    position: absolute;
+    pointer-events: none;
+    filter: blur(5px);
+    opacity: 0.65;
+    z-index: 6;
+  }
+  .blur-front.bl { bottom: -20px; left: -30px; }
+  .blur-front.br { bottom: 80px; right: -20px; }
+  .blur-front.tr { top: 60px; right: -30px; }
+  .blur-front.tl { top: 100px; left: -20px; }
+
+  /* Magnifier (realistic glass) */
+  .magnifier {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    left: 50%;
+    top: 52%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 15;
+  }
+  .magnifier .lens {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 6px solid;
+    border-image: linear-gradient(135deg, #E8E2D0, #8E8470 50%, #5A4F38) 1;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), rgba(255,255,255,0.05) 30%, transparent 60%),
+      rgba(255, 252, 242, 0.04);
+    backdrop-filter: brightness(1.25) saturate(1.2) contrast(1.05);
+    -webkit-backdrop-filter: brightness(1.25) saturate(1.2) contrast(1.05);
+    box-shadow:
+      inset 0 0 30px rgba(255, 252, 242, 0.18),
+      inset 0 0 0 2px rgba(0,0,0,0.15),
+      0 12px 40px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(0, 0, 0, 0.25);
+    position: relative;
+  }
+  /* lens reflection */
+  .magnifier .lens::after {
+    content: '';
+    position: absolute;
+    top: 12px; left: 22px;
+    width: 50px; height: 32px;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.4), transparent 70%);
+    border-radius: 50%;
+    transform: rotate(-25deg);
+    pointer-events: none;
+  }
+  /* Brass/wood handle */
+  .magnifier .handle {
+    position: absolute;
+    bottom: -28px;
+    right: -14px;
+    width: 70px;
+    height: 22px;
+    background: linear-gradient(135deg, #C4A572 0%, #8B6F3F 50%, #5A4220 100%);
+    border-radius: 14px;
+    transform: rotate(40deg);
+    transform-origin: top left;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.3),
+      inset 0 -1px 0 rgba(0,0,0,0.3),
+      0 6px 12px rgba(0, 0, 0, 0.45);
+  }
+  /* Ferrule (metallic ring) */
+  .magnifier .ferrule {
+    position: absolute;
+    bottom: 2px;
+    right: 18px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #E8E2D0, #8E8470);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    z-index: 2;
+  }
+
+  /* Outer dim where lens not present */
+  .dim-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 30, 18, 0.35);
+    z-index: 14;
+    pointer-events: none;
+    -webkit-mask: radial-gradient(circle 88px at 50% 52%, transparent 84px, black 92px);
+    mask: radial-gradient(circle 88px at 50% 52%, transparent 84px, black 92px);
+  }
+
+  /* Hint */
+  .hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--glass);
+    color: var(--grass-deep);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 252, 242, 0.4);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    z-index: 25;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hint .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--grass-mid);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+  <!-- Layered photo-like background -->
+  <div class="grain"></div>
+  <div class="sunray"></div>
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="timer">
+      <div class="ring"></div>
+      <div class="time">00:23</div>
+    </div>
+    <div class="ticket-mini"><span>🎫</span><span>2 / 3</span></div>
+  </div>
+
+  <!-- Field with realistic clovers -->
+  <div class="field" id="field"></div>
+
+  <!-- Out-of-focus foreground grass blades -->
+  <svg class="blur-front bl" width="180" height="220" viewBox="0 0 180 220">
+    <path d="M 30 220 Q 25 130 50 30" stroke="#5A8042" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.85"/>
+    <path d="M 60 220 Q 70 100 90 0" stroke="#6B9450" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <path d="M 100 220 Q 95 140 120 60" stroke="#4A6B3F" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.9"/>
+  </svg>
+  <svg class="blur-front br" width="160" height="180" viewBox="0 0 160 180">
+    <path d="M 130 180 Q 100 100 110 20" stroke="#4A6B3F" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.85"/>
+    <path d="M 150 180 Q 140 80 130 0" stroke="#5A8042" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.75"/>
+  </svg>
+  <svg class="blur-front tr" width="140" height="180" viewBox="0 0 140 180">
+    <path d="M 120 0 Q 100 70 90 170" stroke="#7A9C68" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.6"/>
+    <path d="M 100 0 Q 110 50 90 150" stroke="#6B9450" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.55"/>
+  </svg>
+  <svg class="blur-front tl" width="140" height="160" viewBox="0 0 140 160">
+    <path d="M 20 0 Q 30 60 40 150" stroke="#5A8042" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.65"/>
+  </svg>
+
+  <!-- Dim overlay -->
+  <div class="dim-overlay"></div>
+
+  <!-- Realistic magnifier -->
+  <div class="magnifier">
+    <div class="lens"></div>
+    <div class="ferrule"></div>
+    <div class="handle"></div>
+  </div>
+
+  <!-- Bottom hint -->
+  <div class="hint">
+    <span class="dot"></span>
+    <span>풀숲을 살펴보세요</span>
+  </div>
+
+</div>
+
+<svg width="0" height="0" style="position:absolute;">
+  <defs>
+    <radialGradient id="rLeafTop" cx="0.35" cy="0.3" r="0.85">
+      <stop offset="0%" stop-color="#B8D89A"/>
+      <stop offset="40%" stop-color="#7CA362"/>
+      <stop offset="100%" stop-color="#3D5C28"/>
+    </radialGradient>
+    <radialGradient id="rLeafSide" cx="0.35" cy="0.35" r="0.85">
+      <stop offset="0%" stop-color="#A8C988"/>
+      <stop offset="45%" stop-color="#6B8E5A"/>
+      <stop offset="100%" stop-color="#34501F"/>
+    </radialGradient>
+    <radialGradient id="rLeafBottom" cx="0.4" cy="0.35" r="0.85">
+      <stop offset="0%" stop-color="#92B074"/>
+      <stop offset="50%" stop-color="#5A7E42"/>
+      <stop offset="100%" stop-color="#2D4A1F"/>
+    </radialGradient>
+    <radialGradient id="rLeafDark1" cx="0.35" cy="0.3" r="0.9">
+      <stop offset="0%" stop-color="#5A7E42"/>
+      <stop offset="60%" stop-color="#3D5C28"/>
+      <stop offset="100%" stop-color="#1F2D17"/>
+    </radialGradient>
+    <radialGradient id="rLeafDark2" cx="0.4" cy="0.4" r="0.85">
+      <stop offset="0%" stop-color="#6B9450"/>
+      <stop offset="55%" stop-color="#4A6B3F"/>
+      <stop offset="100%" stop-color="#2D4A1F"/>
+    </radialGradient>
+    <linearGradient id="rStem" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5A7E42"/>
+      <stop offset="100%" stop-color="#2D4A1F"/>
+    </linearGradient>
+    <filter id="rShadow">
+      <feDropShadow dx="1" dy="2" stdDeviation="1.5" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+</svg>
+
+<script>
+(function() {
+  const field = document.getElementById('field');
+  const COUNT = 110;
+  // realistic gradient ID pool
+  const gradPool = ['rLeafTop', 'rLeafSide', 'rLeafBottom', 'rLeafDark1', 'rLeafDark2'];
+
+  const fourLeafIndex = 0;
+  const fourLeafPos = { x: 0.46, y: 0.52 };
+
+  function rand(min, max) { return min + Math.random() * (max - min); }
+  function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+  // Realistic 3-leaf with heart-shaped leaflets, veins, gradient
+  function realistic3Leaf(scale, rot) {
+    const size = Math.round(36 * scale);
+    const g1 = pick(gradPool), g2 = pick(gradPool), g3 = pick(gradPool);
+    return `
+      <svg width="${size}" height="${size}" viewBox="0 0 36 36" style="transform:rotate(${rot}deg);" filter="url(#rShadow)">
+        <g transform="translate(18,20)">
+          <path d="M 0 4 Q 1 12 -1 18" stroke="url(#rStem)" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+          <!-- 3 heart-shape leaflets at 120 -->
+          <g transform="rotate(-90)">
+            <path d="M 0 0 C -2 -3, -7 -5, -5 -10 C -4 -13, -2 -14, 0 -12 C 2 -14, 4 -13, 5 -10 C 7 -5, 2 -3, 0 0 Z" fill="url(#${g1})"/>
+            <path d="M 0 -1 Q -1 -7, -1 -11" stroke="#3A5530" stroke-width="0.3" fill="none" opacity="0.5"/>
+          </g>
+          <g transform="rotate(30)">
+            <path d="M 0 0 C -2 -3, -7 -5, -5 -10 C -4 -13, -2 -14, 0 -12 C 2 -14, 4 -13, 5 -10 C 7 -5, 2 -3, 0 0 Z" fill="url(#${g2})"/>
+            <path d="M 0 -1 Q -1 -7, -1 -11" stroke="#3A5530" stroke-width="0.3" fill="none" opacity="0.5"/>
+          </g>
+          <g transform="rotate(150)">
+            <path d="M 0 0 C -2 -3, -7 -5, -5 -10 C -4 -13, -2 -14, 0 -12 C 2 -14, 4 -13, 5 -10 C 7 -5, 2 -3, 0 0 Z" fill="url(#${g3})"/>
+            <path d="M 0 -1 Q -1 -7, -1 -11" stroke="#3A5530" stroke-width="0.3" fill="none" opacity="0.5"/>
+          </g>
+        </g>
+      </svg>
+    `;
+  }
+
+  // Realistic 4-leaf with detailed gradients & dewdrop
+  function realistic4Leaf(scale) {
+    const size = Math.round(42 * scale);
+    return `
+      <svg width="${size}" height="${size}" viewBox="0 0 42 42" style="transform:rotate(8deg);" filter="url(#rShadow)">
+        <g transform="translate(21,23)">
+          <path d="M 0 5 Q 1.5 14 -1 22" stroke="url(#rStem)" stroke-width="1" fill="none" stroke-linecap="round"/>
+          <g transform="rotate(0)"><path d="M 0 0 C -3 -4, -8 -6, -6 -12 C -5 -16, -2 -17, 0 -14 C 2 -17, 5 -16, 6 -12 C 8 -6, 3 -4, 0 0 Z" fill="url(#rLeafTop)"/><path d="M 0 -1 Q -1 -8, -1 -13" stroke="#3A5530" stroke-width="0.4" fill="none" opacity="0.55"/></g>
+          <g transform="rotate(-90)"><path d="M 0 0 C -3 -4, -8 -6, -6 -12 C -5 -16, -2 -17, 0 -14 C 2 -17, 5 -16, 6 -12 C 8 -6, 3 -4, 0 0 Z" fill="url(#rLeafSide)"/><path d="M 0 -1 Q -1 -8, -1 -13" stroke="#3A5530" stroke-width="0.4" fill="none" opacity="0.55"/></g>
+          <g transform="rotate(90)"><path d="M 0 0 C -3 -4, -8 -6, -6 -12 C -5 -16, -2 -17, 0 -14 C 2 -17, 5 -16, 6 -12 C 8 -6, 3 -4, 0 0 Z" fill="url(#rLeafSide)"/><path d="M 0 -1 Q -1 -8, -1 -13" stroke="#3A5530" stroke-width="0.4" fill="none" opacity="0.55"/></g>
+          <g transform="rotate(180)"><path d="M 0 0 C -3 -4, -8 -6, -6 -12 C -5 -16, -2 -17, 0 -14 C 2 -17, 5 -16, 6 -12 C 8 -6, 3 -4, 0 0 Z" fill="url(#rLeafBottom)"/><path d="M 0 -1 Q -1 -8, -1 -13" stroke="#3A5530" stroke-width="0.4" fill="none" opacity="0.55"/></g>
+          <circle cx="0" cy="0" r="1.5" fill="#D4AF37" opacity="0.7"/>
+        </g>
+      </svg>
+    `;
+  }
+
+  // Place clovers
+  for (let i = 0; i < COUNT; i++) {
+    const el = document.createElement('div');
+    el.className = 'clover';
+    let x, y;
+    if (i === fourLeafIndex) {
+      x = fourLeafPos.x; y = fourLeafPos.y;
+      el.innerHTML = realistic4Leaf(rand(1.0, 1.1));
+      el.classList.add('depth-near');
+    } else {
+      x = rand(0.04, 0.96);
+      y = rand(0.06, 0.92);
+      const scale = rand(0.55, 1.2);
+      const rot = rand(-40, 40);
+      el.innerHTML = realistic3Leaf(scale, rot);
+      // Depth based on size: smaller = farther
+      if (scale < 0.7) el.classList.add('depth-far');
+      else if (scale < 0.95) el.classList.add('depth-mid');
+      else el.classList.add('depth-near');
+    }
+    el.style.left = (x * 100) + '%';
+    el.style.top = (y * 100) + '%';
+    el.style.transform = 'translate(-50%, -50%)';
+    field.appendChild(el);
+  }
+
+  // Some sharp grass blades on field
+  for (let i = 0; i < 22; i++) {
+    const el = document.createElement('div');
+    el.className = 'deco';
+    el.style.left = (rand(0, 1) * 100) + '%';
+    el.style.top = (rand(0, 1) * 100) + '%';
+    const h = rand(18, 38);
+    const tilt = rand(-25, 25);
+    const colors = ['#3A5530', '#4A6B3F', '#2D4A1F', '#5A7E42'];
+    const c = colors[Math.floor(Math.random() * colors.length)];
+    el.innerHTML = `
+      <svg width="6" height="${h}" viewBox="0 0 6 ${h}" style="transform:rotate(${tilt}deg);transform-origin:bottom;">
+        <path d="M 3 ${h} Q 1 ${h/2} 3 0" stroke="${c}" stroke-width="2" fill="none" opacity="0.55" stroke-linecap="round"/>
+      </svg>
+    `;
+    field.appendChild(el);
+  }
+
+  // Tiny pebbles & soil hints
+  for (let i = 0; i < 5; i++) {
+    const el = document.createElement('div');
+    el.className = 'deco';
+    el.style.left = (rand(0.05, 0.95) * 100) + '%';
+    el.style.top = (rand(0.1, 0.9) * 100) + '%';
+    el.innerHTML = `
+      <svg width="10" height="6" viewBox="0 0 10 6">
+        <ellipse cx="5" cy="3" rx="4" ry="2" fill="#5A4A30" opacity="0.5"/>
+        <ellipse cx="4" cy="2.5" rx="2" ry="1" fill="#8E7050" opacity="0.4"/>
+      </svg>
+    `;
+    field.appendChild(el);
+  }
+
+  // A few tiny wildflowers
+  for (let i = 0; i < 4; i++) {
+    const el = document.createElement('div');
+    el.className = 'deco';
+    el.style.left = (rand(0.05, 0.95) * 100) + '%';
+    el.style.top = (rand(0.15, 0.85) * 100) + '%';
+    const colors = ['#FFD9D2', '#FAF7F0', '#E8B96A'];
+    const c = colors[Math.floor(Math.random() * colors.length)];
+    el.innerHTML = `
+      <svg width="10" height="10" viewBox="0 0 10 10">
+        <circle cx="5" cy="2.5" r="1.5" fill="${c}" opacity="0.85"/>
+        <circle cx="7.5" cy="5" r="1.5" fill="${c}" opacity="0.85"/>
+        <circle cx="5" cy="7.5" r="1.5" fill="${c}" opacity="0.85"/>
+        <circle cx="2.5" cy="5" r="1.5" fill="${c}" opacity="0.85"/>
+        <circle cx="5" cy="5" r="1" fill="#D4AF37"/>
+      </svg>
+    `;
+    field.appendChild(el);
+  }
+})();
+</script>
+
+</body>
+</html>
