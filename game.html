@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>🍀 게임</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root {
+    --moss: #6B8E5A;
+    --sprout: #8FBC8F;
+    --leaf-deep: #4A6B3F;
+    --leaf-darker: #3A5530;
+    --beige: #FAF7F0;
+    --ivory: #FFFCF2;
+    --paper: #F5F1E6;
+    --greige: #9C8E7C;
+    --gold: #D4AF37;
+    --ink: #2D3A26;
+    --ink-soft: #5A6B4F;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: #1a1f17;
+    display: flex;
+    justify-content: center;
+    -webkit-font-smoothing: antialiased;
+  }
+  .frame {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 30% 20%, #7A9C68, transparent 55%),
+      radial-gradient(ellipse at 80% 80%, #4A6B3F, transparent 55%),
+      radial-gradient(ellipse at 10% 90%, #5C7D4D, transparent 60%),
+      linear-gradient(135deg, #6B8E5A 0%, #4A6B3F 100%);
+  }
+
+  /* Texture overlay */
+  .frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 12% 22%, rgba(255,255,255,0.06) 0, transparent 1.5px),
+      radial-gradient(circle at 47% 67%, rgba(255,255,255,0.04) 0, transparent 1.5px),
+      radial-gradient(circle at 78% 32%, rgba(0,0,0,0.05) 0, transparent 2px),
+      radial-gradient(circle at 88% 88%, rgba(0,0,0,0.04) 0, transparent 2px);
+    background-size: 90px 90px, 110px 110px, 70px 70px, 130px 130px;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  /* Top HUD */
+  .hud {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 18px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.15), transparent);
+  }
+  .timer {
+    background: rgba(255, 252, 242, 0.92);
+    border-radius: 999px;
+    padding: 8px 18px 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  .timer .ring {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--moss);
+    border-right-color: rgba(107,142,90,0.2);
+    border-bottom-color: rgba(107,142,90,0.2);
+  }
+  .timer .time {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--leaf-deep);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+  .ticket-mini {
+    background: rgba(255, 252, 242, 0.92);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--leaf-deep);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+
+  /* Field */
+  .field {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .clover {
+    position: absolute;
+    transform-origin: center;
+    transition: opacity .3s;
+  }
+  .clover svg { display: block; }
+
+  /* Decorative grass blades and small details */
+  .deco {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  /* Magnifier */
+  .magnifier {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    left: 50%;
+    top: 52%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 5;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.25));
+  }
+  .magnifier .lens {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 252, 242, 0.95);
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,252,242,0.18), transparent 40%),
+      rgba(255,252,242,0.04);
+    backdrop-filter: brightness(1.18) saturate(1.1);
+    -webkit-backdrop-filter: brightness(1.18) saturate(1.1);
+    box-shadow:
+      inset 0 0 30px rgba(255,252,242,0.15),
+      inset 0 0 0 1px rgba(255,252,242,0.4);
+  }
+  .magnifier .handle {
+    position: absolute;
+    bottom: -22px;
+    right: -10px;
+    width: 60px;
+    height: 18px;
+    background: linear-gradient(135deg, #C4A572, #8B6F3F);
+    border-radius: 12px;
+    transform: rotate(40deg);
+    transform-origin: top left;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.3),
+      0 4px 8px rgba(0,0,0,0.2);
+  }
+
+  /* Outer field dimming where magnifier is NOT */
+  .dim-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 28, 18, 0.18);
+    z-index: 4;
+    pointer-events: none;
+    -webkit-mask:
+      radial-gradient(circle 90px at 50% 52%, transparent 88px, black 91px);
+    mask:
+      radial-gradient(circle 90px at 50% 52%, transparent 88px, black 91px);
+  }
+
+  /* Hint */
+  .hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 252, 242, 0.92);
+    color: var(--leaf-deep);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    backdrop-filter: blur(8px);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hint .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--moss);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="timer">
+      <div class="ring"></div>
+      <div class="time">00:23</div>
+    </div>
+    <div class="ticket-mini">
+      <span>🎫</span>
+      <span>2 / 3</span>
+    </div>
+  </div>
+
+  <!-- Field with clovers (generated by JS) -->
+  <div class="field" id="field"></div>
+
+  <!-- Dim overlay (everything outside lens darkened slightly) -->
+  <div class="dim-overlay"></div>
+
+  <!-- Magnifier -->
+  <div class="magnifier">
+    <div class="lens"></div>
+    <div class="handle"></div>
+  </div>
+
+  <!-- Bottom hint -->
+  <div class="hint">
+    <span class="dot"></span>
+    <span>풀숲을 살펴보세요</span>
+  </div>
+
+</div>
+
+<script>
+// Generate field of 3-leaf clovers + 1 hidden 4-leaf
+(function () {
+  const field = document.getElementById('field');
+  const W = field.clientWidth || 420;
+  const H = field.clientHeight || window.innerHeight;
+  const COUNT = 130;
+
+  // 4-leaf clover position — placed near magnifier center for demo readability
+  const fourLeafIndex = 0;
+  const fourLeafPos = { x: 0.46, y: 0.52 };
+
+  const palette = ['#5C7D4D', '#6B8E5A', '#7A9C68', '#8FBC8F', '#A8C99A'];
+
+  // Decorative blades & flowers
+  const decos = [
+    { type: 'blade', count: 24 },
+    { type: 'flower', count: 8 },
+    { type: 'pebble', count: 6 },
+  ];
+
+  function rand(min, max) { return min + Math.random() * (max - min); }
+
+  // 3-leaf SVG generator
+  function threeLeaf(color1, color2, scale, rot) {
+    const size = Math.round(28 * scale);
+    return `
+      <svg width="${size}" height="${size}" viewBox="0 0 28 28" style="transform:rotate(${rot}deg);">
+        <g transform="translate(14,14)">
+          <ellipse cx="0" cy="-6" rx="4.5" ry="6" fill="${color1}"/>
+          <ellipse cx="-6" cy="2" rx="6" ry="4.5" fill="${color2}"/>
+          <ellipse cx="6" cy="2" rx="6" ry="4.5" fill="${color2}"/>
+          <line x1="0" y1="2" x2="0" y2="11" stroke="#3A5530" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+        </g>
+      </svg>
+    `;
+  }
+
+  // 4-leaf SVG (the hidden lucky one)
+  function fourLeaf(scale) {
+    const size = Math.round(30 * scale);
+    return `
+      <svg width="${size}" height="${size}" viewBox="0 0 30 30" style="transform:rotate(8deg);">
+        <g transform="translate(15,15)">
+          <ellipse cx="0" cy="-7" rx="5" ry="6.5" fill="#6B8E5A"/>
+          <ellipse cx="-7" cy="0" rx="6.5" ry="5" fill="#7A9C68"/>
+          <ellipse cx="7" cy="0" rx="6.5" ry="5" fill="#7A9C68"/>
+          <ellipse cx="0" cy="7" rx="5" ry="6.5" fill="#5C7D4D"/>
+          <line x1="0" y1="7" x2="0" y2="13" stroke="#3A5530" stroke-width="1.2" stroke-linecap="round" opacity="0.7"/>
+        </g>
+      </svg>
+    `;
+  }
+
+  // Add clovers
+  for (let i = 0; i < COUNT; i++) {
+    const el = document.createElement('div');
+    el.className = 'clover';
+    let x, y;
+    if (i === fourLeafIndex) {
+      x = fourLeafPos.x;
+      y = fourLeafPos.y;
+      el.innerHTML = fourLeaf(rand(0.95, 1.05));
+      el.dataset.lucky = '1';
+    } else {
+      x = rand(0.04, 0.96);
+      y = rand(0.06, 0.92);
+      const c1 = palette[Math.floor(Math.random() * palette.length)];
+      const c2 = palette[Math.floor(Math.random() * palette.length)];
+      const scale = rand(0.7, 1.15);
+      const rot = rand(-30, 30);
+      el.innerHTML = threeLeaf(c1, c2, scale, rot);
+    }
+    el.style.left = (x * 100) + '%';
+    el.style.top = (y * 100) + '%';
+    el.style.transform = 'translate(-50%, -50%)';
+    el.style.opacity = String(rand(0.85, 1));
+    field.appendChild(el);
+  }
+
+  // Add decorative grass blades
+  for (let i = 0; i < 18; i++) {
+    const el = document.createElement('div');
+    el.className = 'deco';
+    const x = rand(0, 1);
+    const y = rand(0, 1);
+    const h = rand(14, 30);
+    const tilt = rand(-25, 25);
+    el.style.left = (x * 100) + '%';
+    el.style.top = (y * 100) + '%';
+    el.innerHTML = `
+      <svg width="6" height="${h}" viewBox="0 0 6 ${h}" style="transform:rotate(${tilt}deg);transform-origin:bottom;">
+        <path d="M 3 ${h} Q 1 ${h/2} 3 0" stroke="#3A5530" stroke-width="1.5" fill="none" opacity="0.4" stroke-linecap="round"/>
+      </svg>
+    `;
+    field.appendChild(el);
+  }
+
+  // Tiny flowers
+  for (let i = 0; i < 6; i++) {
+    const el = document.createElement('div');
+    el.className = 'deco';
+    el.style.left = (rand(0.05, 0.95) * 100) + '%';
+    el.style.top = (rand(0.1, 0.9) * 100) + '%';
+    const colors = ['#FAF7F0', '#FFD9D2', '#D4AF37'];
+    const c = colors[Math.floor(Math.random() * colors.length)];
+    el.innerHTML = `
+      <svg width="14" height="14" viewBox="0 0 14 14">
+        <circle cx="7" cy="3" r="2" fill="${c}" opacity="0.85"/>
+        <circle cx="11" cy="7" r="2" fill="${c}" opacity="0.85"/>
+        <circle cx="7" cy="11" r="2" fill="${c}" opacity="0.85"/>
+        <circle cx="3" cy="7" r="2" fill="${c}" opacity="0.85"/>
+        <circle cx="7" cy="7" r="1.5" fill="#D4AF37"/>
+      </svg>
+    `;
+    field.appendChild(el);
+  }
+})();
+</script>
+
+</body>
+</html>

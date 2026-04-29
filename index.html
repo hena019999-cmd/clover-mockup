@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>🍀 오늘의 행운 — 디자인 시안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root {
+    --moss: #6B8E5A;
+    --leaf-deep: #4A6B3F;
+    --paper: #F5F1E6;
+    --ivory: #FFFCF2;
+    --greige: #9C8E7C;
+    --gold: #D4AF37;
+    --ink: #2D3A26;
+    --ink-soft: #5A6B4F;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(143,188,143,0.12), transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(212,175,55,0.06), transparent 50%);
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  header .eyebrow {
+    font-size: 12px;
+    color: var(--moss);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px;
+  }
+  header p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.65;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 560px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+  .card {
+    background: var(--ivory);
+    border-radius: 20px;
+    padding: 24px 22px;
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid rgba(107, 142, 90, 0.1);
+    box-shadow: 0 2px 12px rgba(74, 107, 63, 0.05);
+    transition: transform .15s, box-shadow .15s;
+    display: block;
+  }
+  .card:active {
+    transform: scale(0.98);
+  }
+  .card .num {
+    font-size: 11px;
+    color: var(--greige);
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .card .title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .card .desc {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    margin-bottom: 14px;
+  }
+  .card .open {
+    font-size: 12px;
+    color: var(--moss);
+    font-weight: 600;
+  }
+  .card .open::after { content: ' →'; }
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    color: var(--greige);
+    font-size: 11px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">DESIGN PREVIEW</div>
+    <h1>🍀 오늘의 행운</h1>
+    <p>30초 동안 풀숲에서 4잎 클로버를 찾는<br/>토스 앱인토스 비게임 미니앱 디자인 시안</p>
+  </header>
+
+  <div class="grid">
+    <a class="card" href="moodboard.html">
+      <div class="num">01</div>
+      <div class="title">디자인 무드보드</div>
+      <div class="desc">컬러 팔레트, 타이포, 일러스트 톤, 풀숲 텍스처, UX 라이팅 보이스</div>
+      <div class="open">열기</div>
+    </a>
+    <a class="card" href="home.html">
+      <div class="num">02</div>
+      <div class="title">홈 화면</div>
+      <div class="desc">도전권 3장, 메인 CTA, 누적 통계, 떠다니는 4잎 일러스트</div>
+      <div class="open">열기</div>
+    </a>
+    <a class="card" href="game.html">
+      <div class="num">03</div>
+      <div class="title">게임 화면</div>
+      <div class="desc">130개 클로버 풀숲, 돋보기 인터랙션, 30초 타이머</div>
+      <div class="open">열기</div>
+    </a>
+    <a class="card" href="result.html">
+      <div class="num">04</div>
+      <div class="title">결과 시트</div>
+      <div class="desc">4잎 발견 모달, 광고 5배 부스터 vs 그냥 받기</div>
+      <div class="open">열기</div>
+    </a>
+  </div>
+
+  <div class="footer">2026.04.29 · 디자인 시안 v1</div>
+</div>
+</body>
+</html>

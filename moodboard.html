@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>🍀 행운찾기 — 무드보드</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root {
+    --moss: #6B8E5A;
+    --sprout: #8FBC8F;
+    --leaf-deep: #4A6B3F;
+    --beige: #FAF7F0;
+    --ivory: #FFFCF2;
+    --paper: #F5F1E6;
+    --greige: #9C8E7C;
+    --gold: #D4AF37;
+    --ink: #2D3A26;
+    --ink-soft: #5A6B4F;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.65;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(143,188,143,0.12), transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(212,175,55,0.06), transparent 50%);
+    min-height: 100vh;
+  }
+  .wrap {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 60px 32px 100px;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .header .eyebrow {
+    font-size: 13px;
+    color: var(--ink-soft);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .header h1 {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 16px;
+  }
+  .header p {
+    font-size: 15px;
+    color: var(--ink-soft);
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  section {
+    background: var(--ivory);
+    border-radius: 24px;
+    padding: 40px 36px;
+    margin-bottom: 32px;
+    box-shadow: 0 4px 24px rgba(74, 107, 63, 0.05);
+  }
+  section h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 0 0 24px;
+  }
+  section h2 .ko {
+    margin-left: 8px;
+    color: var(--moss);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: none;
+  }
+
+  /* Color palette */
+  .palette {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 12px;
+  }
+  .swatch {
+    border-radius: 16px;
+    aspect-ratio: 1 / 1.15;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-size: 11px;
+    line-height: 1.3;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.04);
+  }
+  .swatch .name { font-weight: 600; }
+  .swatch .hex { opacity: 0.7; font-family: 'SF Mono', Menlo, monospace; }
+  .sw-moss { background: var(--moss); color: white; }
+  .sw-sprout { background: var(--sprout); color: var(--leaf-deep); }
+  .sw-deep { background: var(--leaf-deep); color: white; }
+  .sw-beige { background: var(--beige); color: var(--ink); }
+  .sw-ivory { background: var(--ivory); color: var(--ink); }
+  .sw-greige { background: var(--greige); color: white; }
+  .sw-gold { background: var(--gold); color: white; }
+
+  /* Typography */
+  .typo-row {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    padding: 18px 0;
+    border-bottom: 1px dashed rgba(74, 107, 63, 0.15);
+  }
+  .typo-row:last-child { border-bottom: none; }
+  .typo-row .label {
+    flex: 0 0 140px;
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-family: 'SF Mono', Menlo, monospace;
+  }
+  .typo-row .sample { flex: 1; }
+  .t-title { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; }
+  .t-subtitle { font-size: 20px; font-weight: 600; letter-spacing: -0.015em; }
+  .t-body { font-size: 15px; font-weight: 400; line-height: 1.7; color: var(--ink-soft); }
+  .t-caption { font-size: 12px; font-weight: 400; color: var(--greige); }
+  .t-num { font-size: 32px; font-weight: 300; font-variant-numeric: tabular-nums; letter-spacing: 0.02em; color: var(--moss); }
+
+  /* Illustration tone */
+  .illust-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+  .illust-card {
+    background: var(--paper);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+  }
+  .illust-card .canvas {
+    background: var(--beige);
+    border-radius: 12px;
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    overflow: hidden;
+    position: relative;
+  }
+  .illust-card .name {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .illust-card .desc {
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  /* Mood keywords */
+  .keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .kw {
+    background: var(--paper);
+    color: var(--leaf-deep);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .kw.warn {
+    background: #FBE9E7;
+    color: #8B3A2A;
+    text-decoration: line-through;
+  }
+
+  /* Voice (UX writing) */
+  .voice {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .voice-card {
+    padding: 20px;
+    border-radius: 14px;
+  }
+  .voice-card.do {
+    background: rgba(143, 188, 143, 0.15);
+    border-left: 3px solid var(--moss);
+  }
+  .voice-card.dont {
+    background: rgba(180, 100, 80, 0.06);
+    border-left: 3px solid #B46450;
+  }
+  .voice-card .tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .voice-card.do .tag { color: var(--moss); }
+  .voice-card.dont .tag { color: #B46450; }
+  .voice-card p {
+    font-size: 14px;
+    margin: 6px 0;
+    color: var(--ink);
+  }
+  .voice-card.dont p { color: #8B3A2A; opacity: 0.75; }
+
+  /* Texture sample */
+  .texture-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .texture-card {
+    aspect-ratio: 16/9;
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    align-items: flex-end;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  .tex-meadow {
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(143,188,143,0.4), transparent 50%),
+      radial-gradient(ellipse at 70% 60%, rgba(74,107,63,0.3), transparent 50%),
+      linear-gradient(135deg, var(--moss), var(--leaf-deep));
+  }
+  .tex-spring {
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(255,200,210,0.4), transparent 50%),
+      radial-gradient(ellipse at 20% 80%, rgba(212,175,55,0.2), transparent 50%),
+      linear-gradient(135deg, var(--sprout), var(--moss));
+  }
+
+  footer {
+    text-align: center;
+    margin-top: 60px;
+    color: var(--greige);
+    font-size: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="eyebrow">DESIGN MOODBOARD</div>
+    <h1>🍀 오늘의 행운</h1>
+    <p>30초 동안 풀숲에서 행운을 찾는 시간. 도파민이 아닌 잔잔한 몰입으로, 토스 사용자에게 작은 쉼을 선물해요.</p>
+  </div>
+
+  <section>
+    <h2>01 <span class="ko">컬러 팔레트</span></h2>
+    <div class="palette">
+      <div class="swatch sw-moss"><div class="name">Moss</div><div class="hex">#6B8E5A</div></div>
+      <div class="swatch sw-sprout"><div class="name">Sprout</div><div class="hex">#8FBC8F</div></div>
+      <div class="swatch sw-deep"><div class="name">Leaf Deep</div><div class="hex">#4A6B3F</div></div>
+      <div class="swatch sw-beige"><div class="name">Beige</div><div class="hex">#FAF7F0</div></div>
+      <div class="swatch sw-ivory"><div class="name">Ivory</div><div class="hex">#FFFCF2</div></div>
+      <div class="swatch sw-greige"><div class="name">Greige</div><div class="hex">#9C8E7C</div></div>
+      <div class="swatch sw-gold"><div class="name">Lucky Gold</div><div class="hex">#D4AF37</div></div>
+    </div>
+    <p style="font-size:12px; color:var(--ink-soft); margin-top:18px;">
+      그린 계열을 메인으로 베이지·아이보리로 호흡을 풀고, 4잎 발견 순간에만 골드를 강조해요. 형광·고채도·보라 계열은 사용하지 않습니다.
+    </p>
+  </section>
+
+  <section>
+    <h2>02 <span class="ko">타이포그래피</span></h2>
+    <div class="typo-row">
+      <div class="label">Title / 28px / 700</div>
+      <div class="sample t-title">오늘의 행운을 찾아보세요</div>
+    </div>
+    <div class="typo-row">
+      <div class="label">Subtitle / 20px / 600</div>
+      <div class="sample t-subtitle">22초만에 발견했어요!</div>
+    </div>
+    <div class="typo-row">
+      <div class="label">Body / 15px / 400</div>
+      <div class="sample t-body">화면을 살짝 누르면 돋보기가 나타나요. 풀숲을 천천히 살펴보면서, 잠깐의 쉼을 가져보세요.</div>
+    </div>
+    <div class="typo-row">
+      <div class="label">Caption / 12px / 400</div>
+      <div class="sample t-caption">오늘 도전권 3 / 3</div>
+    </div>
+    <div class="typo-row">
+      <div class="label">Number / 32px / 300</div>
+      <div class="sample t-num">00:30</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>03 <span class="ko">일러스트 톤 — 채택 vs 검토</span></h2>
+    <div class="illust-grid">
+      <div class="illust-card">
+        <div class="canvas">
+          <svg viewBox="0 0 100 100" width="80" height="80">
+            <g transform="translate(50,50)">
+              <ellipse cx="0" cy="-14" rx="9" ry="12" fill="#6B8E5A" />
+              <ellipse cx="-13" cy="0" rx="12" ry="9" fill="#7A9C68" />
+              <ellipse cx="13" cy="0" rx="12" ry="9" fill="#7A9C68" />
+              <ellipse cx="0" cy="14" rx="9" ry="12" fill="#5C7D4D" />
+              <line x1="0" y1="14" x2="0" y2="34" stroke="#4A6B3F" stroke-width="2" stroke-linecap="round"/>
+            </g>
+          </svg>
+        </div>
+        <div class="name">미니멀 평면 ✓</div>
+        <div class="desc">SVG 기반 깔끔한 형태.<br/>100+개여도 가독성 유지.</div>
+      </div>
+      <div class="illust-card">
+        <div class="canvas" style="background:#F0EBDD;">
+          <svg viewBox="0 0 100 100" width="80" height="80">
+            <defs>
+              <filter id="rough">
+                <feTurbulence baseFrequency="0.9" numOctaves="2" />
+                <feDisplacementMap in="SourceGraphic" scale="2" />
+              </filter>
+            </defs>
+            <g transform="translate(50,50)" filter="url(#rough)" opacity="0.85">
+              <ellipse cx="0" cy="-14" rx="9" ry="12" fill="#7A9C68" />
+              <ellipse cx="-13" cy="0" rx="12" ry="9" fill="#8FBC8F" />
+              <ellipse cx="13" cy="0" rx="12" ry="9" fill="#8FBC8F" />
+              <ellipse cx="0" cy="14" rx="9" ry="12" fill="#6B8E5A" />
+            </g>
+          </svg>
+        </div>
+        <div class="name">수채화 풍 △</div>
+        <div class="desc">감성은 강하지만<br/>찾기 가독성 약함.</div>
+      </div>
+      <div class="illust-card">
+        <div class="canvas" style="background:#2D3A26;">
+          <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:2px;">
+            <div style="background:#6B8E5A;width:8px;height:8px;"></div>
+            <div style="background:#8FBC8F;width:8px;height:8px;"></div>
+            <div style="background:#6B8E5A;width:8px;height:8px;"></div>
+            <div></div>
+            <div style="background:#8FBC8F;width:8px;height:8px;"></div>
+          </div>
+        </div>
+        <div class="name">픽셀아트 ✗</div>
+        <div class="desc">힐링 무드와 결이 다름.<br/>사용 안 함.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>04 <span class="ko">풀숲 텍스처</span></h2>
+    <div class="texture-row">
+      <div class="texture-card tex-meadow">기본 풀숲 (메도우)</div>
+      <div class="texture-card tex-spring">봄 — 벚꽃 풀숲 (Phase 2)</div>
+    </div>
+    <p style="font-size:12px; color:var(--ink-soft); margin-top:18px;">
+      배경은 단색이 아닌 옅은 그라디언트로 깊이감을 주고, 페이퍼 텍스처를 옅게 깔아 눈의 피로를 줄여요.
+    </p>
+  </section>
+
+  <section>
+    <h2>05 <span class="ko">무드 키워드</span></h2>
+    <div class="keywords">
+      <div class="kw">힐링</div>
+      <div class="kw">잔잔함</div>
+      <div class="kw">자연</div>
+      <div class="kw">행운</div>
+      <div class="kw">쉼</div>
+      <div class="kw">몰입</div>
+      <div class="kw">발견</div>
+      <div class="kw">손그림</div>
+      <div class="kw warn">자극적</div>
+      <div class="kw warn">긴박</div>
+      <div class="kw warn">화려함</div>
+      <div class="kw warn">도파민</div>
+    </div>
+  </section>
+
+  <section>
+    <h2>06 <span class="ko">UX 라이팅 — 보이스</span></h2>
+    <div class="voice">
+      <div class="voice-card do">
+        <div class="tag">DO</div>
+        <p>"오늘의 행운을 찾아보세요"</p>
+        <p>"잠깐, 30초의 쉼이 시작돼요"</p>
+        <p>"22초만에 발견했어요!"</p>
+        <p>"아직 행운이 숨어있어요"</p>
+      </div>
+      <div class="voice-card dont">
+        <div class="tag">DON'T</div>
+        <p>"실패! 시간 초과"</p>
+        <p>"빨리 찾으세요!"</p>
+        <p>"마지막 기회!"</p>
+        <p>"지금이 아니면 끝!"</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    🍀 오늘의 행운 · 디자인 무드보드 v1 · 2026.04.29
+  </footer>
+
+</div>
+</body>
+</html>
