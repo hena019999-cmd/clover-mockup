@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>🌾 진짜 잔디밭 시안</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root {
+    --moss: #6B8E5A;
+    --leaf-deep: #4A6B3F;
+    --paper: #F5F1E6;
+    --ivory: #FFFCF2;
+    --greige: #9C8E7C;
+    --gold: #D4AF37;
+    --ink: #2D3A26;
+    --ink-soft: #5A6B4F;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  header .eyebrow {
+    font-size: 12px;
+    color: var(--moss);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+  }
+  header p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 720px) {
+    .grid { grid-template-columns: 1fr 1fr 1fr; }
+  }
+
+  .card {
+    background: var(--ivory);
+    border: 1px solid rgba(107, 142, 90, 0.15);
+    border-radius: 20px;
+    padding: 16px;
+    box-shadow: 0 4px 20px rgba(74, 107, 63, 0.05);
+  }
+  .card .head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .card .ver {
+    font-size: 11px;
+    color: var(--greige);
+    letter-spacing: 0.15em;
+    font-weight: 600;
+  }
+  .card .name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .card .desc {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .field-mock {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+  }
+  .layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .item {
+    position: absolute;
+    transform-origin: center;
+    pointer-events: none;
+  }
+  .item svg {
+    display: block;
+  }
+  .item.clover svg {
+    filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.45));
+  }
+  .stats-mini {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    background: var(--paper);
+    color: var(--ink-soft);
+    font-size: 10px;
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute;" aria-hidden="true">
+  <defs>
+    <radialGradient id="leafG-74B655" cx="0.3" cy="0.3" r="0.95">
+      <stop offset="0%" stop-color="#B5DC85"/><stop offset="50%" stop-color="#74B655"/><stop offset="100%" stop-color="#3F6B28"/>
+    </radialGradient>
+    <radialGradient id="leafG-8FCB68" cx="0.3" cy="0.3" r="0.95">
+      <stop offset="0%" stop-color="#C9E693"/><stop offset="50%" stop-color="#8FCB68"/><stop offset="100%" stop-color="#557E38"/>
+    </radialGradient>
+    <radialGradient id="leafG-A2D870" cx="0.3" cy="0.3" r="0.95">
+      <stop offset="0%" stop-color="#D8F0A0"/><stop offset="50%" stop-color="#A2D870"/><stop offset="100%" stop-color="#638B40"/>
+    </radialGradient>
+    <radialGradient id="leafG-9DD460" cx="0.3" cy="0.3" r="0.95">
+      <stop offset="0%" stop-color="#D4EC92"/><stop offset="50%" stop-color="#9DD460"/><stop offset="100%" stop-color="#5C8430"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">REALISTIC LAWN VARIANTS</div>
+  <h1>🌾 진짜 잔디밭에서 클로버 찾기</h1>
+  <p>풀이 풍성하게 깔린 진짜 잔디밭 느낌의 3가지 시안.<br/>풀이 클로버를 살짝 가리고, 색·길이·두께 변화로 자연스러움 강조.</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+</div>
+
+<script>
+const PALETTE = ['#74B655', '#8FCB68', '#A2D870', '#9DD460'];
+const LEAFLET_PATH = "M 0 0 C -4 -2 -10 -6 -10 -12 C -10 -16 -6 -18 -2 -16 C 0 -14 0 -10 0 -8 C 0 -10 0 -14 2 -16 C 6 -18 10 -16 10 -12 C 10 -6 4 -2 0 0 Z";
+function lighter(c) {
+  const map = { '#74B655': '#A8DC85', '#8FCB68': '#BFE693', '#A2D870': '#D4F0A0', '#9DD460': '#C5EC92' };
+  return map[c] || '#C5EC92';
+}
+function leafletV5(c) {
+  return `<path d="${LEAFLET_PATH}" fill="url(#leafG-${c.slice(1)})" stroke="#1F2D17" stroke-width="0.5"/>
+    <path d="M -4.5 -10 Q 0 -8 4.5 -10" stroke="${lighter(c)}" stroke-width="0.9" fill="none" opacity="0.65" stroke-linecap="round"/>`;
+}
+function threeLeafSvg(c1, c2, scale, rot) {
+  const size = Math.round(38 * scale);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 38 38" style="transform:rotate(${rot}deg);">
+    <g transform="translate(19,21)">
+      <path d="M 0 0 Q 2 9 -1 18" fill="none" stroke="#5A8042" stroke-width="1.5" stroke-linecap="round" opacity="0.95"/>
+      <g transform="rotate(0)">${leafletV5(c1)}</g>
+      <g transform="rotate(120)">${leafletV5(c2)}</g>
+      <g transform="rotate(-120)">${leafletV5(c1)}</g>
+    </g>
+  </svg>`;
+}
+function fourLeafSvg(scale, rot) {
+  const size = Math.round(40 * scale);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 40 40" style="transform:rotate(${rot}deg);">
+    <g transform="translate(20,22)">
+      <path d="M 0 0 Q 2 10 -1 19" fill="none" stroke="#5A8042" stroke-width="1.6" stroke-linecap="round" opacity="0.95"/>
+      <g transform="rotate(0)">${leafletV5('#8FCB68')}</g>
+      <g transform="rotate(90)">${leafletV5('#A2D870')}</g>
+      <g transform="rotate(180)">${leafletV5('#74B655')}</g>
+      <g transform="rotate(-90)">${leafletV5('#A2D870')}</g>
+    </g>
+  </svg>`;
+}
+
+function rand(a, b) { return a + Math.random() * (b - a); }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+// Realistic grass blade — tapered (wide at base, thin at tip), curved
+function realGrassBlade(h, w, color, opacity) {
+  const tilt = rand(-30, 30);
+  const curl = rand(-3, 3);
+  return `<svg width="${w * 2}" height="${h}" viewBox="0 0 ${w * 2} ${h}" style="transform:rotate(${tilt}deg);transform-origin:bottom center;">
+    <path d="M ${w} ${h}
+             Q ${w + curl} ${h * 0.55} ${w + curl - 1} 0
+             L ${w + curl + 0.3} 0
+             Q ${w + curl + 1} ${h * 0.55} ${w + 0.4} ${h} Z"
+          fill="${color}" opacity="${opacity}"/>
+  </svg>`;
+}
+
+// Big background color patch (softer green tones)
+function patchBg(color) {
+  return `<div style="position:absolute;width:100%;height:100%;background:radial-gradient(ellipse 40% 30% at ${rand(0,100)}% ${rand(0,100)}%, ${color}, transparent 60%);pointer-events:none;"></div>`;
+}
+
+// Build a realistic lawn variant
+function buildRealField(variant) {
+  return {
+    bgPatches: variant.patches.map(p => patchBg(p)),
+    backLayer: backgroundGrassLayer(variant.backCount),
+    midLayer: clovers(variant),
+    frontLayer: foregroundGrass(variant.frontCount),
+  };
+}
+
+function backgroundGrassLayer(count) {
+  const items = [];
+  // Short blurred blades (back layer) — distant grass feel
+  const colors = [
+    '#3A5530',  // dark
+    '#4A6B3F',  // mid-dark
+    '#2D4A1F',  // very dark
+    '#5A7A3A',  // mid
+    '#42603A',  // muted
+    '#557A45',  // mid-light
+  ];
+  for (let i = 0; i < count; i++) {
+    const h = rand(8, 16);
+    const w = rand(0.8, 1.5);
+    const color = pick(colors);
+    items.push({
+      x: rand(-2, 102), y: rand(0, 100),
+      svg: realGrassBlade(h, w, color, rand(0.45, 0.75)),
+    });
+  }
+  return items;
+}
+
+function foregroundGrass(count) {
+  const items = [];
+  // Tall sharp blades (front) — overlap clovers
+  const colors = [
+    '#5A8042',
+    '#6B9450',
+    '#4A6B3F',
+    '#7DAA5A',
+    '#3A5530',
+    '#88B964',
+  ];
+  for (let i = 0; i < count; i++) {
+    const h = rand(20, 38);
+    const w = rand(1, 2);
+    const color = pick(colors);
+    items.push({
+      x: rand(-3, 103), y: rand(0, 100),
+      svg: realGrassBlade(h, w, color, rand(0.55, 0.85)),
+    });
+  }
+  return items;
+}
+
+function clovers(variant) {
+  const items = [];
+  for (let i = 0; i < variant.clovers; i++) {
+    const x = rand(2, 98), y = rand(2, 98);
+    const scale = rand(variant.cloverMin, variant.cloverMax);
+    const rot = rand(-180, 180);
+    const c1 = pick(PALETTE), c2 = pick(PALETTE);
+    items.push({ x, y, svg: threeLeafSvg(c1, c2, scale, rot), isClover: true });
+  }
+  // 1 lucky 4-leaf
+  items.push({
+    x: rand(20, 80), y: rand(20, 80),
+    svg: fourLeafSvg(rand(0.6, 0.8), rand(-15, 15)),
+    isClover: true,
+  });
+  return items;
+}
+
+// Variants
+const variants = [
+  {
+    ver: 'F5', name: '잔디밭 클래식',
+    desc: '풀이 두텁게 깔리고 클로버는 그 사이사이. 앞쪽 풀이 살짝 가림.',
+    patches: ['rgba(122, 156, 80, 0.45)', 'rgba(74, 107, 63, 0.4)', 'rgba(90, 122, 58, 0.35)'],
+    backCount: 220,
+    clovers: 60, cloverMin: 0.4, cloverMax: 0.65,
+    frontCount: 70,
+    bgGrad: 'radial-gradient(ellipse at 30% 25%, #6B9450 0%, transparent 55%), radial-gradient(ellipse at 75% 80%, #4A6B3F 0%, transparent 60%), linear-gradient(160deg, #5A8042 0%, #3F6B28 100%)',
+  },
+  {
+    ver: 'F6', name: '봄 잔디 + 황금톤',
+    desc: '연두색 새싹이 풍성한 봄 잔디밭. 따뜻한 황금빛 패치.',
+    patches: ['rgba(168, 220, 133, 0.5)', 'rgba(125, 168, 90, 0.4)', 'rgba(212, 175, 55, 0.15)'],
+    backCount: 200,
+    clovers: 70, cloverMin: 0.45, cloverMax: 0.7,
+    frontCount: 60,
+    bgGrad: 'radial-gradient(ellipse at 20% 20%, #88B964 0%, transparent 55%), radial-gradient(ellipse at 80% 85%, #5A8042 0%, transparent 55%), linear-gradient(160deg, #7DAA5A 0%, #557E38 100%)',
+  },
+  {
+    ver: 'F7', name: '무성한 야생 풀밭',
+    desc: '풀이 매우 길고 빽빽함. 거의 정글 수준 — 클로버 찾기 어려움 ↑',
+    patches: ['rgba(58, 85, 48, 0.5)', 'rgba(74, 107, 63, 0.5)', 'rgba(45, 74, 31, 0.4)'],
+    backCount: 280,
+    clovers: 50, cloverMin: 0.4, cloverMax: 0.6,
+    frontCount: 110,
+    bgGrad: 'radial-gradient(ellipse at 40% 30%, #557A38 0%, transparent 55%), radial-gradient(ellipse at 80% 90%, #2D4A1F 0%, transparent 60%), linear-gradient(170deg, #4A6B3F 0%, #2D4A1F 100%)',
+  },
+];
+
+// Render
+const grid = document.getElementById('grid');
+grid.innerHTML = variants.map(v => `
+  <div class="card">
+    <div class="head"><span class="ver">${v.ver}</span><span class="name">${v.name}</span></div>
+    <div class="desc">${v.desc}</div>
+    <div class="field-mock" data-id="${v.ver}" style="background:${v.bgGrad};"></div>
+    <div class="stats-mini">
+      <span class="pill">뒤풀 ${v.backCount}</span>
+      <span class="pill">클로버 ${v.clovers}</span>
+      <span class="pill">앞풀 ${v.frontCount}</span>
+    </div>
+  </div>
+`).join('');
+
+variants.forEach(v => {
+  const container = grid.querySelector(`[data-id="${v.ver}"]`);
+  const data = buildRealField(v);
+
+  // bg patches
+  container.innerHTML += data.bgPatches.join('');
+
+  // back grass layer
+  let html = '<div class="layer">';
+  data.backLayer.forEach(it => {
+    html += `<div class="item" style="left:${it.x}%;top:${it.y}%;transform:translate(-50%,-50%);">${it.svg}</div>`;
+  });
+  html += '</div>';
+
+  // mid: clovers
+  html += '<div class="layer">';
+  data.midLayer.forEach(it => {
+    html += `<div class="item clover" style="left:${it.x}%;top:${it.y}%;transform:translate(-50%,-50%);">${it.svg}</div>`;
+  });
+  html += '</div>';
+
+  // front grass overlapping clovers
+  html += '<div class="layer">';
+  data.frontLayer.forEach(it => {
+    html += `<div class="item" style="left:${it.x}%;top:${it.y}%;transform:translate(-50%,-50%);">${it.svg}</div>`;
+  });
+  html += '</div>';
+
+  container.innerHTML += html;
+});
+</script>
+
+</body>
+</html>
