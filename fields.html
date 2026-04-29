@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>🌿 풀숲 시안 비교</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root {
+    --moss: #6B8E5A;
+    --leaf-deep: #4A6B3F;
+    --paper: #F5F1E6;
+    --ivory: #FFFCF2;
+    --greige: #9C8E7C;
+    --gold: #D4AF37;
+    --ink: #2D3A26;
+    --ink-soft: #5A6B4F;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  header .eyebrow {
+    font-size: 12px;
+    color: var(--moss);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+  }
+  header p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 720px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .card {
+    background: var(--ivory);
+    border: 1px solid rgba(107, 142, 90, 0.15);
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 4px 20px rgba(74, 107, 63, 0.05);
+  }
+  .card .head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .card .ver {
+    font-size: 11px;
+    color: var(--greige);
+    letter-spacing: 0.15em;
+    font-weight: 600;
+  }
+  .card .name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .card .desc {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .field-mock {
+    width: 100%;
+    aspect-ratio: 9 / 16;
+    border-radius: 14px;
+    overflow: hidden;
+    position: relative;
+    background:
+      radial-gradient(ellipse at 30% 20%, #7A9C68, transparent 55%),
+      radial-gradient(ellipse at 80% 80%, #4A6B3F, transparent 55%),
+      radial-gradient(ellipse at 10% 90%, #5C7D4D, transparent 60%),
+      linear-gradient(135deg, #6B8E5A 0%, #4A6B3F 100%);
+  }
+  .field-mock::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 12% 22%, rgba(255,255,255,0.06) 0, transparent 1.5px),
+      radial-gradient(circle at 47% 67%, rgba(255,255,255,0.04) 0, transparent 1.5px),
+      radial-gradient(circle at 78% 32%, rgba(0,0,0,0.05) 0, transparent 2px);
+    background-size: 90px 90px, 110px 110px, 70px 70px;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  .field-item {
+    position: absolute;
+    transform-origin: center;
+    pointer-events: none;
+  }
+  .field-item svg {
+    filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.3));
+  }
+  .field-item.deco svg {
+    filter: none;
+  }
+  .stats-mini {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  .pill {
+    background: var(--paper);
+    color: var(--ink-soft);
+    font-size: 10px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<!-- Global SVG defs -->
+<svg width="0" height="0" style="position:absolute;" aria-hidden="true">
+  <defs>
+    <radialGradient id="leafG-74B655" cx="0.3" cy="0.3" r="0.95">
+      <stop offset="0%" stop-color="#B5DC85"/>
+      <stop offset="50%" stop-color="#74B655"/>
+      <stop offset="100%" stop-color="#3F6B28"/>
+    </radialGradient>
+    <radialGradient id="leafG-8FCB68" cx="0.3" cy="0.3" r="0.95">
+      <stop offset="0%" stop-color="#C9E693"/>
+      <stop offset="50%" stop-color="#8FCB68"/>
+      <stop offset="100%" stop-color="#557E38"/>
+    </radialGradient>
+    <radialGradient id="leafG-A2D870" cx="0.3" cy="0.3" r="0.95">
+      <stop offset="0%" stop-color="#D8F0A0"/>
+      <stop offset="50%" stop-color="#A2D870"/>
+      <stop offset="100%" stop-color="#638B40"/>
+    </radialGradient>
+    <radialGradient id="leafG-9DD460" cx="0.3" cy="0.3" r="0.95">
+      <stop offset="0%" stop-color="#D4EC92"/>
+      <stop offset="50%" stop-color="#9DD460"/>
+      <stop offset="100%" stop-color="#5C8430"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">FIELD VARIANTS</div>
+  <h1>🌿 풀숲 시안 4가지</h1>
+  <p>잔디밭 느낌부터 클로버 군락까지 — 다른 비율의 풀과 클로버 조합.<br/>마음에 드는 번호를 알려주시면 게임에 적용합니다.</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+</div>
+
+<script>
+const PALETTE = ['#74B655', '#8FCB68', '#A2D870', '#9DD460'];
+const LEAFLET_PATH = "M 0 0 C -4 -2 -10 -6 -10 -12 C -10 -16 -6 -18 -2 -16 C 0 -14 0 -10 0 -8 C 0 -10 0 -14 2 -16 C 6 -18 10 -16 10 -12 C 10 -6 4 -2 0 0 Z";
+function lighter(c) {
+  const map = { '#74B655': '#A8DC85', '#8FCB68': '#BFE693', '#A2D870': '#D4F0A0', '#9DD460': '#C5EC92' };
+  return map[c] || '#C5EC92';
+}
+function leafletV5(c) {
+  return `<path d="${LEAFLET_PATH}" fill="url(#leafG-${c.slice(1)})" stroke="#1F2D17" stroke-width="0.5"/>
+    <path d="M -4.5 -10 Q 0 -8 4.5 -10" stroke="${lighter(c)}" stroke-width="0.9" fill="none" opacity="0.65" stroke-linecap="round"/>`;
+}
+function threeLeafSvg(c1, c2, scale, rot) {
+  const size = Math.round(38 * scale);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 38 38" style="transform:rotate(${rot}deg);">
+    <g transform="translate(19,21)">
+      <path d="M 0 0 Q 2 9 -1 18" fill="none" stroke="#5A8042" stroke-width="1.5" stroke-linecap="round" opacity="0.95"/>
+      <g transform="rotate(0)">${leafletV5(c1)}</g>
+      <g transform="rotate(120)">${leafletV5(c2)}</g>
+      <g transform="rotate(-120)">${leafletV5(c1)}</g>
+    </g>
+  </svg>`;
+}
+function fourLeafSvg(scale, rot) {
+  const size = Math.round(40 * scale);
+  return `<svg width="${size}" height="${size}" viewBox="0 0 40 40" style="transform:rotate(${rot}deg);">
+    <g transform="translate(20,22)">
+      <path d="M 0 0 Q 2 10 -1 19" fill="none" stroke="#5A8042" stroke-width="1.6" stroke-linecap="round" opacity="0.95"/>
+      <g transform="rotate(0)">${leafletV5('#8FCB68')}</g>
+      <g transform="rotate(90)">${leafletV5('#A2D870')}</g>
+      <g transform="rotate(180)">${leafletV5('#74B655')}</g>
+      <g transform="rotate(-90)">${leafletV5('#A2D870')}</g>
+    </g>
+  </svg>`;
+}
+
+function rand(a, b) { return a + Math.random() * (b - a); }
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+// Single grass blade
+function grassBlade(h, color, opacity) {
+  const tilt = rand(-25, 25);
+  return `<svg width="6" height="${h}" viewBox="0 0 6 ${h}" style="transform:rotate(${tilt}deg);transform-origin:bottom;"><path d="M 3 ${h} Q 1 ${h/2} 3 0" stroke="${color}" stroke-width="1.6" fill="none" opacity="${opacity}" stroke-linecap="round"/></svg>`;
+}
+
+// Grass tuft (small clump)
+function grassTuft() {
+  return `<svg width="22" height="22" viewBox="0 0 22 22" style="transform-origin:bottom;">
+    <path d="M 6 22 Q 5 12 8 2" stroke="#3A5530" stroke-width="1.4" fill="none" opacity="0.55" stroke-linecap="round"/>
+    <path d="M 11 22 Q 12 10 14 0" stroke="#4A6B3F" stroke-width="1.4" fill="none" opacity="0.55" stroke-linecap="round"/>
+    <path d="M 16 22 Q 15 14 18 4" stroke="#3A5530" stroke-width="1.3" fill="none" opacity="0.5" stroke-linecap="round"/>
+  </svg>`;
+}
+
+// Pebble
+function pebble() {
+  const rx = rand(2, 3.5);
+  const ry = rand(1.2, 2);
+  return `<svg width="10" height="6" viewBox="0 0 10 6"><ellipse cx="5" cy="3" rx="${rx}" ry="${ry}" fill="#3A2D1A" opacity="0.35"/></svg>`;
+}
+
+// Spawn items into a container
+function spawn(container, items) {
+  container.innerHTML += items.map(it => `<div class="field-item ${it.deco ? 'deco' : ''}" style="left:${it.x}%;top:${it.y}%;transform:translate(-50%,-50%);">${it.svg}</div>`).join('');
+}
+
+// Build field per variant
+function buildVariant(variant) {
+  const items = [];
+
+  // Pebbles first (bottom)
+  for (let i = 0; i < variant.pebbles; i++) {
+    items.push({ x: rand(2, 98), y: rand(2, 98), svg: pebble(), deco: true });
+  }
+
+  // Grass blades
+  const grassColors = ['#3A5530', '#4A6B3F', '#2D4A1F', '#5A8042'];
+  for (let i = 0; i < variant.grass; i++) {
+    const h = rand(variant.grassMin, variant.grassMax);
+    const color = pick(grassColors);
+    const opacity = rand(0.4, 0.7);
+    items.push({ x: rand(0, 100), y: rand(0, 100), svg: grassBlade(h, color, opacity), deco: true });
+  }
+
+  // Grass tufts
+  for (let i = 0; i < variant.tufts; i++) {
+    items.push({ x: rand(2, 98), y: rand(2, 98), svg: grassTuft(), deco: true });
+  }
+
+  // Clovers
+  for (let i = 0; i < variant.clovers; i++) {
+    const x = rand(2, 98), y = rand(2, 98);
+    const scale = rand(variant.cloverMin, variant.cloverMax);
+    const rot = rand(-180, 180);
+    const c1 = pick(PALETTE), c2 = pick(PALETTE);
+    items.push({ x, y, svg: threeLeafSvg(c1, c2, scale, rot), deco: false });
+  }
+
+  // 1 lucky 4-leaf
+  items.push({ x: rand(20, 80), y: rand(20, 80), svg: fourLeafSvg(rand(0.7, 0.85), rand(-15, 15)), deco: false });
+
+  return items;
+}
+
+const variants = [
+  {
+    ver: 'F1', name: '잔디밭 — 풀 압도',
+    desc: '풀이 압도적, 클로버는 그 사이에 박혀있는 느낌. 진짜 잔디밭.',
+    grass: 90, grassMin: 16, grassMax: 32,
+    tufts: 12, pebbles: 0,
+    clovers: 75, cloverMin: 0.45, cloverMax: 0.7,
+  },
+  {
+    ver: 'F2', name: '클로버 정원 — 클로버 풍성',
+    desc: '클로버가 메인. 풀은 보조 역할. 현재 게임 화면에 가까움.',
+    grass: 35, grassMin: 14, grassMax: 24,
+    tufts: 5, pebbles: 8,
+    clovers: 220, cloverMin: 0.55, cloverMax: 0.85,
+  },
+  {
+    ver: 'F3', name: '야생 들판 — 균형',
+    desc: '풀과 클로버 균형. 풀 묶음 클러스터 많음. 자연스러운 야생 느낌.',
+    grass: 70, grassMin: 18, grassMax: 38,
+    tufts: 22, pebbles: 6,
+    clovers: 130, cloverMin: 0.5, cloverMax: 0.8,
+  },
+  {
+    ver: 'F4', name: '단순 정원 — 깔끔',
+    desc: '클로버 듬성듬성, 큼직하게. 풀 절제. 미니멀하고 명확.',
+    grass: 20, grassMin: 14, grassMax: 22,
+    tufts: 0, pebbles: 0,
+    clovers: 90, cloverMin: 0.7, cloverMax: 0.95,
+  },
+];
+
+// Render
+const grid = document.getElementById('grid');
+grid.innerHTML = variants.map(v => `
+  <div class="card">
+    <div class="head">
+      <span class="ver">${v.ver}</span>
+      <span class="name">${v.name}</span>
+    </div>
+    <div class="desc">${v.desc}</div>
+    <div class="field-mock" data-id="${v.ver}"></div>
+    <div class="stats-mini">
+      <span class="pill">클로버 ${v.clovers}</span>
+      <span class="pill">풀잎 ${v.grass}</span>
+      <span class="pill">묶음 ${v.tufts}</span>
+      <span class="pill">자갈 ${v.pebbles}</span>
+    </div>
+  </div>
+`).join('');
+
+variants.forEach(v => {
+  const container = grid.querySelector(`[data-id="${v.ver}"]`);
+  const items = buildVariant(v);
+  spawn(container, items);
+});
+</script>
+
+</body>
+</html>
