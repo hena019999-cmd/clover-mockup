@@ -109,17 +109,41 @@
     border: 1px solid rgba(255, 252, 242, 0.4);
   }
 
-  /* The hidden 4-leaf — overlaid on photo at lens center */
+  /* The hidden 4-leaf — using real clover photo with mask & blend */
   .lucky {
     position: absolute;
     left: 50%;
     top: 52%;
-    transform: translate(-50%, -50%);
-    z-index: 5;
-    width: 48px;
-    height: 48px;
+    transform: translate(-50%, -50%) rotate(8deg);
+    z-index: 6;
+    width: 100px;
+    height: 100px;
     pointer-events: none;
-    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.4));
+    background:
+      url('https://images.unsplash.com/photo-1609473295863-2d9299af71d4?w=500&q=90&auto=format&fit=crop') no-repeat;
+    background-size: 350% 350%;
+    background-position: 50% 38%;
+    /* Mask into clover shape via SVG mask */
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g transform='translate(50,52)'><path d='M 0 0 C -8 -10, -22 -16, -16 -32 C -12 -42, -4 -45, 0 -38 C 4 -45, 12 -42, 16 -32 C 22 -16, 8 -10, 0 0 Z' fill='black'/><path d='M 0 0 C -10 -8, -16 -22, -32 -16 C -42 -12, -45 -4, -38 0 C -45 4, -42 12, -32 16 C -16 22, -10 8, 0 0 Z' fill='black'/><path d='M 0 0 C 10 -8, 16 -22, 32 -16 C 42 -12, 45 -4, 38 0 C 45 4, 42 12, 32 16 C 16 22, 10 8, 0 0 Z' fill='black'/><path d='M 0 0 C -8 10, -22 16, -16 32 C -12 42, -4 45, 0 38 C 4 45, 12 42, 16 32 C 22 16, 8 10, 0 0 Z' fill='black'/><path d='M 0 5 Q 1 18 -2 30' stroke='black' stroke-width='2.5' fill='none'/></g></svg>") center / contain no-repeat;
+            mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g transform='translate(50,52)'><path d='M 0 0 C -8 -10, -22 -16, -16 -32 C -12 -42, -4 -45, 0 -38 C 4 -45, 12 -42, 16 -32 C 22 -16, 8 -10, 0 0 Z' fill='black'/><path d='M 0 0 C -10 -8, -16 -22, -32 -16 C -42 -12, -45 -4, -38 0 C -45 4, -42 12, -32 16 C -16 22, -10 8, 0 0 Z' fill='black'/><path d='M 0 0 C 10 -8, 16 -22, 32 -16 C 42 -12, 45 -4, 38 0 C 45 4, 42 12, 32 16 C 16 22, 10 8, 0 0 Z' fill='black'/><path d='M 0 0 C -8 10, -22 16, -16 32 C -12 42, -4 45, 0 38 C 4 45, 12 42, 16 32 C 22 16, 8 10, 0 0 Z' fill='black'/><path d='M 0 5 Q 1 18 -2 30' stroke='black' stroke-width='2.5' fill='none'/></g></svg>") center / contain no-repeat;
+    filter:
+      saturate(1.05)
+      contrast(1.08)
+      drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
+  }
+  /* Subtle gold glow behind for "luck" hint without breaking realism */
+  .lucky-glow {
+    position: absolute;
+    left: 50%;
+    top: 52%;
+    transform: translate(-50%, -50%);
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.18), transparent 65%);
+    pointer-events: none;
+    z-index: 4;
+    filter: blur(2px);
   }
 
   /* Outer dim */
@@ -241,29 +265,9 @@
     <div class="ticket-mini"><span>🎫</span><span>2 / 3</span></div>
   </div>
 
-  <!-- Hidden 4-leaf clover (overlay) -->
-  <svg class="lucky" viewBox="0 0 48 48">
-    <defs>
-      <radialGradient id="luckyTop" cx="0.35" cy="0.3" r="0.85">
-        <stop offset="0%" stop-color="#A8C988"/>
-        <stop offset="50%" stop-color="#5A7E42"/>
-        <stop offset="100%" stop-color="#2D4A1F"/>
-      </radialGradient>
-      <radialGradient id="luckySide" cx="0.4" cy="0.35" r="0.85">
-        <stop offset="0%" stop-color="#92B074"/>
-        <stop offset="55%" stop-color="#4A6B3F"/>
-        <stop offset="100%" stop-color="#1F2D17"/>
-      </radialGradient>
-    </defs>
-    <g transform="translate(24,26)" filter="drop-shadow(0 2px 3px rgba(0,0,0,0.4))">
-      <path d="M 0 6 Q 1 14 -1 22" stroke="#3D5C28" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-      <g transform="rotate(0)"><path d="M 0 0 C -3 -4, -8 -6, -6 -12 C -5 -16, -2 -17, 0 -14 C 2 -17, 5 -16, 6 -12 C 8 -6, 3 -4, 0 0 Z" fill="url(#luckyTop)"/><path d="M 0 -1 Q -1 -8, -1 -13" stroke="#3A5530" stroke-width="0.4" fill="none" opacity="0.55"/></g>
-      <g transform="rotate(-90)"><path d="M 0 0 C -3 -4, -8 -6, -6 -12 C -5 -16, -2 -17, 0 -14 C 2 -17, 5 -16, 6 -12 C 8 -6, 3 -4, 0 0 Z" fill="url(#luckySide)"/><path d="M 0 -1 Q -1 -8, -1 -13" stroke="#3A5530" stroke-width="0.4" fill="none" opacity="0.55"/></g>
-      <g transform="rotate(90)"><path d="M 0 0 C -3 -4, -8 -6, -6 -12 C -5 -16, -2 -17, 0 -14 C 2 -17, 5 -16, 6 -12 C 8 -6, 3 -4, 0 0 Z" fill="url(#luckySide)"/><path d="M 0 -1 Q -1 -8, -1 -13" stroke="#3A5530" stroke-width="0.4" fill="none" opacity="0.55"/></g>
-      <g transform="rotate(180)"><path d="M 0 0 C -3 -4, -8 -6, -6 -12 C -5 -16, -2 -17, 0 -14 C 2 -17, 5 -16, 6 -12 C 8 -6, 3 -4, 0 0 Z" fill="url(#luckyTop)"/><path d="M 0 -1 Q -1 -8, -1 -13" stroke="#3A5530" stroke-width="0.4" fill="none" opacity="0.55"/></g>
-      <circle cx="0" cy="0" r="1.5" fill="#D4AF37" opacity="0.7"/>
-    </g>
-  </svg>
+  <!-- Hidden 4-leaf clover (real photo cutout via mix-blend-mode) -->
+  <div class="lucky-glow"></div>
+  <div class="lucky" aria-hidden="true"></div>
 
   <!-- Dim overlay -->
   <div class="dim-overlay"></div>
