@@ -1062,10 +1062,10 @@ function renderDecorations() {
   return view.decorations.map(d => `<div class="clover" style="left:${d.x}%; top:${d.y}%; transform:translate(-50%,-50%); pointer-events:none;">${d.svg}</div>`).join('');
 }
 
-// Realistic clover leaflet — rounder heart with deeper notch
-const LEAFLET_PATH = "M 0 -2 C -3 -3 -8 -5 -10 -9 C -12 -13 -10 -17 -6 -17 C -3 -17 -1 -15 0 -12 C 1 -15 3 -17 6 -17 C 10 -17 12 -13 10 -9 C 8 -5 3 -3 0 -2 Z";
+// V5: 가운데 모인 하트 — leaflets converge tightly at center
+const LEAFLET_PATH = "M 0 0 C -4 -2 -10 -6 -10 -12 C -10 -16 -6 -18 -2 -16 C 0 -14 0 -10 0 -8 C 0 -10 0 -14 2 -16 C 6 -18 10 -16 10 -12 C 10 -6 4 -2 0 0 Z";
 
-// Lighter tone for V-mark
+// (lighter() retained for any future use; V5 has no V-mark)
 function lighter(c) {
   const map = {
     '#74B655': '#A8DC85',
@@ -1076,10 +1076,9 @@ function lighter(c) {
   return map[c] || '#C5EC92';
 }
 
-// Render a single leaflet with V-mark — outline added for crisp separation from dark bg
+// V5 leaflet: solid fill + dark outline, no V-mark
 function leafletWithMark(c) {
-  return `<path d="${LEAFLET_PATH}" fill="${c}" stroke="#1F2D17" stroke-width="0.5" opacity="1"/>
-    <path d="M -4.5 -10 Q 0 -8 4.5 -10" stroke="${lighter(c)}" stroke-width="0.9" fill="none" opacity="0.7" stroke-linecap="round"/>`;
+  return `<path d="${LEAFLET_PATH}" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>`;
 }
 
 // 3-leaf trefoil + visible stem (longer, brighter)
