@@ -319,11 +319,13 @@
     overflow: hidden;
     pointer-events: none;
   }
-  /* Default field: very dense small clovers — hard to distinguish without zoom */
+  /* Default field: dense clovers — hard to distinguish 3-leaf vs 4-leaf without zoom */
   .field-blurry {
     pointer-events: none;
   }
   .field-blurry .clover { pointer-events: none !important; }
+  /* Crisp SVG rendering (no antialiasing fuzz at small sizes) */
+  .clover svg { shape-rendering: geometricPrecision; }
   /* Sharp field: zoomed-in (scale 2x) + masked to magnifier circle */
   .field-sharp {
     transform: scale(2);
@@ -1247,8 +1249,8 @@ function startGame() {
   persistedState.ticket -= 1;
   saveState(persistedState);
 
-  // Generate field — DENSE small clovers (hard to distinguish without zoom)
-  const COUNT = 280;
+  // Generate field — dense, but each clover crisp & legible
+  const COUNT = 220;
   const palette = ['#5C7D4D', '#6B8E5A', '#7A9C68', '#8FBC8F', '#A8C99A'];
   const positions = [];
   // 1 lucky 네잎클로버
@@ -1256,7 +1258,7 @@ function startGame() {
     x: 20 + Math.random() * 60,
     y: 20 + Math.random() * 60,
     isLucky: true,
-    scale: 0.55 + Math.random() * 0.1,   // small, blends in
+    scale: 0.65 + Math.random() * 0.1,
     rot: Math.random() * 16 - 8,
   });
   // 3-leaf
@@ -1265,11 +1267,11 @@ function startGame() {
       x: 3 + Math.random() * 94,
       y: 4 + Math.random() * 92,
       isLucky: false,
-      scale: 0.4 + Math.random() * 0.3,  // very small (was 0.7-1.15)
+      scale: 0.55 + Math.random() * 0.3,  // medium-small but crisp
       rot: Math.random() * 60 - 30,
       c1: palette[Math.floor(Math.random() * palette.length)],
       c2: palette[Math.floor(Math.random() * palette.length)],
-      opacity: 0.75 + Math.random() * 0.2,
+      opacity: 0.9 + Math.random() * 0.1,  // higher opacity (was 0.75-0.95)
     });
   }
   view.cloverPositions = positions;
