@@ -319,23 +319,21 @@
     overflow: hidden;
     pointer-events: none;
   }
-  /* Default field: blurry & dim — looks distant */
+  /* Default field: very dense small clovers — hard to distinguish without zoom */
   .field-blurry {
-    filter: blur(3px) brightness(0.85) saturate(0.7);
-    transform: scale(0.93);
-    transform-origin: center;
     pointer-events: none;
   }
   .field-blurry .clover { pointer-events: none !important; }
-  /* Sharp field: only visible inside magnifier circle (mask-based) */
+  /* Sharp field: zoomed-in (scale 2x) + masked to magnifier circle */
   .field-sharp {
+    transform: scale(2);
+    transform-origin: 50% 50%;
     -webkit-mask: radial-gradient(circle 0px at 50% 50%, black 100%, transparent 100%);
             mask: radial-gradient(circle 0px at 50% 50%, black 100%, transparent 100%);
-    transition: -webkit-mask .18s ease, mask .18s ease;
+    transition: -webkit-mask .15s ease, mask .15s ease;
+    will-change: transform;
   }
-  .field-sharp.active {
-    /* mask is updated via inline style on each move */
-  }
+  .field-sharp .clover { pointer-events: auto; }
   .clover {
     position: absolute;
     transform-origin: center;
@@ -362,11 +360,21 @@
     width: 100%; height: 100%;
     border-radius: 50%;
     border: 4px solid rgba(255, 252, 242, 0.95);
-    background:
-      radial-gradient(circle at 30% 30%, rgba(255,252,242,0.12), transparent 50%);
+    background: transparent;
     box-shadow:
-      inset 0 0 30px rgba(255,252,242,0.1),
-      inset 0 0 0 1px rgba(255,252,242,0.4);
+      inset 0 0 0 1px rgba(255,252,242,0.4),
+      0 4px 16px rgba(0,0,0,0.2);
+  }
+  /* Subtle highlight on lens for glassy look */
+  .magnifier .lens::after {
+    content: '';
+    position: absolute;
+    top: 14px; left: 24px;
+    width: 38px; height: 22px;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.35), transparent 70%);
+    border-radius: 50%;
+    transform: rotate(-25deg);
+    pointer-events: none;
   }
   .magnifier .handle {
     position: absolute;
@@ -930,7 +938,7 @@ function renderHome() {
     <div class="hero">
       <div class="eyebrow">${formatDate()}</div>
       <h1>오늘의 행운을<br/>찾아보세요</h1>
-      <p>풀숲 어딘가에 숨어있는 네잎 클로버.<br/>30초의 잔잔한 몰입을 시작해요.</p>
+      <p>풀숲 어딘가에 숨어있는 네잎클로버클로버TMP.<br/>30초의 잔잔한 몰입을 시작해요.</p>
     </div>
 
     <div class="illust">
@@ -1146,7 +1154,7 @@ function renderResultSheet() {
       </div>
 
       <div class="footer-note">
-        <span class="lucky">🍀</span> 발견한 네잎 클로버는 도감에 자동으로 기록돼요
+        <span class="lucky">🍀</span> 발견한 네잎클로버클로버TMP는 도감에 자동으로 기록돼요
       </div>
     </div>
   </div>`;
@@ -1175,7 +1183,7 @@ function renderCollection() {
         최고 ${persistedState.bestTime ? persistedState.bestTime + '초' : '-'}
       </div>
       ${items.length === 0
-        ? `<div class="col-empty">🌱<br/>아직 발견한 네잎이 없어요<br/>오늘의 행운을 찾아보세요</div>`
+        ? `<div class="col-empty">🌱<br/>아직 발견한 네잎클로버이 없어요<br/>오늘의 행운을 찾아보세요</div>`
         : `<div class="collection-grid">${items.map(it => `
             <div class="col-item found">
               <div>
@@ -1239,29 +1247,29 @@ function startGame() {
   persistedState.ticket -= 1;
   saveState(persistedState);
 
-  // Generate field
-  const COUNT = 130;
+  // Generate field — DENSE small clovers (hard to distinguish without zoom)
+  const COUNT = 280;
   const palette = ['#5C7D4D', '#6B8E5A', '#7A9C68', '#8FBC8F', '#A8C99A'];
   const positions = [];
-  // 1 lucky 4-leaf
+  // 1 lucky 네잎클로버
   positions.push({
     x: 20 + Math.random() * 60,
     y: 20 + Math.random() * 60,
     isLucky: true,
-    scale: 0.95 + Math.random() * 0.15,
+    scale: 0.55 + Math.random() * 0.1,   // small, blends in
     rot: Math.random() * 16 - 8,
   });
   // 3-leaf
   for (let i = 0; i < COUNT; i++) {
     positions.push({
-      x: 4 + Math.random() * 92,
-      y: 6 + Math.random() * 86,
+      x: 3 + Math.random() * 94,
+      y: 4 + Math.random() * 92,
       isLucky: false,
-      scale: 0.7 + Math.random() * 0.45,
+      scale: 0.4 + Math.random() * 0.3,  // very small (was 0.7-1.15)
       rot: Math.random() * 60 - 30,
       c1: palette[Math.floor(Math.random() * palette.length)],
       c2: palette[Math.floor(Math.random() * palette.length)],
-      opacity: 0.85 + Math.random() * 0.15,
+      opacity: 0.75 + Math.random() * 0.2,
     });
   }
   view.cloverPositions = positions;
@@ -1443,6 +1451,8 @@ function attachHandlers() {
           const mask = `radial-gradient(circle 86px at ${view.magnifier.x}% ${view.magnifier.y}%, black 80px, transparent 86px)`;
           $sharp.style.webkitMask = mask;
           $sharp.style.mask = mask;
+          // Zoom origin follows magnifier so the spot under lens enlarges
+          $sharp.style.transformOrigin = `${view.magnifier.x}% ${view.magnifier.y}%`;
         }
         // Hide hint
         const $hint = $game.querySelector('.game-hint');
