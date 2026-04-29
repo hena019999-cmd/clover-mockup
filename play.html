@@ -1319,7 +1319,7 @@ function startGame() {
   }
   view.cloverPositions = positions;
 
-  // Decorations: blades & flowers (pre-rendered SVG strings)
+  // Decorations: only grass blades (flowers removed per request)
   const decorations = [];
   for (let i = 0; i < 18; i++) {
     const h = 14 + Math.random() * 16;
@@ -1328,15 +1328,6 @@ function startGame() {
       x: Math.random() * 100,
       y: Math.random() * 100,
       svg: `<svg width="6" height="${h}" viewBox="0 0 6 ${h}" style="transform:rotate(${tilt}deg);transform-origin:bottom;"><path d="M 3 ${h} Q 1 ${h/2} 3 0" stroke="#3A5530" stroke-width="1.5" fill="none" opacity="0.4" stroke-linecap="round"/></svg>`,
-    });
-  }
-  for (let i = 0; i < 6; i++) {
-    const colors = ['#FAF7F0', '#FFD9D2', '#D4AF37'];
-    const c = colors[Math.floor(Math.random() * colors.length)];
-    decorations.push({
-      x: 5 + Math.random() * 90,
-      y: 10 + Math.random() * 80,
-      svg: `<svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="3" r="2" fill="${c}" opacity="0.85"/><circle cx="11" cy="7" r="2" fill="${c}" opacity="0.85"/><circle cx="7" cy="11" r="2" fill="${c}" opacity="0.85"/><circle cx="3" cy="7" r="2" fill="${c}" opacity="0.85"/><circle cx="7" cy="7" r="1.5" fill="#D4AF37"/></svg>`,
     });
   }
   view.decorations = decorations;

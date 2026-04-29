@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>🍀 클로버 모양 비교</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root {
+    --moss: #6B8E5A;
+    --leaf-deep: #4A6B3F;
+    --paper: #F5F1E6;
+    --ivory: #FFFCF2;
+    --greige: #9C8E7C;
+    --gold: #D4AF37;
+    --ink: #2D3A26;
+    --ink-soft: #5A6B4F;
+    --bg-grass: linear-gradient(135deg, #6B8E5A 0%, #4A6B3F 100%);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  header .eyebrow {
+    font-size: 12px;
+    color: var(--moss);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+  }
+  header p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  @media (min-width: 720px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .card {
+    background: var(--ivory);
+    border: 1px solid rgba(107, 142, 90, 0.15);
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 4px 20px rgba(74, 107, 63, 0.05);
+  }
+  .card .head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .card .ver {
+    font-size: 11px;
+    color: var(--greige);
+    letter-spacing: 0.15em;
+    font-weight: 600;
+  }
+  .card .name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .card .desc {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .display {
+    background: var(--bg-grass);
+    border-radius: 14px;
+    padding: 22px 20px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .display::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 12% 22%, rgba(255,255,255,0.06) 0, transparent 1.5px),
+      radial-gradient(circle at 47% 67%, rgba(255,255,255,0.04) 0, transparent 1.5px),
+      radial-gradient(circle at 78% 32%, rgba(0,0,0,0.05) 0, transparent 2px);
+    background-size: 60px 60px, 80px 80px, 90px 90px;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+  .display .row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 36px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 8px;
+  }
+  .display .label {
+    text-align: center;
+    color: rgba(255, 252, 242, 0.85);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+  .display .single {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cluster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 252, 242, 0.2);
+    position: relative;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">CLOVER SHAPE VARIANTS</div>
+  <h1>🍀 클로버 모양 6가지</h1>
+  <p>6가지 디자인 시안을 풀숲 배경에서 비교해보세요.<br/>마음에 드는 번호를 알려주시면 그 모양으로 게임에 적용합니다.</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+</div>
+
+<script>
+// ============================================================
+// 6 VARIANTS of clover SVG
+// Each function returns { three(scale), four(scale), name, desc }
+// ============================================================
+
+// V1: 둥근 하트 + V무늬 (현재)
+const V1_PATH = "M 0 -2 C -3 -3 -8 -5 -10 -9 C -12 -13 -10 -17 -6 -17 C -3 -17 -1 -15 0 -12 C 1 -15 3 -17 6 -17 C 10 -17 12 -13 10 -9 C 8 -5 3 -3 0 -2 Z";
+
+// V2: 단순 원형 잎
+function v2Leaflet(c) {
+  return `<circle cx="0" cy="-10" r="9" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>`;
+}
+
+// V3: 각진 하트 (sharp)
+const V3_PATH = "M 0 -1 L -5 -7 L -10 -10 L -10 -15 L -5 -16 L -1 -13 L 0 -10 L 1 -13 L 5 -16 L 10 -15 L 10 -10 L 5 -7 Z";
+
+// V4: 물방울 (teardrop)
+const V4_PATH = "M 0 -1 C -7 -5 -10 -11 -7 -16 C -3 -19 0 -16 0 -10 C 0 -16 3 -19 7 -16 C 10 -11 7 -5 0 -1 Z";
+
+// V5: 가운데 모인 — 잎이 거의 붙어있음
+const V5_PATH = "M 0 0 C -4 -2 -10 -6 -10 -12 C -10 -16 -6 -18 -2 -16 C 0 -14 0 -10 0 -8 C 0 -10 0 -14 2 -16 C 6 -18 10 -16 10 -12 C 10 -6 4 -2 0 0 Z";
+
+// V6: 미니멀 평면 — 외곽선·V무늬 X
+function v6Leaflet(c) {
+  return `<path d="${V1_PATH}" fill="${c}"/>`;
+}
+
+// ============================================================
+// V1: 둥근 하트 + V무늬 (현재)
+// ============================================================
+function v1Cluster(palette) {
+  return paletteToCluster(palette, (c) => `
+    <g>
+      <path d="${V1_PATH}" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>
+      <path d="M -4.5 -10 Q 0 -8 4.5 -10" stroke="${lighter(c)}" stroke-width="0.9" fill="none" opacity="0.7" stroke-linecap="round"/>
+    </g>`);
+}
+function v1Three(palette) {
+  return cloverSvg(60, palette, (c) => `
+    <g>
+      <path d="${V1_PATH}" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>
+      <path d="M -4.5 -10 Q 0 -8 4.5 -10" stroke="${lighter(c)}" stroke-width="0.9" fill="none" opacity="0.7" stroke-linecap="round"/>
+    </g>`, 3);
+}
+function v1Four(palette) {
+  return cloverSvg(60, palette, (c) => `
+    <g>
+      <path d="${V1_PATH}" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>
+      <path d="M -4.5 -10 Q 0 -8 4.5 -10" stroke="${lighter(c)}" stroke-width="0.9" fill="none" opacity="0.7" stroke-linecap="round"/>
+    </g>`, 4);
+}
+
+// ============================================================
+// V2: 단순 원형
+// ============================================================
+function v2Three(palette) {
+  return cloverSvg(60, palette, (c) => `<circle cx="0" cy="-10" r="9" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>`, 3);
+}
+function v2Four(palette) {
+  return cloverSvg(60, palette, (c) => `<circle cx="0" cy="-10" r="9" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>`, 4);
+}
+
+// ============================================================
+// V3: 각진 하트
+// ============================================================
+function v3Three(palette) {
+  return cloverSvg(60, palette, (c) => `<path d="${V3_PATH}" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>`, 3);
+}
+function v3Four(palette) {
+  return cloverSvg(60, palette, (c) => `<path d="${V3_PATH}" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>`, 4);
+}
+
+// ============================================================
+// V4: 물방울 (teardrop)
+// ============================================================
+function v4Three(palette) {
+  return cloverSvg(60, palette, (c) => `<path d="${V4_PATH}" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>`, 3);
+}
+function v4Four(palette) {
+  return cloverSvg(60, palette, (c) => `<path d="${V4_PATH}" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>`, 4);
+}
+
+// ============================================================
+// V5: 가운데 모인
+// ============================================================
+function v5Three(palette) {
+  return cloverSvg(60, palette, (c) => `<path d="${V5_PATH}" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>`, 3);
+}
+function v5Four(palette) {
+  return cloverSvg(60, palette, (c) => `<path d="${V5_PATH}" fill="${c}" stroke="#1F2D17" stroke-width="0.5"/>`, 4);
+}
+
+// ============================================================
+// V6: 미니멀 평면 (no outline, no mark)
+// ============================================================
+function v6Three(palette) {
+  return cloverSvg(60, palette, v6Leaflet, 3);
+}
+function v6Four(palette) {
+  return cloverSvg(60, palette, v6Leaflet, 4);
+}
+
+// ============================================================
+// Helpers
+// ============================================================
+function lighter(c) {
+  const map = {
+    '#74B655': '#A8DC85',
+    '#8FCB68': '#BFE693',
+    '#A2D870': '#D4F0A0',
+    '#5C7D4D': '#8FBC8F',
+    '#6B8E5A': '#A8C99A',
+  };
+  return map[c] || '#A8DC85';
+}
+
+// Build clover SVG with N leaflets at angles (3 or 4) + stem
+function cloverSvg(size, palette, leafletRenderer, count) {
+  const angles = count === 3 ? [0, 120, -120] : [0, 90, 180, -90];
+  const leaflets = angles.map((a, i) => `<g transform="rotate(${a})">${leafletRenderer(palette[i % palette.length])}</g>`).join('');
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+    <g transform="translate(${size / 2}, ${size / 2 - 4})">
+      <path d="M 0 0 Q 2 11 -1 24" fill="none" stroke="#5A8042" stroke-width="2.4" stroke-linecap="round" opacity="0.95"/>
+      <path d="M 0 0 Q 2 11 -1 24" fill="none" stroke="#A8DC85" stroke-width="0.9" stroke-linecap="round" opacity="0.55"/>
+      ${leaflets}
+    </g>
+  </svg>`;
+}
+
+function paletteToCluster(palette, leafletRenderer) {
+  // Returns small 28px clovers in mini cluster
+  const out = [];
+  for (let i = 0; i < 8; i++) {
+    const c = palette[i % palette.length];
+    const rot = Math.random() * 360 - 180;
+    out.push(`<svg width="28" height="28" viewBox="0 0 28 28" style="transform:rotate(${rot}deg);">
+      <g transform="translate(14, 11)">
+        <path d="M 0 0 Q 1 6 -1 12" fill="none" stroke="#5A8042" stroke-width="1.3" stroke-linecap="round" opacity="0.95"/>
+        ${[0, 120, -120].map((a, j) => `<g transform="rotate(${a}) scale(0.55)">${leafletRenderer(palette[(i + j) % palette.length])}</g>`).join('')}
+      </g>
+    </svg>`);
+  }
+  return out.join('');
+}
+
+// ============================================================
+// VARIANT DEFINITIONS
+// ============================================================
+const PALETTE = ['#74B655', '#8FCB68', '#A2D870', '#9DD460'];
+
+const variants = [
+  {
+    ver: 'V1', name: '둥근 하트 + V무늬', desc: '실제 클로버에 가장 가까움. 잎 표면에 옅은 V자 표식.',
+    three: v1Three(PALETTE), four: v1Four(PALETTE),
+  },
+  {
+    ver: 'V2', name: '단순 원형', desc: '잎이 완벽한 원. 카툰풍, 가장 친근하고 인지 쉬움.',
+    three: v2Three(PALETTE), four: v2Four(PALETTE),
+  },
+  {
+    ver: 'V3', name: '각진 하트', desc: '날카로운 직선 윤곽. 그래픽 아이콘 스타일.',
+    three: v3Three(PALETTE), four: v3Four(PALETTE),
+  },
+  {
+    ver: 'V4', name: '물방울 잎', desc: '뾰족한 끝, 통통한 몸. 풀잎 같은 느낌.',
+    three: v4Three(PALETTE), four: v4Four(PALETTE),
+  },
+  {
+    ver: 'V5', name: '가운데 모인 하트', desc: '잎이 가운데에 거의 붙어있음. 구분 주의 필요.',
+    three: v5Three(PALETTE), four: v5Four(PALETTE),
+  },
+  {
+    ver: 'V6', name: '미니멀 평면', desc: '외곽선·표식 없는 단색. 매우 깔끔, 토스 톤.',
+    three: v6Three(PALETTE), four: v6Four(PALETTE),
+  },
+];
+
+// ============================================================
+// Render
+// ============================================================
+const grid = document.getElementById('grid');
+grid.innerHTML = variants.map(v => `
+  <div class="card">
+    <div class="head">
+      <span class="ver">${v.ver}</span>
+      <span class="name">${v.name}</span>
+    </div>
+    <div class="desc">${v.desc}</div>
+    <div class="display">
+      <div class="row">
+        <div class="single">
+          ${v.three}
+          <div class="label">3-leaf</div>
+        </div>
+        <div class="single">
+          ${v.four}
+          <div class="label">4-leaf</div>
+        </div>
+      </div>
+    </div>
+  </div>
+`).join('');
+</script>
+
+</body>
+</html>
