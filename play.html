@@ -319,6 +319,23 @@
     overflow: hidden;
     pointer-events: none;
   }
+  /* Default field: blurry & dim — looks distant */
+  .field-blurry {
+    filter: blur(3px) brightness(0.85) saturate(0.7);
+    transform: scale(0.93);
+    transform-origin: center;
+    pointer-events: none;
+  }
+  .field-blurry .clover { pointer-events: none !important; }
+  /* Sharp field: only visible inside magnifier circle (mask-based) */
+  .field-sharp {
+    -webkit-mask: radial-gradient(circle 0px at 50% 50%, black 100%, transparent 100%);
+            mask: radial-gradient(circle 0px at 50% 50%, black 100%, transparent 100%);
+    transition: -webkit-mask .18s ease, mask .18s ease;
+  }
+  .field-sharp.active {
+    /* mask is updated via inline style on each move */
+  }
   .clover {
     position: absolute;
     transform-origin: center;
@@ -346,12 +363,9 @@
     border-radius: 50%;
     border: 4px solid rgba(255, 252, 242, 0.95);
     background:
-      radial-gradient(circle at 30% 30%, rgba(255,252,242,0.18), transparent 40%),
-      rgba(255,252,242,0.04);
-    backdrop-filter: brightness(1.18) saturate(1.1);
-    -webkit-backdrop-filter: brightness(1.18) saturate(1.1);
+      radial-gradient(circle at 30% 30%, rgba(255,252,242,0.12), transparent 50%);
     box-shadow:
-      inset 0 0 30px rgba(255,252,242,0.15),
+      inset 0 0 30px rgba(255,252,242,0.1),
       inset 0 0 0 1px rgba(255,252,242,0.4);
   }
   .magnifier .handle {
@@ -365,16 +379,8 @@
     transform-origin: top left;
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 4px 8px rgba(0,0,0,0.2);
   }
-  .dim-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(20, 28, 18, 0.18);
-    z-index: 11;
-    pointer-events: none;
-    transition: opacity .25s;
-    opacity: 0;
-  }
-  .dim-overlay.active { opacity: 1; }
+  /* Dim overlay no longer needed (blur handles distance) */
+  .dim-overlay { display: none; }
 
   .game-hint {
     position: absolute;
@@ -924,7 +930,7 @@ function renderHome() {
     <div class="hero">
       <div class="eyebrow">${formatDate()}</div>
       <h1>오늘의 행운을<br/>찾아보세요</h1>
-      <p>풀숲 어딘가에 숨어있는 4잎 클로버.<br/>30초의 잔잔한 몰입을 시작해요.</p>
+      <p>풀숲 어딘가에 숨어있는 네잎 클로버.<br/>30초의 잔잔한 몰입을 시작해요.</p>
     </div>
 
     <div class="illust">
@@ -1000,11 +1006,15 @@ function renderGame() {
       <button class="quit-btn" data-action="confirm-quit">포기하기</button>
     </div>
 
-    <div class="field" id="field">
+    <div class="field field-blurry" id="field-blur">
       ${renderField()}
     </div>
-
-    <div class="dim-overlay ${view.magnifier.active ? 'active' : ''}" id="dim" style="${view.magnifier.active ? `-webkit-mask: radial-gradient(circle 90px at ${view.magnifier.x}% ${view.magnifier.y}%, transparent 86px, black 92px); mask: radial-gradient(circle 90px at ${view.magnifier.x}% ${view.magnifier.y}%, transparent 86px, black 92px);` : ''}"></div>
+    <div class="field field-sharp ${view.magnifier.active ? 'active' : ''}" id="field-sharp"
+      style="${view.magnifier.active
+        ? `-webkit-mask: radial-gradient(circle 86px at ${view.magnifier.x}% ${view.magnifier.y}%, black 80px, transparent 86px); mask: radial-gradient(circle 86px at ${view.magnifier.x}% ${view.magnifier.y}%, black 80px, transparent 86px);`
+        : ''}">
+      ${renderField()}
+    </div>
 
     <div class="magnifier ${view.magnifier.active ? 'active' : ''}" id="mag" style="left:${view.magnifier.x}%; top:${view.magnifier.y}%;">
       <div class="lens"></div>
@@ -1136,7 +1146,7 @@ function renderResultSheet() {
       </div>
 
       <div class="footer-note">
-        <span class="lucky">🍀</span> 발견한 4잎 클로버는 도감에 자동으로 기록돼요
+        <span class="lucky">🍀</span> 발견한 네잎 클로버는 도감에 자동으로 기록돼요
       </div>
     </div>
   </div>`;
@@ -1165,7 +1175,7 @@ function renderCollection() {
         최고 ${persistedState.bestTime ? persistedState.bestTime + '초' : '-'}
       </div>
       ${items.length === 0
-        ? `<div class="col-empty">🌱<br/>아직 발견한 4잎이 없어요<br/>오늘의 행운을 찾아보세요</div>`
+        ? `<div class="col-empty">🌱<br/>아직 발견한 네잎이 없어요<br/>오늘의 행운을 찾아보세요</div>`
         : `<div class="collection-grid">${items.map(it => `
             <div class="col-item found">
               <div>
@@ -1422,16 +1432,17 @@ function attachHandlers() {
         view.magnifier.active = true;
         // Direct DOM update for smoothness
         const $m = document.getElementById('mag');
-        const $d = document.getElementById('dim');
+        const $sharp = document.getElementById('field-sharp');
         if ($m) {
           $m.style.left = view.magnifier.x + '%';
           $m.style.top = view.magnifier.y + '%';
           $m.classList.add('active');
         }
-        if ($d) {
-          $d.classList.add('active');
-          $d.style.webkitMask = `radial-gradient(circle 90px at ${view.magnifier.x}% ${view.magnifier.y}%, transparent 86px, black 92px)`;
-          $d.style.mask = `radial-gradient(circle 90px at ${view.magnifier.x}% ${view.magnifier.y}%, transparent 86px, black 92px)`;
+        if ($sharp) {
+          $sharp.classList.add('active');
+          const mask = `radial-gradient(circle 86px at ${view.magnifier.x}% ${view.magnifier.y}%, black 80px, transparent 86px)`;
+          $sharp.style.webkitMask = mask;
+          $sharp.style.mask = mask;
         }
         // Hide hint
         const $hint = $game.querySelector('.game-hint');
