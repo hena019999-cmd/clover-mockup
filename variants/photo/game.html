@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>📸 사진 — 게임</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root {
+    --leaf-deep: #2D4A1F;
+    --moss: #4A6B3F;
+    --gold: #D4AF37;
+    --gold-soft: #E5C76B;
+    --cream: #FFFCF2;
+    --ink: #1F2D17;
+    --ink-soft: #4A5A3F;
+    --glass: rgba(255, 252, 242, 0.92);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: #1F2D17;
+    display: flex;
+    justify-content: center;
+    -webkit-font-smoothing: antialiased;
+  }
+  .frame {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+    background:
+      url('https://images.unsplash.com/photo-1597535355985-0e3d8bd46376?w=600&q=85&auto=format&fit=crop&crop=center') no-repeat center center;
+    background-size: cover;
+  }
+  /* Slight color grade overlay to darken edges and warm the center */
+  .frame::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 30%, rgba(0,0,0,0.25) 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  /* Photo grain overlay */
+  .frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 12% 22%, rgba(255,255,255,0.06) 0, transparent 1.5px),
+      radial-gradient(circle at 47% 67%, rgba(0,0,0,0.05) 0, transparent 1.5px),
+      radial-gradient(circle at 78% 32%, rgba(255,255,255,0.04) 0, transparent 1.5px),
+      radial-gradient(circle at 88% 88%, rgba(0,0,0,0.05) 0, transparent 1.5px);
+    background-size: 70px 70px, 110px 110px, 90px 90px, 130px 130px;
+    pointer-events: none;
+    opacity: 0.6;
+    z-index: 2;
+  }
+
+  /* HUD */
+  .hud {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 18px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 25;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.25), transparent);
+  }
+  .timer {
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    border-radius: 999px;
+    padding: 8px 18px 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 252, 242, 0.4);
+  }
+  .timer .ring {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--moss);
+    border-right-color: rgba(74, 107, 63, 0.2);
+    border-bottom-color: rgba(74, 107, 63, 0.2);
+  }
+  .timer .time {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--leaf-deep);
+    font-variant-numeric: tabular-nums;
+  }
+  .ticket-mini {
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--leaf-deep);
+    font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 252, 242, 0.4);
+  }
+
+  /* The hidden 4-leaf — overlaid on photo at lens center */
+  .lucky {
+    position: absolute;
+    left: 50%;
+    top: 52%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    width: 48px;
+    height: 48px;
+    pointer-events: none;
+    filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.4));
+  }
+
+  /* Outer dim */
+  .dim-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(20, 30, 18, 0.4);
+    z-index: 10;
+    pointer-events: none;
+    -webkit-mask: radial-gradient(circle 88px at 50% 52%, transparent 84px, black 92px);
+    mask: radial-gradient(circle 88px at 50% 52%, transparent 84px, black 92px);
+  }
+
+  /* Magnifier (realistic glass) */
+  .magnifier {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    left: 50%;
+    top: 52%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 15;
+  }
+  .magnifier .lens {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 5px solid #C4A572;
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22), rgba(255,255,255,0.04) 35%, transparent 65%),
+      rgba(255, 252, 242, 0.04);
+    backdrop-filter: brightness(1.18) saturate(1.18) contrast(1.05);
+    -webkit-backdrop-filter: brightness(1.18) saturate(1.18) contrast(1.05);
+    box-shadow:
+      inset 0 0 30px rgba(255, 252, 242, 0.18),
+      inset 0 0 0 1px rgba(0,0,0,0.2),
+      0 0 0 2px rgba(94, 73, 41, 0.5),
+      0 12px 40px rgba(0, 0, 0, 0.55);
+    position: relative;
+  }
+  .magnifier .lens::after {
+    content: '';
+    position: absolute;
+    top: 12px; left: 22px;
+    width: 50px; height: 32px;
+    background: radial-gradient(ellipse, rgba(255,255,255,0.45), transparent 70%);
+    border-radius: 50%;
+    transform: rotate(-25deg);
+    pointer-events: none;
+  }
+  .magnifier .ferrule {
+    position: absolute;
+    bottom: 2px;
+    right: 18px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #E8E2D0, #8E8470);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    z-index: 2;
+  }
+  .magnifier .handle {
+    position: absolute;
+    bottom: -28px;
+    right: -14px;
+    width: 70px;
+    height: 22px;
+    background: linear-gradient(135deg, #C4A572 0%, #8B6F3F 50%, #5A4220 100%);
+    border-radius: 14px;
+    transform: rotate(40deg);
+    transform-origin: top left;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,0.3),
+      inset 0 -1px 0 rgba(0,0,0,0.3),
+      0 6px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Hint */
+  .hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--glass);
+    color: var(--leaf-deep);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 500;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 252, 242, 0.4);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    z-index: 25;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .hint .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--moss);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="timer">
+      <div class="ring"></div>
+      <div class="time">00:23</div>
+    </div>
+    <div class="ticket-mini"><span>🎫</span><span>2 / 3</span></div>
+  </div>
+
+  <!-- Hidden 4-leaf clover (overlay) -->
+  <svg class="lucky" viewBox="0 0 48 48">
+    <defs>
+      <radialGradient id="luckyTop" cx="0.35" cy="0.3" r="0.85">
+        <stop offset="0%" stop-color="#A8C988"/>
+        <stop offset="50%" stop-color="#5A7E42"/>
+        <stop offset="100%" stop-color="#2D4A1F"/>
+      </radialGradient>
+      <radialGradient id="luckySide" cx="0.4" cy="0.35" r="0.85">
+        <stop offset="0%" stop-color="#92B074"/>
+        <stop offset="55%" stop-color="#4A6B3F"/>
+        <stop offset="100%" stop-color="#1F2D17"/>
+      </radialGradient>
+    </defs>
+    <g transform="translate(24,26)" filter="drop-shadow(0 2px 3px rgba(0,0,0,0.4))">
+      <path d="M 0 6 Q 1 14 -1 22" stroke="#3D5C28" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <g transform="rotate(0)"><path d="M 0 0 C -3 -4, -8 -6, -6 -12 C -5 -16, -2 -17, 0 -14 C 2 -17, 5 -16, 6 -12 C 8 -6, 3 -4, 0 0 Z" fill="url(#luckyTop)"/><path d="M 0 -1 Q -1 -8, -1 -13" stroke="#3A5530" stroke-width="0.4" fill="none" opacity="0.55"/></g>
+      <g transform="rotate(-90)"><path d="M 0 0 C -3 -4, -8 -6, -6 -12 C -5 -16, -2 -17, 0 -14 C 2 -17, 5 -16, 6 -12 C 8 -6, 3 -4, 0 0 Z" fill="url(#luckySide)"/><path d="M 0 -1 Q -1 -8, -1 -13" stroke="#3A5530" stroke-width="0.4" fill="none" opacity="0.55"/></g>
+      <g transform="rotate(90)"><path d="M 0 0 C -3 -4, -8 -6, -6 -12 C -5 -16, -2 -17, 0 -14 C 2 -17, 5 -16, 6 -12 C 8 -6, 3 -4, 0 0 Z" fill="url(#luckySide)"/><path d="M 0 -1 Q -1 -8, -1 -13" stroke="#3A5530" stroke-width="0.4" fill="none" opacity="0.55"/></g>
+      <g transform="rotate(180)"><path d="M 0 0 C -3 -4, -8 -6, -6 -12 C -5 -16, -2 -17, 0 -14 C 2 -17, 5 -16, 6 -12 C 8 -6, 3 -4, 0 0 Z" fill="url(#luckyTop)"/><path d="M 0 -1 Q -1 -8, -1 -13" stroke="#3A5530" stroke-width="0.4" fill="none" opacity="0.55"/></g>
+      <circle cx="0" cy="0" r="1.5" fill="#D4AF37" opacity="0.7"/>
+    </g>
+  </svg>
+
+  <!-- Dim overlay -->
+  <div class="dim-overlay"></div>
+
+  <!-- Magnifier -->
+  <div class="magnifier">
+    <div class="lens"></div>
+    <div class="ferrule"></div>
+    <div class="handle"></div>
+  </div>
+
+  <!-- Hint -->
+  <div class="hint">
+    <span class="dot"></span>
+    <span>풀숲을 살펴보세요</span>
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>📸 사진 — 홈</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root {
+    --photo-green: #B5E27A;
+    --leaf-deep: #2D4A1F;
+    --moss: #4A6B3F;
+    --cream: #FFFCF2;
+    --beige: #F0E6D0;
+    --gold: #D4AF37;
+    --gold-deep: #A8842B;
+    --ink: #1F2D17;
+    --ink-soft: #4A5A3F;
+    --glass: rgba(255, 252, 242, 0.92);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: #B5E27A;
+    color: var(--ink);
+    display: flex;
+    justify-content: center;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .frame {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #B5E27A 0%, #B5E27A 50%, #FFFCF2 65%, #FFFCF2 100%);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Hero photo zone */
+  .photo-zone {
+    position: relative;
+    height: 360px;
+    overflow: hidden;
+    background: url('https://images.unsplash.com/photo-1609473295863-2d9299af71d4?w=600&q=85&auto=format&fit=crop&crop=center') no-repeat center 45%;
+    background-size: cover;
+  }
+
+  /* Subtle photo grain overlay */
+  .photo-zone::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 12% 22%, rgba(255,255,255,0.05) 0, transparent 1.5px),
+      radial-gradient(circle at 47% 67%, rgba(0,0,0,0.04) 0, transparent 1.5px),
+      radial-gradient(circle at 78% 32%, rgba(0,0,0,0.03) 0, transparent 1.5px);
+    background-size: 70px 70px, 110px 110px, 90px 90px;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+
+  /* Bottom fade into cream */
+  .photo-zone::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 90px;
+    background: linear-gradient(180deg, transparent, var(--cream));
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Glow ring around clover */
+  .photo-zone .glow {
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    left: 50%;
+    top: 52%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(212,175,55,0.18), transparent 60%);
+    pointer-events: none;
+    animation: pulse 4s ease-in-out infinite;
+    z-index: 1;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+  }
+
+  /* Header (over photo) */
+  .header {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px;
+    z-index: 10;
+  }
+  .header .brand {
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 600;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  }
+  .icon-btn {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+    font-size: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Hero text below photo */
+  .hero {
+    text-align: center;
+    padding: 28px 28px 0;
+    position: relative;
+    z-index: 5;
+  }
+  .hero .eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    color: var(--moss);
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .hero h1 {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    margin: 0 0 10px;
+    color: var(--ink);
+  }
+  .hero p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    line-height: 1.65;
+    margin: 0 auto;
+    max-width: 280px;
+  }
+
+  /* Ticket */
+  .ticket {
+    margin: 22px 24px 0;
+    background: var(--cream);
+    border: 1px solid rgba(74, 107, 63, 0.12);
+    border-radius: 18px;
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(74, 107, 63, 0.08);
+  }
+  .ticket .label {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+  }
+  .ticket .count {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--leaf-deep);
+    letter-spacing: -0.01em;
+  }
+  .ticket .count .total {
+    color: var(--ink-soft);
+    font-weight: 400;
+    font-size: 16px;
+  }
+  .ticket .dots { display: flex; gap: 6px; }
+  .ticket .dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--moss);
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.3);
+  }
+
+  /* CTA */
+  .cta-wrap { padding: 16px 24px 0; }
+  .cta {
+    width: 100%;
+    height: 60px;
+    border: none;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #5E7E40 0%, #3D5C28 100%);
+    color: var(--cream);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    box-shadow:
+      0 6px 20px rgba(45, 74, 31, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    padding: 18px 24px 14px;
+    margin-top: auto;
+  }
+  .stat {
+    background: rgba(74, 107, 63, 0.08);
+    border-radius: 14px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+  .stat .v {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--leaf-deep);
+  }
+  .stat .l {
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+
+  .hint {
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-soft);
+    padding: 4px 24px 24px;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="frame">
+
+  <!-- Header (overlaid on photo) -->
+  <header class="header">
+    <div class="brand">🍀 오늘의 행운</div>
+    <button class="icon-btn" aria-label="도감 열기">📔</button>
+  </header>
+
+  <!-- Hero photo -->
+  <div class="photo-zone">
+    <div class="glow"></div>
+  </div>
+
+  <!-- Text -->
+  <div class="hero">
+    <div class="eyebrow">2026 · 4 · 29 수요일</div>
+    <h1>오늘의 행운을<br/>찾아보세요</h1>
+    <p>풀숲 어딘가에 숨어있는 4잎 클로버.<br/>30초의 잔잔한 몰입을 시작해요.</p>
+  </div>
+
+  <!-- Ticket -->
+  <div class="ticket">
+    <div>
+      <div class="label">오늘의 도전권</div>
+      <div class="count">3 <span class="total">/ 3</span></div>
+    </div>
+    <div class="dots">
+      <span class="dot"></span>
+      <span class="dot"></span>
+      <span class="dot"></span>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-wrap">
+    <button class="cta">
+      <span>✦</span>
+      <span>행운 찾기 시작</span>
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="v">12</div><div class="l">총 발견</div></div>
+    <div class="stat"><div class="v">4일</div><div class="l">연속 발견</div></div>
+    <div class="stat"><div class="v">14초</div><div class="l">최고 기록</div></div>
+  </div>
+
+  <div class="hint">매일 자정에 도전권 3장이 새로 충전돼요</div>
+
+</div>
+
+</body>
+</html>
