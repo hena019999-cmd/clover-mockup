@@ -1445,15 +1445,8 @@ function extendTime() {
 }
 
 function showAd(context, callback) {
-  view.adActive = context;
-  view.adCallback = callback;
-  render();
-  setTimeout(() => {
-    view.adActive = null;
-    if (view.adCallback) view.adCallback();
-    view.adCallback = null;
-    render();
-  }, 2000);
+  // TEST MODE: skip ad, run callback immediately
+  if (callback) callback();
 }
 
 /* ============================================================
