@@ -123,6 +123,14 @@
     margin: 24px auto 4px;
     width: 200px; height: 200px;
     position: relative;
+    animation: gentle-bob 4s ease-in-out infinite;
+  }
+  @keyframes gentle-bob {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
+  }
+  .illust svg {
+    filter: drop-shadow(0 6px 12px rgba(74, 107, 63, 0.25));
   }
   .illust .glow {
     position: absolute; inset: 30px;
@@ -1022,16 +1030,44 @@ function renderHome() {
     <div class="illust">
       <div class="glow"></div>
       <svg viewBox="0 0 200 200">
+        <defs>
+          <radialGradient id="logoG-9CD06E" cx="0.35" cy="0.35" r="0.9">
+            <stop offset="0%" stop-color="#B8DD92"/>
+            <stop offset="60%" stop-color="#9CD06E"/>
+            <stop offset="100%" stop-color="#78AA50"/>
+          </radialGradient>
+          <radialGradient id="logoG-AFDC82" cx="0.35" cy="0.35" r="0.9">
+            <stop offset="0%" stop-color="#C8E4A4"/>
+            <stop offset="60%" stop-color="#AFDC82"/>
+            <stop offset="100%" stop-color="#88B860"/>
+          </radialGradient>
+          <radialGradient id="logoG-88C25A" cx="0.35" cy="0.35" r="0.9">
+            <stop offset="0%" stop-color="#A8D680"/>
+            <stop offset="60%" stop-color="#88C25A"/>
+            <stop offset="100%" stop-color="#669A40"/>
+          </radialGradient>
+        </defs>
         <g transform="translate(100,100)">
-          <path d="M 0 30 Q -3 60 5 90" fill="none" stroke="#4A6B3F" stroke-width="3" stroke-linecap="round"/>
-          <ellipse class="leaf-anim leaf-1" cx="0" cy="-30" rx="22" ry="28" fill="#6B8E5A"/>
-          <ellipse class="leaf-anim leaf-2" cx="-30" cy="0" rx="28" ry="22" fill="#7A9C68"/>
-          <ellipse class="leaf-anim leaf-3" cx="30" cy="0" rx="28" ry="22" fill="#7A9C68"/>
-          <ellipse class="leaf-anim leaf-4" cx="0" cy="30" rx="22" ry="28" fill="#5C7D4D"/>
-          <ellipse cx="-3" cy="-35" rx="6" ry="8" fill="#A8C99A" opacity="0.5"/>
-          <ellipse cx="-33" cy="-3" rx="8" ry="6" fill="#A8C99A" opacity="0.5"/>
-          <circle cx="0" cy="0" r="6" fill="#D4AF37" opacity="0.7"/>
-          <circle cx="0" cy="0" r="3" fill="#FFFCF2"/>
+          <!-- Curved stem (2-tone) -->
+          <path d="M 0 0 Q 10 48 -4 92" fill="none" stroke="#578830" stroke-width="3.5" stroke-linecap="round" opacity="0.95"/>
+          <path d="M 0 0 Q 10 48 -4 92" fill="none" stroke="#A8D680" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/>
+          <!-- 4 leaflets (V5 path scaled 3.5x) — top, right, bottom, left -->
+          <g transform="rotate(0)">
+            <path d="M 0 0 C -14 -7 -35 -21 -35 -42 C -35 -56 -21 -63 -7 -56 C 0 -49 0 -35 0 -28 C 0 -35 0 -49 7 -56 C 21 -63 35 -56 35 -42 C 35 -21 14 -7 0 0 Z" fill="url(#logoG-AFDC82)"/>
+            <path d="M -16 -35 Q 0 -28 16 -35" stroke="#C8E4A4" stroke-width="2.8" fill="none" opacity="0.6" stroke-linecap="round"/>
+          </g>
+          <g transform="rotate(90)">
+            <path d="M 0 0 C -14 -7 -35 -21 -35 -42 C -35 -56 -21 -63 -7 -56 C 0 -49 0 -35 0 -28 C 0 -35 0 -49 7 -56 C 21 -63 35 -56 35 -42 C 35 -21 14 -7 0 0 Z" fill="url(#logoG-9CD06E)"/>
+            <path d="M -16 -35 Q 0 -28 16 -35" stroke="#B8DD92" stroke-width="2.8" fill="none" opacity="0.6" stroke-linecap="round"/>
+          </g>
+          <g transform="rotate(180)">
+            <path d="M 0 0 C -14 -7 -35 -21 -35 -42 C -35 -56 -21 -63 -7 -56 C 0 -49 0 -35 0 -28 C 0 -35 0 -49 7 -56 C 21 -63 35 -56 35 -42 C 35 -21 14 -7 0 0 Z" fill="url(#logoG-88C25A)"/>
+            <path d="M -16 -35 Q 0 -28 16 -35" stroke="#A8D680" stroke-width="2.8" fill="none" opacity="0.6" stroke-linecap="round"/>
+          </g>
+          <g transform="rotate(-90)">
+            <path d="M 0 0 C -14 -7 -35 -21 -35 -42 C -35 -56 -21 -63 -7 -56 C 0 -49 0 -35 0 -28 C 0 -35 0 -49 7 -56 C 21 -63 35 -56 35 -42 C 35 -21 14 -7 0 0 Z" fill="url(#logoG-9CD06E)"/>
+            <path d="M -16 -35 Q 0 -28 16 -35" stroke="#B8DD92" stroke-width="2.8" fill="none" opacity="0.6" stroke-linecap="round"/>
+          </g>
         </g>
       </svg>
     </div>
