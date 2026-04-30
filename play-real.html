@@ -1345,33 +1345,33 @@ function startGame() {
   persistedState.ticket -= 1;
   saveState(persistedState);
 
-  // Generate clover field: 10x15 = 150 cells (C11 햇살 흙)
+  // Generate clover field: 15x20 = 300 cells (C11 햇살 흙)
   const palette = ['#88C25A', '#9CD06E', '#AFDC82', '#74AC48'];
-  const COLS = 10;
-  const ROWS = 15;
+  const COLS = 15;
+  const ROWS = 20;
   const cellW = 100 / COLS;
   const cellH = 100 / ROWS;
   const positions = [];
 
-  // Pick a random cell for the lucky 4-leaf
+  // Pick a random cell for the lucky 4-leaf (1 only)
   const luckyCol = 1 + Math.floor(Math.random() * (COLS - 2));
   const luckyRow = 1 + Math.floor(Math.random() * (ROWS - 2));
 
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
-      const cx = (c + 0.5) * cellW + (Math.random() - 0.5) * cellW * 0.6;
-      const cy = (r + 0.5) * cellH + (Math.random() - 0.5) * cellH * 0.6;
+      const cx = (c + 0.5) * cellW + (Math.random() - 0.5) * cellW * 0.55;
+      const cy = (r + 0.5) * cellH + (Math.random() - 0.5) * cellH * 0.55;
       const isLucky = (c === luckyCol && r === luckyRow);
       if (isLucky) {
         positions.push({
           x: cx, y: cy, isLucky: true,
-          scale: 0.75 + Math.random() * 0.15,
+          scale: 0.6 + Math.random() * 0.1,
           rot: Math.random() * 30 - 15,
         });
       } else {
         positions.push({
           x: cx, y: cy, isLucky: false,
-          scale: 0.7 + Math.random() * 0.15,
+          scale: 0.55 + Math.random() * 0.15,
           rot: Math.random() * 360 - 180,
           c1: palette[Math.floor(Math.random() * palette.length)],
           c2: palette[Math.floor(Math.random() * palette.length)],
