@@ -250,11 +250,11 @@
     height: 100vh;
     position: relative;
     overflow: hidden;
-    /* C1 연한 라임 — bright spring lime */
+    /* C11 햇살 흙 — warm brown soil + bright lime clovers */
     background:
-      radial-gradient(ellipse 60% 50% at 25% 25%, rgba(200, 232, 152, 0.7), transparent 65%),
-      radial-gradient(ellipse at 75% 80%, #B5D898 0%, transparent 60%),
-      linear-gradient(160deg, #C5DEA8 0%, #95BC72 100%);
+      radial-gradient(ellipse 60% 50% at 25% 25%, #D4B080, transparent 65%),
+      radial-gradient(ellipse at 80% 80%, #A8855A, transparent 60%),
+      linear-gradient(160deg, #C29766 0%, #8E6E48 100%);
     touch-action: none;
     cursor: crosshair;
   }
@@ -864,26 +864,26 @@
 <!-- Global SVG defs: radial gradients per leaflet color (3D feel) -->
 <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
   <defs>
-    <!-- C1 연한 라임 — bright lime greens with soft gradient -->
-    <radialGradient id="leafG-90C870" cx="0.35" cy="0.35" r="0.9">
-      <stop offset="0%" stop-color="#B5DC95"/>
-      <stop offset="60%" stop-color="#90C870"/>
-      <stop offset="100%" stop-color="#6EA250"/>
+    <!-- C11 햇살 흙 — bright lime greens against warm brown soil -->
+    <radialGradient id="leafG-88C25A" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#A8D680"/>
+      <stop offset="60%" stop-color="#88C25A"/>
+      <stop offset="100%" stop-color="#669A40"/>
     </radialGradient>
-    <radialGradient id="leafG-A2D87A" cx="0.35" cy="0.35" r="0.9">
-      <stop offset="0%" stop-color="#C7E5A2"/>
-      <stop offset="60%" stop-color="#A2D87A"/>
-      <stop offset="100%" stop-color="#7DB05A"/>
+    <radialGradient id="leafG-9CD06E" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#B8DD92"/>
+      <stop offset="60%" stop-color="#9CD06E"/>
+      <stop offset="100%" stop-color="#78AA50"/>
     </radialGradient>
-    <radialGradient id="leafG-B5E08C" cx="0.35" cy="0.35" r="0.9">
-      <stop offset="0%" stop-color="#D4ECB5"/>
-      <stop offset="60%" stop-color="#B5E08C"/>
-      <stop offset="100%" stop-color="#8EBC68"/>
+    <radialGradient id="leafG-AFDC82" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#C8E4A4"/>
+      <stop offset="60%" stop-color="#AFDC82"/>
+      <stop offset="100%" stop-color="#88B860"/>
     </radialGradient>
-    <radialGradient id="leafG-7DB05A" cx="0.35" cy="0.35" r="0.9">
-      <stop offset="0%" stop-color="#A0CB7E"/>
-      <stop offset="60%" stop-color="#7DB05A"/>
-      <stop offset="100%" stop-color="#5E8C40"/>
+    <radialGradient id="leafG-74AC48" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#92BD6A"/>
+      <stop offset="60%" stop-color="#74AC48"/>
+      <stop offset="100%" stop-color="#578830"/>
     </radialGradient>
   </defs>
 </svg>
@@ -1122,10 +1122,10 @@ const LEAFLET_PATH = "M 0 -2 C -3 -3 -8 -5 -10 -9 C -12 -13 -10 -17 -6 -17 C -3 
 
 function lighter(c) {
   const map = {
-    '#90C870': '#B5DC95', '#A2D87A': '#C7E5A2',
-    '#B5E08C': '#D4ECB5', '#7DB05A': '#A0CB7E',
+    '#88C25A': '#A8D680', '#9CD06E': '#B8DD92',
+    '#AFDC82': '#C8E4A4', '#74AC48': '#92BD6A',
   };
-  return map[c] || '#B5DC95';
+  return map[c] || '#A8D680';
 }
 
 // Leaflet with 3D gradient + V-mark + transparent stroke (turns white on hover)
@@ -1345,10 +1345,10 @@ function startGame() {
   persistedState.ticket -= 1;
   saveState(persistedState);
 
-  // Generate clover field: dense grid placement (C1 연한 라임)
-  const palette = ['#90C870', '#A2D87A', '#B5E08C', '#7DB05A'];
-  const COLS = 14;
-  const ROWS = 22;
+  // Generate clover field: 10x15 = 150 cells (C11 햇살 흙)
+  const palette = ['#88C25A', '#9CD06E', '#AFDC82', '#74AC48'];
+  const COLS = 10;
+  const ROWS = 15;
   const cellW = 100 / COLS;
   const cellH = 100 / ROWS;
   const positions = [];
@@ -1365,17 +1365,17 @@ function startGame() {
       if (isLucky) {
         positions.push({
           x: cx, y: cy, isLucky: true,
-          scale: 0.6 + Math.random() * 0.1,
+          scale: 0.75 + Math.random() * 0.15,
           rot: Math.random() * 30 - 15,
         });
       } else {
         positions.push({
           x: cx, y: cy, isLucky: false,
-          scale: 0.55 + Math.random() * 0.15,
+          scale: 0.7 + Math.random() * 0.15,
           rot: Math.random() * 360 - 180,
           c1: palette[Math.floor(Math.random() * palette.length)],
           c2: palette[Math.floor(Math.random() * palette.length)],
-          opacity: 0.92 + Math.random() * 0.08,
+          opacity: 0.95 + Math.random() * 0.05,
         });
       }
     }
