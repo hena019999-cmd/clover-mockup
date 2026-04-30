@@ -258,6 +258,29 @@
     touch-action: none;
     cursor: crosshair;
   }
+  /* Ants — small crawling creatures between clovers */
+  .ant {
+    position: absolute;
+    z-index: 4;
+    pointer-events: none;
+    width: 22px;
+    height: 16px;
+    will-change: transform, left, top;
+  }
+  .ant svg {
+    display: block;
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.4));
+  }
+  /* Subtle leg-wiggle */
+  .ant svg .legs {
+    animation: ant-walk 0.3s linear infinite;
+    transform-origin: center;
+  }
+  @keyframes ant-walk {
+    0%, 100% { transform: translateY(0) scaleX(1); }
+    50% { transform: translateY(-0.3px) scaleX(0.95); }
+  }
+
   /* Background grass layer (behind clovers) */
   .grass-bg, .grass-fg {
     position: absolute;
@@ -1075,6 +1098,8 @@ function renderGame() {
       ${renderField()}
     </div>
 
+    <div class="ants-layer" id="ants-layer">${renderAnts()}</div>
+
     <div class="grass-fg">${renderGrass(view.grassFg || [])}</div>
 
     <div class="magnifier" id="mag" style="left:50%; top:52%;">
@@ -1102,6 +1127,62 @@ function renderField() {
 
 function renderGrass(blades) {
   return blades.map(b => `<div class="grass-blade" style="left:${b.x}%;top:${b.y}%;transform:translate(-50%,-100%) rotate(${b.tilt}deg);">${b.svg}</div>`).join('');
+}
+
+// Ant SVG — head + thorax + abdomen + 6 legs + antennae (heading: positive X = right)
+function antSvg() {
+  return `<svg width="22" height="16" viewBox="0 0 22 16">
+    <g class="legs" stroke="#2A1A0E" stroke-width="0.8" stroke-linecap="round" fill="none">
+      <path d="M 6 7 L 3 4 M 6 8 L 3 8 M 6 9 L 3 12"/>
+      <path d="M 14 7 L 17 4 M 14 8 L 17 8 M 14 9 L 17 12"/>
+    </g>
+    <ellipse cx="3" cy="8" rx="2" ry="1.6" fill="#2A1A0E"/>
+    <path d="M 2 6.8 L 0 4.5 M 2 9.2 L 0 11.5" stroke="#2A1A0E" stroke-width="0.6" stroke-linecap="round" fill="none"/>
+    <ellipse cx="8" cy="8" rx="2.4" ry="1.9" fill="#3D2812"/>
+    <ellipse cx="14" cy="8" rx="3.4" ry="2.3" fill="#2A1A0E"/>
+    <ellipse cx="13" cy="7.3" rx="0.6" ry="0.4" fill="#5A3820" opacity="0.7"/>
+  </svg>`;
+}
+
+function renderAnts() {
+  if (!view.ants) return '';
+  return view.ants.map((a, i) => `<div class="ant" data-ant="${i}" style="left:${a.x}%;top:${a.y}%;transform:translate(-50%,-50%) rotate(${a.angleDeg}deg);">${antSvg()}</div>`).join('');
+}
+
+let antRafId = null;
+function startAntAnimation() {
+  if (antRafId) cancelAnimationFrame(antRafId);
+  let last = performance.now();
+  function tick(now) {
+    if (view.phase !== 'playing') {
+      antRafId = null;
+      return;
+    }
+    const dt = Math.min(50, now - last);
+    last = now;
+    view.ants.forEach((ant, i) => {
+      // Slight random angle drift
+      ant.angle += (Math.random() - 0.5) * 0.08;
+      const dx = Math.cos(ant.angle) * ant.speed * dt / 16;
+      const dy = Math.sin(ant.angle) * ant.speed * dt / 16;
+      ant.x += dx;
+      ant.y += dy;
+      // Wrap around edges
+      if (ant.x < -5) ant.x = 105;
+      if (ant.x > 105) ant.x = -5;
+      if (ant.y < -5) ant.y = 105;
+      if (ant.y > 105) ant.y = -5;
+      ant.angleDeg = ant.angle * 180 / Math.PI;
+      const el = document.querySelector(`[data-ant="${i}"]`);
+      if (el) {
+        el.style.left = ant.x + '%';
+        el.style.top = ant.y + '%';
+        el.style.transform = `translate(-50%, -50%) rotate(${ant.angleDeg}deg)`;
+      }
+    });
+    antRafId = requestAnimationFrame(tick);
+  }
+  antRafId = requestAnimationFrame(tick);
 }
 
 function makeGrassBlade(h, w, color, opacity) {
@@ -1353,8 +1434,8 @@ function startGame() {
   const cellH = 100 / ROWS;
   const positions = [];
 
-  // Pick 5 random cells for the lucky 4-leaves
-  const LUCKY_COUNT = 5;
+  // Pick 1 random cell for the lucky 4-leaf
+  const LUCKY_COUNT = 1;
   const luckyCells = new Set();
   while (luckyCells.size < LUCKY_COUNT) {
     const lc = 1 + Math.floor(Math.random() * (COLS - 2));
@@ -1387,6 +1468,19 @@ function startGame() {
   }
   view.cloverPositions = positions;
   view.decorations = [];
+
+  // Ants — small crawling creatures
+  view.ants = [];
+  for (let i = 0; i < 5; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    view.ants.push({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      angle,
+      angleDeg: angle * 180 / Math.PI,
+      speed: 0.10 + Math.random() * 0.08,
+    });
+  }
 
   // F6 grass: spring tones (bright + golden) — bg layer + fg layer
   const bgGrassColors = ['#5A8042', '#6B9450', '#7DAA5A', '#88B964', '#4A6B3F', '#A8DC85'];
@@ -1432,6 +1526,7 @@ function startGame() {
 
   startTimer();
   render();
+  startAntAnimation();
 }
 
 function startTimer() {
