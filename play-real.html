@@ -1155,17 +1155,19 @@ function leafletWithMark(c) {
     <path d="M -4.5 -10 Q 0 -8 4.5 -10" stroke="${lighter(c)}" stroke-width="0.9" fill="none" opacity="0.65" stroke-linecap="round"/>`;
 }
 
-// 3-leaf trefoil + visible stem (longer, brighter)
+// 3-leaf trefoil + visible stem + center bump
 function threeLeafSvg(c1, c2, scale, rot) {
   const size = Math.round(42 * scale);
   return `<svg width="${size}" height="${size}" viewBox="0 0 42 42" style="transform:rotate(${rot}deg);">
     <g transform="translate(21,20)">
-      <!-- Visible curved stem extending below -->
       <path d="M 0 0 Q 2 9 -1 20" fill="none" stroke="#5A8042" stroke-width="1.8" stroke-linecap="round" opacity="0.95"/>
       <path d="M 0 0 Q 2 9 -1 20" fill="none" stroke="#7DAA5A" stroke-width="0.7" stroke-linecap="round" opacity="0.6"/>
       <g transform="rotate(0)">${leafletWithMark(c1)}</g>
       <g transform="rotate(120)">${leafletWithMark(c2)}</g>
       <g transform="rotate(-120)">${leafletWithMark(c1)}</g>
+      <!-- Center bump (well + highlight) -->
+      <circle cx="0" cy="0" r="2.2" fill="#3F6628"/>
+      <circle cx="-0.5" cy="-0.5" r="1" fill="#C5E08C" opacity="0.85"/>
     </g>
   </svg>`;
 }
@@ -1181,6 +1183,9 @@ function fourLeafSvg(scale, rot) {
       <g transform="rotate(90)">${leafletWithMark('#AFDC82')}</g>
       <g transform="rotate(180)">${leafletWithMark('#88C25A')}</g>
       <g transform="rotate(-90)">${leafletWithMark('#AFDC82')}</g>
+      <!-- Center bump with gold highlight (lucky 4-leaf) -->
+      <circle cx="0" cy="0" r="2.5" fill="#3F6628"/>
+      <circle cx="-0.5" cy="-0.5" r="1.2" fill="#D4AF37"/>
     </g>
   </svg>`;
 }
