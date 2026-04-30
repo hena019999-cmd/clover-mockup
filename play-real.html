@@ -867,35 +867,36 @@
 <!-- Global SVG defs: radial gradients per leaflet color (3D feel) -->
 <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
   <defs>
-    <radialGradient id="leafG-74B655" cx="0.3" cy="0.3" r="0.95">
-      <stop offset="0%" stop-color="#B5DC85"/>
-      <stop offset="50%" stop-color="#74B655"/>
-      <stop offset="100%" stop-color="#3F6B28"/>
+    <!-- Natural grass greens — softer gradients (less contrast, no neon) -->
+    <radialGradient id="leafG-5C8B3F" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#82AE60"/>
+      <stop offset="60%" stop-color="#5C8B3F"/>
+      <stop offset="100%" stop-color="#3E6628"/>
     </radialGradient>
-    <radialGradient id="leafG-8FCB68" cx="0.3" cy="0.3" r="0.95">
-      <stop offset="0%" stop-color="#C9E693"/>
-      <stop offset="50%" stop-color="#8FCB68"/>
-      <stop offset="100%" stop-color="#557E38"/>
+    <radialGradient id="leafG-6B9C45" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#92BE6E"/>
+      <stop offset="60%" stop-color="#6B9C45"/>
+      <stop offset="100%" stop-color="#4A7430"/>
     </radialGradient>
-    <radialGradient id="leafG-A2D870" cx="0.3" cy="0.3" r="0.95">
-      <stop offset="0%" stop-color="#D8F0A0"/>
-      <stop offset="50%" stop-color="#A2D870"/>
-      <stop offset="100%" stop-color="#638B40"/>
+    <radialGradient id="leafG-78AD55" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#9DCB7A"/>
+      <stop offset="60%" stop-color="#78AD55"/>
+      <stop offset="100%" stop-color="#54823C"/>
     </radialGradient>
-    <radialGradient id="leafG-9DD460" cx="0.3" cy="0.3" r="0.95">
-      <stop offset="0%" stop-color="#D4EC92"/>
-      <stop offset="50%" stop-color="#9DD460"/>
-      <stop offset="100%" stop-color="#5C8430"/>
+    <radialGradient id="leafG-507A35" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#759E58"/>
+      <stop offset="60%" stop-color="#507A35"/>
+      <stop offset="100%" stop-color="#345220"/>
     </radialGradient>
-    <radialGradient id="leafG-5A8042" cx="0.3" cy="0.3" r="0.95">
-      <stop offset="0%" stop-color="#88B964"/>
-      <stop offset="50%" stop-color="#5A8042"/>
-      <stop offset="100%" stop-color="#2D4A1F"/>
+    <radialGradient id="leafG-86B85E" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#A4D08A"/>
+      <stop offset="60%" stop-color="#86B85E"/>
+      <stop offset="100%" stop-color="#5E8C3C"/>
     </radialGradient>
-    <radialGradient id="leafG-4A6B3F" cx="0.3" cy="0.3" r="0.95">
-      <stop offset="0%" stop-color="#7A9C68"/>
-      <stop offset="50%" stop-color="#4A6B3F"/>
-      <stop offset="100%" stop-color="#1F2D17"/>
+    <radialGradient id="leafG-456B2C" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#6B8F4D"/>
+      <stop offset="60%" stop-color="#456B2C"/>
+      <stop offset="100%" stop-color="#2D481A"/>
     </radialGradient>
   </defs>
 </svg>
@@ -1134,10 +1135,10 @@ const LEAFLET_PATH = "M 0 -2 C -3 -3 -8 -5 -10 -9 C -12 -13 -10 -17 -6 -17 C -3 
 
 function lighter(c) {
   const map = {
-    '#74B655': '#A8DC85', '#8FCB68': '#BFE693', '#A2D870': '#D4F0A0', '#9DD460': '#C5EC92',
-    '#5A8042': '#88B964', '#4A6B3F': '#7A9C68',
+    '#5C8B3F': '#82AE60', '#6B9C45': '#92BE6E', '#78AD55': '#9DCB7A',
+    '#507A35': '#759E58', '#86B85E': '#A4D08A', '#456B2C': '#6B8F4D',
   };
-  return map[c] || '#A8DC85';
+  return map[c] || '#9DCB7A';
 }
 
 // Leaflet with 3D gradient + V-mark + transparent stroke (turns white on hover)
@@ -1357,8 +1358,8 @@ function startGame() {
   persistedState.ticket -= 1;
   saveState(persistedState);
 
-  // Generate clover field: dense grid placement
-  const palette = ['#74B655', '#8FCB68', '#A2D870', '#9DD460', '#5A8042', '#4A6B3F'];
+  // Generate clover field: dense grid placement (natural grass greens)
+  const palette = ['#5C8B3F', '#6B9C45', '#78AD55', '#507A35', '#86B85E', '#456B2C'];
   const COLS = 14;
   const ROWS = 22;
   const cellW = 100 / COLS;
