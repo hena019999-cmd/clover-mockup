@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>🔍 돋보기 시안 10가지</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css" />
+<style>
+  :root {
+    --moss: #6B8E5A;
+    --leaf-deep: #4A6B3F;
+    --paper: #F5F1E6;
+    --ivory: #FFFCF2;
+    --greige: #9C8E7C;
+    --gold: #D4AF37;
+    --ink: #2D3A26;
+    --ink-soft: #5A6B4F;
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 32px 16px 80px;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  header .eyebrow {
+    font-size: 12px;
+    color: var(--moss);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    letter-spacing: -0.02em;
+  }
+  header p {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 0;
+    line-height: 1.55;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+  @media (min-width: 700px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (min-width: 1000px) {
+    .grid { grid-template-columns: repeat(4, 1fr); }
+  }
+
+  .card {
+    background: var(--ivory);
+    border: 1px solid rgba(107, 142, 90, 0.15);
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: 0 4px 16px rgba(74, 107, 63, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .card .head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .card .ver {
+    font-size: 10px;
+    color: var(--greige);
+    letter-spacing: 0.12em;
+    font-weight: 600;
+  }
+  .card .name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .card .desc {
+    font-size: 10px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+  .stage {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    background:
+      radial-gradient(ellipse 60% 50% at 25% 25%, #D4B080, transparent 65%),
+      radial-gradient(ellipse at 80% 80%, #A8855A, transparent 60%),
+      linear-gradient(160deg, #C29766 0%, #8E6E48 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stage::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 30% 40%, #88C25A 0, transparent 8%),
+      radial-gradient(circle at 60% 70%, #9CD06E 0, transparent 8%),
+      radial-gradient(circle at 75% 30%, #AFDC82 0, transparent 7%),
+      radial-gradient(circle at 25% 75%, #74AC48 0, transparent 7%);
+    background-size: 60px 60px, 70px 70px, 50px 50px, 80px 80px;
+    pointer-events: none;
+    opacity: 0.4;
+  }
+  .magnifier {
+    position: relative;
+    z-index: 2;
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">MAGNIFIER VARIANTS</div>
+  <h1>🔍 돋보기 시안 10가지</h1>
+  <p>다양한 스타일의 돋보기 — 각 시안은 흙·클로버 배경 위에서 보입니다.<br/>마음에 드는 번호 알려주시면 게임에 적용합니다.</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+</div>
+
+<script>
+// 10 magnifier SVG variants
+const variants = [
+  {
+    ver: 'M1', name: '클래식 화이트',
+    desc: '흰 프레임 + 우드 핸들. 가장 무난.',
+    svg: `<svg width="120" height="140" viewBox="0 0 120 140">
+      <defs>
+        <linearGradient id="m1-h" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#C4A572"/>
+          <stop offset="1" stop-color="#7A5A30"/>
+        </linearGradient>
+      </defs>
+      <rect x="78" y="86" width="40" height="14" rx="7" fill="url(#m1-h)" transform="rotate(40 78 86)"/>
+      <circle cx="50" cy="50" r="40" fill="rgba(255,252,242,0.08)" stroke="#FFFCF2" stroke-width="4"/>
+      <circle cx="50" cy="50" r="36" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
+      <ellipse cx="38" cy="35" rx="14" ry="6" fill="rgba(255,255,255,0.45)" transform="rotate(-25 38 35)"/>
+    </svg>`,
+  },
+  {
+    ver: 'M2', name: '브라스 빈티지',
+    desc: '골드 브라스 프레임 + 진한 우드 핸들. 클래식.',
+    svg: `<svg width="120" height="140" viewBox="0 0 120 140">
+      <defs>
+        <linearGradient id="m2-f" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#F0D080"/>
+          <stop offset="0.5" stop-color="#C9A04A"/>
+          <stop offset="1" stop-color="#8E6F2C"/>
+        </linearGradient>
+        <linearGradient id="m2-h" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#6B4520"/>
+          <stop offset="1" stop-color="#3D2510"/>
+        </linearGradient>
+      </defs>
+      <rect x="78" y="86" width="42" height="15" rx="6" fill="url(#m2-h)" transform="rotate(40 78 86)"/>
+      <rect x="78" y="89" width="42" height="2" fill="#1F1408" transform="rotate(40 78 86)" opacity="0.7"/>
+      <circle cx="50" cy="50" r="40" fill="rgba(255,250,220,0.06)" stroke="url(#m2-f)" stroke-width="6"/>
+      <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(0,0,0,0.25)" stroke-width="0.5"/>
+      <ellipse cx="38" cy="35" rx="14" ry="6" fill="rgba(255,255,255,0.35)" transform="rotate(-25 38 35)"/>
+    </svg>`,
+  },
+  {
+    ver: 'M3', name: '모던 블랙',
+    desc: '얇은 검정 테두리 + 십자선. 미니멀.',
+    svg: `<svg width="120" height="140" viewBox="0 0 120 140">
+      <circle cx="50" cy="50" r="42" fill="rgba(255,255,255,0.04)" stroke="#1F1F1F" stroke-width="2"/>
+      <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="0.5"/>
+      <line x1="50" y1="42" x2="50" y2="48" stroke="#1F1F1F" stroke-width="1"/>
+      <line x1="50" y1="52" x2="50" y2="58" stroke="#1F1F1F" stroke-width="1"/>
+      <line x1="42" y1="50" x2="48" y2="50" stroke="#1F1F1F" stroke-width="1"/>
+      <line x1="52" y1="50" x2="58" y2="50" stroke="#1F1F1F" stroke-width="1"/>
+      <circle cx="50" cy="50" r="2" fill="#1F1F1F"/>
+    </svg>`,
+  },
+  {
+    ver: 'M4', name: '토스 블루',
+    desc: '토스 브랜드 블루 프레임. 앱 통일감.',
+    svg: `<svg width="120" height="140" viewBox="0 0 120 140">
+      <defs>
+        <linearGradient id="m4-f" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#5DA0F8"/>
+          <stop offset="1" stop-color="#1864F0"/>
+        </linearGradient>
+      </defs>
+      <rect x="78" y="86" width="40" height="13" rx="6" fill="#1864F0" transform="rotate(40 78 86)"/>
+      <rect x="78" y="86" width="40" height="3" rx="1.5" fill="rgba(255,255,255,0.4)" transform="rotate(40 78 86)"/>
+      <circle cx="50" cy="50" r="40" fill="rgba(93,160,248,0.05)" stroke="url(#m4-f)" stroke-width="5"/>
+      <ellipse cx="38" cy="35" rx="14" ry="6" fill="rgba(255,255,255,0.4)" transform="rotate(-25 38 35)"/>
+    </svg>`,
+  },
+  {
+    ver: 'M5', name: '크리스탈 글래스',
+    desc: '실버 프레임 + 강한 빛 반사. 고급스러움.',
+    svg: `<svg width="120" height="140" viewBox="0 0 120 140">
+      <defs>
+        <linearGradient id="m5-f" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#F0F0F0"/>
+          <stop offset="0.5" stop-color="#A0A0A0"/>
+          <stop offset="1" stop-color="#606060"/>
+        </linearGradient>
+      </defs>
+      <circle cx="50" cy="50" r="42" fill="rgba(220,240,255,0.1)" stroke="url(#m5-f)" stroke-width="5"/>
+      <ellipse cx="36" cy="33" rx="16" ry="8" fill="rgba(255,255,255,0.55)" transform="rotate(-25 36 33)"/>
+      <ellipse cx="60" cy="65" rx="8" ry="3" fill="rgba(255,255,255,0.3)" transform="rotate(20 60 65)"/>
+      <circle cx="64" cy="40" r="3" fill="rgba(255,255,255,0.7)"/>
+    </svg>`,
+  },
+  {
+    ver: 'M6', name: '셜록 디텍티브',
+    desc: '장식 브라스 프레임 + 곡선 핸들. 탐정 느낌.',
+    svg: `<svg width="120" height="140" viewBox="0 0 120 140">
+      <defs>
+        <linearGradient id="m6-f" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#E8C268"/>
+          <stop offset="0.5" stop-color="#B58A30"/>
+          <stop offset="1" stop-color="#6E5018"/>
+        </linearGradient>
+      </defs>
+      <path d="M 78 80 Q 95 95 110 110 Q 115 115 110 120 Q 105 125 100 120 Q 85 105 78 92 Z" fill="url(#m6-f)"/>
+      <circle cx="50" cy="50" r="42" fill="rgba(255,250,220,0.05)" stroke="url(#m6-f)" stroke-width="7"/>
+      <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="0.5"/>
+      <circle cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="0.5"/>
+      <ellipse cx="38" cy="35" rx="14" ry="6" fill="rgba(255,255,255,0.35)" transform="rotate(-25 38 35)"/>
+    </svg>`,
+  },
+  {
+    ver: 'M7', name: '카툰 팝',
+    desc: '굵은 검정 외곽선 + 큰 핸들. 만화·동심.',
+    svg: `<svg width="120" height="140" viewBox="0 0 120 140">
+      <rect x="76" y="84" width="46" height="18" rx="9" fill="#3A2818" stroke="#1F1408" stroke-width="2.5" transform="rotate(40 76 84)"/>
+      <circle cx="50" cy="50" r="40" fill="rgba(255,255,255,0.15)" stroke="#1F1408" stroke-width="5"/>
+      <ellipse cx="36" cy="33" rx="14" ry="6" fill="rgba(255,255,255,0.55)" transform="rotate(-25 36 33)"/>
+    </svg>`,
+  },
+  {
+    ver: 'M8', name: '소프트 파스텔',
+    desc: '연한 핑크/크림 프레임. 부드럽고 친근.',
+    svg: `<svg width="120" height="140" viewBox="0 0 120 140">
+      <defs>
+        <linearGradient id="m8-h" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#F2C7B0"/>
+          <stop offset="1" stop-color="#C99882"/>
+        </linearGradient>
+      </defs>
+      <rect x="78" y="86" width="40" height="14" rx="7" fill="url(#m8-h)" transform="rotate(40 78 86)"/>
+      <circle cx="50" cy="50" r="40" fill="rgba(255,250,240,0.1)" stroke="#FAD2C0" stroke-width="5"/>
+      <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="1"/>
+      <ellipse cx="38" cy="35" rx="14" ry="6" fill="rgba(255,255,255,0.45)" transform="rotate(-25 38 35)"/>
+    </svg>`,
+  },
+  {
+    ver: 'M9', name: '렌즈 온리',
+    desc: '핸들 없이 원형 렌즈만. 가장 깔끔.',
+    svg: `<svg width="120" height="140" viewBox="0 0 120 140">
+      <circle cx="60" cy="60" r="46" fill="rgba(255,252,242,0.08)" stroke="rgba(255,252,242,0.95)" stroke-width="3.5"/>
+      <circle cx="60" cy="60" r="42" fill="none" stroke="rgba(0,0,0,0.15)" stroke-width="0.5"/>
+      <ellipse cx="48" cy="42" rx="16" ry="7" fill="rgba(255,255,255,0.45)" transform="rotate(-25 48 42)"/>
+    </svg>`,
+  },
+  {
+    ver: 'M10', name: '크로스헤어 스코프',
+    desc: '얇은 테두리 + 정확한 십자선. 정밀 스코프.',
+    svg: `<svg width="120" height="140" viewBox="0 0 120 140">
+      <circle cx="60" cy="60" r="46" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.85)" stroke-width="2"/>
+      <circle cx="60" cy="60" r="20" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+      <line x1="60" y1="14" x2="60" y2="50" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+      <line x1="60" y1="70" x2="60" y2="106" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+      <line x1="14" y1="60" x2="50" y2="60" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+      <line x1="70" y1="60" x2="106" y2="60" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+      <circle cx="60" cy="60" r="2" fill="#FF4444"/>
+    </svg>`,
+  },
+];
+
+const grid = document.getElementById('grid');
+grid.innerHTML = variants.map(v => `
+  <div class="card">
+    <div class="head"><span class="ver">${v.ver}</span><span class="name">${v.name}</span></div>
+    <div class="desc">${v.desc}</div>
+    <div class="stage">
+      <div class="magnifier">${v.svg}</div>
+    </div>
+  </div>
+`).join('');
+</script>
+
+</body>
+</html>
