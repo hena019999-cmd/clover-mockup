@@ -250,14 +250,11 @@
     height: 100vh;
     position: relative;
     overflow: hidden;
-    /* F6: 봄 잔디 + 황금톤 — bright spring meadow with warm gold patches */
+    /* C1 연한 라임 — bright spring lime */
     background:
-      radial-gradient(ellipse 50% 40% at 20% 20%, rgba(168, 220, 133, 0.5), transparent 60%),
-      radial-gradient(ellipse 50% 40% at 80% 85%, rgba(125, 168, 90, 0.45), transparent 60%),
-      radial-gradient(ellipse 40% 30% at 60% 50%, rgba(212, 175, 55, 0.15), transparent 65%),
-      radial-gradient(ellipse at 20% 20%, #88B964 0%, transparent 55%),
-      radial-gradient(ellipse at 80% 85%, #5A8042 0%, transparent 55%),
-      linear-gradient(160deg, #7DAA5A 0%, #557E38 100%);
+      radial-gradient(ellipse 60% 50% at 25% 25%, rgba(200, 232, 152, 0.7), transparent 65%),
+      radial-gradient(ellipse at 75% 80%, #B5D898 0%, transparent 60%),
+      linear-gradient(160deg, #C5DEA8 0%, #95BC72 100%);
     touch-action: none;
     cursor: crosshair;
   }
@@ -867,36 +864,26 @@
 <!-- Global SVG defs: radial gradients per leaflet color (3D feel) -->
 <svg width="0" height="0" style="position:absolute;" aria-hidden="true">
   <defs>
-    <!-- Natural grass greens — softer gradients (less contrast, no neon) -->
-    <radialGradient id="leafG-5C8B3F" cx="0.35" cy="0.35" r="0.9">
-      <stop offset="0%" stop-color="#82AE60"/>
-      <stop offset="60%" stop-color="#5C8B3F"/>
-      <stop offset="100%" stop-color="#3E6628"/>
+    <!-- C1 연한 라임 — bright lime greens with soft gradient -->
+    <radialGradient id="leafG-90C870" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#B5DC95"/>
+      <stop offset="60%" stop-color="#90C870"/>
+      <stop offset="100%" stop-color="#6EA250"/>
     </radialGradient>
-    <radialGradient id="leafG-6B9C45" cx="0.35" cy="0.35" r="0.9">
-      <stop offset="0%" stop-color="#92BE6E"/>
-      <stop offset="60%" stop-color="#6B9C45"/>
-      <stop offset="100%" stop-color="#4A7430"/>
+    <radialGradient id="leafG-A2D87A" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#C7E5A2"/>
+      <stop offset="60%" stop-color="#A2D87A"/>
+      <stop offset="100%" stop-color="#7DB05A"/>
     </radialGradient>
-    <radialGradient id="leafG-78AD55" cx="0.35" cy="0.35" r="0.9">
-      <stop offset="0%" stop-color="#9DCB7A"/>
-      <stop offset="60%" stop-color="#78AD55"/>
-      <stop offset="100%" stop-color="#54823C"/>
+    <radialGradient id="leafG-B5E08C" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#D4ECB5"/>
+      <stop offset="60%" stop-color="#B5E08C"/>
+      <stop offset="100%" stop-color="#8EBC68"/>
     </radialGradient>
-    <radialGradient id="leafG-507A35" cx="0.35" cy="0.35" r="0.9">
-      <stop offset="0%" stop-color="#759E58"/>
-      <stop offset="60%" stop-color="#507A35"/>
-      <stop offset="100%" stop-color="#345220"/>
-    </radialGradient>
-    <radialGradient id="leafG-86B85E" cx="0.35" cy="0.35" r="0.9">
-      <stop offset="0%" stop-color="#A4D08A"/>
-      <stop offset="60%" stop-color="#86B85E"/>
-      <stop offset="100%" stop-color="#5E8C3C"/>
-    </radialGradient>
-    <radialGradient id="leafG-456B2C" cx="0.35" cy="0.35" r="0.9">
-      <stop offset="0%" stop-color="#6B8F4D"/>
-      <stop offset="60%" stop-color="#456B2C"/>
-      <stop offset="100%" stop-color="#2D481A"/>
+    <radialGradient id="leafG-7DB05A" cx="0.35" cy="0.35" r="0.9">
+      <stop offset="0%" stop-color="#A0CB7E"/>
+      <stop offset="60%" stop-color="#7DB05A"/>
+      <stop offset="100%" stop-color="#5E8C40"/>
     </radialGradient>
   </defs>
 </svg>
@@ -1135,10 +1122,10 @@ const LEAFLET_PATH = "M 0 -2 C -3 -3 -8 -5 -10 -9 C -12 -13 -10 -17 -6 -17 C -3 
 
 function lighter(c) {
   const map = {
-    '#5C8B3F': '#82AE60', '#6B9C45': '#92BE6E', '#78AD55': '#9DCB7A',
-    '#507A35': '#759E58', '#86B85E': '#A4D08A', '#456B2C': '#6B8F4D',
+    '#90C870': '#B5DC95', '#A2D87A': '#C7E5A2',
+    '#B5E08C': '#D4ECB5', '#7DB05A': '#A0CB7E',
   };
-  return map[c] || '#9DCB7A';
+  return map[c] || '#B5DC95';
 }
 
 // Leaflet with 3D gradient + V-mark + transparent stroke (turns white on hover)
@@ -1358,8 +1345,8 @@ function startGame() {
   persistedState.ticket -= 1;
   saveState(persistedState);
 
-  // Generate clover field: dense grid placement (natural grass greens)
-  const palette = ['#5C8B3F', '#6B9C45', '#78AD55', '#507A35', '#86B85E', '#456B2C'];
+  // Generate clover field: dense grid placement (C1 연한 라임)
+  const palette = ['#90C870', '#A2D87A', '#B5E08C', '#7DB05A'];
   const COLS = 14;
   const ROWS = 22;
   const cellW = 100 / COLS;
