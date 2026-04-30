@@ -1345,7 +1345,7 @@ function startGame() {
   persistedState.ticket -= 1;
   saveState(persistedState);
 
-  // Generate clover field: 15x20 = 300 cells (C11 햇살 흙)
+  // Generate clover field: 15x20 = 300 cells (C11 햇살 흙) — bigger clovers, denser look
   const palette = ['#88C25A', '#9CD06E', '#AFDC82', '#74AC48'];
   const COLS = 15;
   const ROWS = 20;
@@ -1364,19 +1364,19 @@ function startGame() {
 
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
-      const cx = (c + 0.5) * cellW + (Math.random() - 0.5) * cellW * 0.55;
-      const cy = (r + 0.5) * cellH + (Math.random() - 0.5) * cellH * 0.55;
+      const cx = (c + 0.5) * cellW + (Math.random() - 0.5) * cellW * 0.5;
+      const cy = (r + 0.5) * cellH + (Math.random() - 0.5) * cellH * 0.5;
       const isLucky = luckyCells.has(r * COLS + c);
       if (isLucky) {
         positions.push({
           x: cx, y: cy, isLucky: true,
-          scale: 0.6 + Math.random() * 0.1,
+          scale: 0.85 + Math.random() * 0.1,
           rot: Math.random() * 30 - 15,
         });
       } else {
         positions.push({
           x: cx, y: cy, isLucky: false,
-          scale: 0.55 + Math.random() * 0.15,
+          scale: 0.8 + Math.random() * 0.15,
           rot: Math.random() * 360 - 180,
           c1: palette[Math.floor(Math.random() * palette.length)],
           c2: palette[Math.floor(Math.random() * palette.length)],
