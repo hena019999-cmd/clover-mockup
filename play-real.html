@@ -342,9 +342,67 @@
     stroke: #FFFCF2 !important;
     stroke-width: 1.5 !important;
   }
-  /* Hide unused magnifier/sharp/dim elements */
-  .magnifier, .field-sharp, .dim-overlay, .field-blurry { display: none; }
+  /* Hide unused field-sharp/dim — keep magnifier visible */
+  .field-sharp, .dim-overlay, .field-blurry { display: none; }
   .field { display: block !important; }
+
+  /* Magnifier — visual only (no zoom). Highlights clover under center. */
+  .magnifier {
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    pointer-events: none;
+    z-index: 50;
+    transform: translate(-50%, -50%);
+    filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.3));
+    transition: opacity .25s;
+    opacity: 0;
+  }
+  .magnifier.active { opacity: 1; }
+  .magnifier .lens {
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 252, 242, 0.95);
+    background: transparent;
+    box-shadow:
+      inset 0 0 0 1.5px rgba(255, 252, 242, 0.4),
+      0 4px 16px rgba(0, 0, 0, 0.2);
+    position: relative;
+  }
+  .magnifier .lens::after {
+    content: '';
+    position: absolute;
+    top: 12px; left: 20px;
+    width: 32px; height: 18px;
+    background: radial-gradient(ellipse, rgba(255, 255, 255, 0.4), transparent 70%);
+    border-radius: 50%;
+    transform: rotate(-25deg);
+    pointer-events: none;
+  }
+  .magnifier .handle {
+    position: absolute;
+    bottom: -18px; right: -8px;
+    width: 50px; height: 16px;
+    background: linear-gradient(135deg, #C4A572, #8B6F3F);
+    border-radius: 10px;
+    transform: rotate(40deg);
+    transform-origin: top left;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      0 4px 8px rgba(0, 0, 0, 0.25);
+  }
+  /* Centered crosshair dot at lens center */
+  .magnifier::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255, 252, 242, 0.95);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
 
   .game-hint {
     position: absolute;
@@ -1010,10 +1068,15 @@ function renderGame() {
       ${renderField()}
     </div>
 
+    <div class="magnifier" id="mag" style="left:50%; top:52%;">
+      <div class="lens"></div>
+      <div class="handle"></div>
+    </div>
+
     ${view.phase === 'playing' ? `
       <div class="game-hint">
         <span class="pulse"></span>
-        <span>화면을 살펴보다 네잎클로버를 발견하면 탭!</span>
+        <span>돋보기를 움직이며 네잎클로버를 찾아보세요</span>
       </div>
     ` : ''}
   </div>`;
@@ -1440,6 +1503,8 @@ function attachHandlers() {
         view.hoveredIdx = idx;
       }
 
+      const $mag = document.getElementById('mag');
+
       const updateFromEvent = (e) => {
         const rect = $game.getBoundingClientRect();
         const isTouch = e.touches && e.touches.length > 0;
@@ -1449,10 +1514,16 @@ function attachHandlers() {
         const py = ((cy - rect.top) / rect.height) * 100;
         if (px < 0 || px > 100 || py < 0 || py > 100) {
           setHover(-1);
+          if ($mag) $mag.classList.remove('active');
           return;
         }
+        // Move magnifier to cursor position; magnifier center === highlight anchor
+        if ($mag) {
+          $mag.style.left = px + '%';
+          $mag.style.top = py + '%';
+          $mag.classList.add('active');
+        }
         setHover(findNearest(px, py));
-        // Hide hint after first interaction
         const $hint = $game.querySelector('.game-hint');
         if ($hint) $hint.style.opacity = '0';
       };
