@@ -1353,15 +1353,20 @@ function startGame() {
   const cellH = 100 / ROWS;
   const positions = [];
 
-  // Pick a random cell for the lucky 4-leaf (1 only)
-  const luckyCol = 1 + Math.floor(Math.random() * (COLS - 2));
-  const luckyRow = 1 + Math.floor(Math.random() * (ROWS - 2));
+  // Pick 5 random cells for the lucky 4-leaves
+  const LUCKY_COUNT = 5;
+  const luckyCells = new Set();
+  while (luckyCells.size < LUCKY_COUNT) {
+    const lc = 1 + Math.floor(Math.random() * (COLS - 2));
+    const lr = 1 + Math.floor(Math.random() * (ROWS - 2));
+    luckyCells.add(lr * COLS + lc);
+  }
 
   for (let r = 0; r < ROWS; r++) {
     for (let c = 0; c < COLS; c++) {
       const cx = (c + 0.5) * cellW + (Math.random() - 0.5) * cellW * 0.55;
       const cy = (r + 0.5) * cellH + (Math.random() - 0.5) * cellH * 0.55;
-      const isLucky = (c === luckyCol && r === luckyRow);
+      const isLucky = luckyCells.has(r * COLS + c);
       if (isLucky) {
         positions.push({
           x: cx, y: cy, isLucky: true,
