@@ -383,18 +383,6 @@
   }
   .magnifier.active { opacity: 1; }
   .magnifier svg { display: block; width: 100%; height: 100%; overflow: visible; }
-  /* Centered crosshair dot at lens center (cx=50/120 = ~42% horizontally, cy=50/140 = ~36% vertically) */
-  .magnifier::before {
-    content: '';
-    position: absolute;
-    top: 36%; left: 42%;
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: rgba(255, 252, 242, 0.95);
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4);
-    transform: translate(-50%, -50%);
-    z-index: 2;
-  }
 
   .game-hint {
     position: absolute;
