@@ -250,13 +250,29 @@
     height: 100vh;
     position: relative;
     overflow: hidden;
+    /* F6: 봄 잔디 + 황금톤 — bright spring meadow with warm gold patches */
     background:
-      radial-gradient(ellipse at 30% 20%, #7A9C68, transparent 55%),
-      radial-gradient(ellipse at 80% 80%, #4A6B3F, transparent 55%),
-      radial-gradient(ellipse at 10% 90%, #5C7D4D, transparent 60%),
-      linear-gradient(135deg, #6B8E5A 0%, #4A6B3F 100%);
+      radial-gradient(ellipse 50% 40% at 20% 20%, rgba(168, 220, 133, 0.5), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 85%, rgba(125, 168, 90, 0.45), transparent 60%),
+      radial-gradient(ellipse 40% 30% at 60% 50%, rgba(212, 175, 55, 0.15), transparent 65%),
+      radial-gradient(ellipse at 20% 20%, #88B964 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 85%, #5A8042 0%, transparent 55%),
+      linear-gradient(160deg, #7DAA5A 0%, #557E38 100%);
     touch-action: none;
     cursor: crosshair;
+  }
+  /* Background grass layer (behind clovers) */
+  .grass-bg, .grass-fg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .grass-bg { z-index: 1; }
+  .grass-fg { z-index: 3; }
+  .grass-blade {
+    position: absolute;
+    transform-origin: bottom center;
+    pointer-events: none;
   }
   .game::before {
     content: '';
@@ -319,6 +335,7 @@
     inset: 0;
     overflow: hidden;
     pointer-events: none;
+    z-index: 2;
   }
   /* Reference style: hover-highlight nearest clover (no magnifier, no zoom layer) */
   .clover svg { shape-rendering: geometricPrecision; }
@@ -1064,9 +1081,13 @@ function renderGame() {
       <button class="quit-btn" data-action="confirm-quit">포기하기</button>
     </div>
 
+    <div class="grass-bg">${renderGrass(view.grassBg || [])}</div>
+
     <div class="field" id="field" style="display:block; position:absolute; inset:0;">
       ${renderField()}
     </div>
+
+    <div class="grass-fg">${renderGrass(view.grassFg || [])}</div>
 
     <div class="magnifier" id="mag" style="left:50%; top:52%;">
       <div class="lens"></div>
@@ -1089,6 +1110,17 @@ function renderField() {
       ${svg}
     </div>`;
   }).join('');
+}
+
+function renderGrass(blades) {
+  return blades.map(b => `<div class="grass-blade" style="left:${b.x}%;top:${b.y}%;transform:translate(-50%,-100%) rotate(${b.tilt}deg);">${b.svg}</div>`).join('');
+}
+
+function makeGrassBlade(h, w, color, opacity) {
+  return `<svg width="${w * 2}" height="${h}" viewBox="0 0 ${w * 2} ${h}">
+    <path d="M ${w} ${h} Q ${w + w * 0.3} ${h * 0.5} ${w} 0 L ${w + 0.4} 0 Q ${w + w * 0.4} ${h * 0.5} ${w + 0.4} ${h} Z"
+          fill="${color}" opacity="${opacity}"/>
+  </svg>`;
 }
 
 function renderDecorations() {
@@ -1363,6 +1395,40 @@ function startGame() {
   }
   view.cloverPositions = positions;
   view.decorations = [];
+
+  // F6 grass: spring tones (bright + golden) — bg layer + fg layer
+  const bgGrassColors = ['#5A8042', '#6B9450', '#7DAA5A', '#88B964', '#4A6B3F', '#A8DC85'];
+  const fgGrassColors = ['#88B964', '#A8DC85', '#5A8042', '#7DAA5A', '#C5DEA8', '#6B9450'];
+
+  // Background: 200 short blades scattered behind clovers
+  const grassBg = [];
+  for (let i = 0; i < 200; i++) {
+    const h = 10 + Math.random() * 14;
+    const w = 1 + Math.random() * 0.6;
+    const color = bgGrassColors[Math.floor(Math.random() * bgGrassColors.length)];
+    grassBg.push({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      tilt: Math.random() * 50 - 25,
+      svg: makeGrassBlade(h, w, color, 0.5 + Math.random() * 0.3),
+    });
+  }
+  view.grassBg = grassBg;
+
+  // Foreground: 60 tall blades over clovers (can overlap)
+  const grassFg = [];
+  for (let i = 0; i < 60; i++) {
+    const h = 22 + Math.random() * 22;
+    const w = 1.2 + Math.random() * 0.8;
+    const color = fgGrassColors[Math.floor(Math.random() * fgGrassColors.length)];
+    grassFg.push({
+      x: Math.random() * 100,
+      y: 5 + Math.random() * 95,
+      tilt: Math.random() * 50 - 25,
+      svg: makeGrassBlade(h, w, color, 0.55 + Math.random() * 0.3),
+    });
+  }
+  view.grassFg = grassFg;
 
   // State
   view.phase = 'playing';
