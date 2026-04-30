@@ -1190,37 +1190,67 @@ function fourLeafSvg(scale, rot) {
   </svg>`;
 }
 
-// Big clover SVG for result modal — won (4-leaf gold) vs miss (3-leaf grey)
+// Big clover SVG for result modal — matches home/intro logo design exactly
 function resultCloverSvg(won) {
-  const path = "M 0 0 C -4 -2 -10 -6 -10 -12 C -10 -16 -6 -18 -2 -16 C 0 -14 0 -10 0 -8 C 0 -10 0 -14 2 -16 C 6 -18 10 -16 10 -12 C 10 -6 4 -2 0 0 Z";
-  const vMark = (lighter) => `<path d="M -4.5 -10 Q 0 -8 4.5 -10" stroke="${lighter}" stroke-width="0.9" fill="none" opacity="0.7" stroke-linecap="round"/>`;
+  // V5 path scaled 3.5x (same as home logo)
+  const PATH_3X = "M 0 0 C -14 -7 -35 -21 -35 -42 C -35 -56 -21 -63 -7 -56 C 0 -49 0 -35 0 -28 C 0 -35 0 -49 7 -56 C 21 -63 35 -56 35 -42 C 35 -21 14 -7 0 0 Z";
+  const vMark = (lighter) => `<path d="M -16 -35 Q 0 -28 16 -35" stroke="${lighter}" stroke-width="2.8" fill="none" opacity="0.6" stroke-linecap="round"/>`;
 
   if (won) {
-    // 4-leaf gold
-    return `<svg width="120" height="140" viewBox="0 0 120 140">
-      <g transform="translate(60, 50) scale(2.5)">
-        <path d="M 0 0 Q 4 18 -2 36" fill="none" stroke="#578830" stroke-width="2.4" stroke-linecap="round" opacity="0.95"/>
-        <path d="M 0 0 Q 4 18 -2 36" fill="none" stroke="#A8D680" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-        <g transform="rotate(0)"><path d="${path}" fill="#AFDC82"/>${vMark('#C8E4A4')}</g>
-        <g transform="rotate(90)"><path d="${path}" fill="#9CD06E"/>${vMark('#B8DD92')}</g>
-        <g transform="rotate(180)"><path d="${path}" fill="#88C25A"/>${vMark('#A8D680')}</g>
-        <g transform="rotate(-90)"><path d="${path}" fill="#9CD06E"/>${vMark('#B8DD92')}</g>
-        <circle cx="0" cy="0" r="2" fill="#3F6628"/>
-        <circle cx="-0.4" cy="-0.4" r="1" fill="#D4AF37"/>
+    return `<svg width="120" height="120" viewBox="0 0 200 200">
+      <defs>
+        <radialGradient id="resG-9CD06E" cx="0.35" cy="0.35" r="0.9">
+          <stop offset="0%" stop-color="#B8DD92"/>
+          <stop offset="60%" stop-color="#9CD06E"/>
+          <stop offset="100%" stop-color="#78AA50"/>
+        </radialGradient>
+        <radialGradient id="resG-AFDC82" cx="0.35" cy="0.35" r="0.9">
+          <stop offset="0%" stop-color="#C8E4A4"/>
+          <stop offset="60%" stop-color="#AFDC82"/>
+          <stop offset="100%" stop-color="#88B860"/>
+        </radialGradient>
+        <radialGradient id="resG-88C25A" cx="0.35" cy="0.35" r="0.9">
+          <stop offset="0%" stop-color="#A8D680"/>
+          <stop offset="60%" stop-color="#88C25A"/>
+          <stop offset="100%" stop-color="#669A40"/>
+        </radialGradient>
+      </defs>
+      <g transform="translate(100,100)">
+        <path d="M 0 0 Q 10 48 -4 92" fill="none" stroke="#578830" stroke-width="3.5" stroke-linecap="round" opacity="0.95"/>
+        <path d="M 0 0 Q 10 48 -4 92" fill="none" stroke="#A8D680" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/>
+        <g transform="rotate(0)"><path d="${PATH_3X}" fill="url(#resG-AFDC82)"/>${vMark('#C8E4A4')}</g>
+        <g transform="rotate(90)"><path d="${PATH_3X}" fill="url(#resG-9CD06E)"/>${vMark('#B8DD92')}</g>
+        <g transform="rotate(180)"><path d="${PATH_3X}" fill="url(#resG-88C25A)"/>${vMark('#A8D680')}</g>
+        <g transform="rotate(-90)"><path d="${PATH_3X}" fill="url(#resG-9CD06E)"/>${vMark('#B8DD92')}</g>
       </g>
     </svg>`;
   }
 
-  // 3-leaf greyed (miss)
-  return `<svg width="120" height="140" viewBox="0 0 120 140">
-    <g transform="translate(60, 50) scale(2.5)">
-      <path d="M 0 0 Q 4 18 -2 36" fill="none" stroke="#7A6E58" stroke-width="2.4" stroke-linecap="round" opacity="0.95"/>
-      <path d="M 0 0 Q 4 18 -2 36" fill="none" stroke="#A89878" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-      <g transform="rotate(0)"><path d="${path}" fill="#A8A095"/>${vMark('#C5BDA8')}</g>
-      <g transform="rotate(120)"><path d="${path}" fill="#9C8E7C"/>${vMark('#BAB0A0')}</g>
-      <g transform="rotate(-120)"><path d="${path}" fill="#857A6A"/>${vMark('#A89878')}</g>
-      <circle cx="0" cy="0" r="2" fill="#5A5040"/>
-      <circle cx="-0.4" cy="-0.4" r="1" fill="#FFFCF2" opacity="0.7"/>
+  // MISS: 3-leaf greyed (same path/stem, grey gradients)
+  return `<svg width="120" height="120" viewBox="0 0 200 200">
+    <defs>
+      <radialGradient id="resG-grey1" cx="0.35" cy="0.35" r="0.9">
+        <stop offset="0%" stop-color="#C5BDA8"/>
+        <stop offset="60%" stop-color="#A8A095"/>
+        <stop offset="100%" stop-color="#857A6A"/>
+      </radialGradient>
+      <radialGradient id="resG-grey2" cx="0.35" cy="0.35" r="0.9">
+        <stop offset="0%" stop-color="#BAB0A0"/>
+        <stop offset="60%" stop-color="#9C8E7C"/>
+        <stop offset="100%" stop-color="#75685A"/>
+      </radialGradient>
+      <radialGradient id="resG-grey3" cx="0.35" cy="0.35" r="0.9">
+        <stop offset="0%" stop-color="#A89878"/>
+        <stop offset="60%" stop-color="#857A6A"/>
+        <stop offset="100%" stop-color="#5A5040"/>
+      </radialGradient>
+    </defs>
+    <g transform="translate(100,100)">
+      <path d="M 0 0 Q 10 48 -4 92" fill="none" stroke="#7A6E58" stroke-width="3.5" stroke-linecap="round" opacity="0.95"/>
+      <path d="M 0 0 Q 10 48 -4 92" fill="none" stroke="#A89878" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/>
+      <g transform="rotate(0)"><path d="${PATH_3X}" fill="url(#resG-grey1)"/>${vMark('#C5BDA8')}</g>
+      <g transform="rotate(120)"><path d="${PATH_3X}" fill="url(#resG-grey2)"/>${vMark('#BAB0A0')}</g>
+      <g transform="rotate(-120)"><path d="${PATH_3X}" fill="url(#resG-grey3)"/>${vMark('#A89878')}</g>
     </g>
   </svg>`;
 }
