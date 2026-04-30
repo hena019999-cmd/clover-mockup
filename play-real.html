@@ -266,14 +266,15 @@
     touch-action: none;
     cursor: crosshair;
   }
-  /* Background grass layer (behind clovers) */
-  .grass-bg, .grass-fg {
+  /* Grass layers */
+  .grass-bg, .grass-fg, .grass-lawn {
     position: absolute;
     inset: 0;
     pointer-events: none;
   }
-  .grass-bg { z-index: 1; }
-  .grass-fg { z-index: 3; }
+  .grass-bg { z-index: 1; }       /* behind clovers */
+  .grass-lawn { z-index: 3; }     /* thin lawn over clovers */
+  .grass-fg { z-index: 4; }       /* tall blades over everything */
   .grass-blade {
     position: absolute;
     transform-origin: bottom center;
@@ -1111,6 +1112,7 @@ function renderGame() {
       ${renderField()}
     </div>
 
+    <div class="grass-lawn">${renderGrass(view.grassLawn || [])}</div>
     <div class="grass-fg">${renderGrass(view.grassFg || [])}</div>
 
     <div class="magnifier" id="mag" style="left:50%; top:52%;">
@@ -1444,9 +1446,25 @@ function startGame() {
   }
   view.grassBg = grassBg;
 
-  // Foreground: 60 tall blades over clovers (can overlap)
+  // Lawn layer: thin grass carpet over clovers (300 short blades, low opacity)
+  const lawnColors = ['#7DAA5A', '#88B964', '#A8DC85', '#6B9450', '#92BE6E', '#5A8042'];
+  const grassLawn = [];
+  for (let i = 0; i < 300; i++) {
+    const h = 5 + Math.random() * 7;
+    const w = 0.5 + Math.random() * 0.5;
+    const color = lawnColors[Math.floor(Math.random() * lawnColors.length)];
+    grassLawn.push({
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      tilt: Math.random() * 40 - 20,
+      svg: makeGrassBlade(h, w, color, 0.35 + Math.random() * 0.3),
+    });
+  }
+  view.grassLawn = grassLawn;
+
+  // Foreground: tall sparse blades over everything (some overlap)
   const grassFg = [];
-  for (let i = 0; i < 60; i++) {
+  for (let i = 0; i < 40; i++) {
     const h = 22 + Math.random() * 22;
     const w = 1.2 + Math.random() * 0.8;
     const color = fgGrassColors[Math.floor(Math.random() * fgGrassColors.length)];
