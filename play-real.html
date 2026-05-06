@@ -1413,8 +1413,11 @@ function renderResultSheet() {
             <div class="amount">${adReward}원<span class="x5">x5</span></div>
           </button>
           <button class="btn-reward btn-secondary" data-action="reward-skip">
-            <div class="label"><div class="main">그냥 받기</div></div>
-            <div class="amount">${baseReward}원</div>
+            <div class="label">
+              <div class="main">행운만 받기</div>
+              <div class="sub">도감에만 등록 · 포인트 없음</div>
+            </div>
+            <div class="amount">0원</div>
           </button>
         ` : `
           ${!view.extendedTime ? `
@@ -1428,7 +1431,7 @@ function renderResultSheet() {
           ` : ''}
           <button class="btn-reward btn-secondary" data-action="reward-skip">
             <div class="label"><div class="main">그만하기</div></div>
-            <div class="amount">1원</div>
+            <div class="amount">0원</div>
           </button>
         `}
       </div>
@@ -1679,13 +1682,17 @@ function found() {
 
 function claimReward(useAd) {
   const won = view.phase === 'result';
-  let reward = 1;
-  if (won) {
-    reward = rewardForTime(view.foundAt, view.extendedTime);
-    reward *= gradeInfo(view.foundGrade).mult;  // grade multiplier
-    if (useAd) reward *= 5;
+  let reward = 0;
+  if (useAd) {
+    if (won) {
+      reward = rewardForTime(view.foundAt, view.extendedTime);
+      reward *= gradeInfo(view.foundGrade).mult;
+      reward *= 5;
+    } else {
+      reward = 0;
+    }
   } else {
-    reward = 1;
+    reward = 0; // No ad → no points
   }
 
   // Update persisted state
