@@ -537,6 +537,13 @@
   .info .v { font-size: 16px; font-weight: 700; color: var(--leaf-deep); }
   .info .l { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
 
+  .rewards-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--leaf-deep);
+    margin: 4px 0 12px;
+    letter-spacing: -0.01em;
+  }
   .rewards {
     display: flex;
     flex-direction: column;
@@ -1297,6 +1304,8 @@ function renderResultSheet() {
         <div class="info"><div class="v">${s.streak}일</div><div class="l">연속 발견</div></div>
         <div class="info"><div class="v">${s.bestTime ? s.bestTime + '초' : '-'}</div><div class="l">최고 기록</div></div>
       </div>
+
+      ${won ? `<div class="rewards-title">🍀 행운 받기</div>` : ''}
 
       <div class="rewards">
         ${won ? `
