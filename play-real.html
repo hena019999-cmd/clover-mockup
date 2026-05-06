@@ -506,9 +506,9 @@
     margin-bottom: 10px;
   }
   .result-headline h2 {
-    font-size: 23px;
+    font-size: 22px;
     font-weight: 700;
-    margin: 0 0 8px;
+    margin: 0 0 6px;
     letter-spacing: -0.02em;
   }
   .result-headline h2 .num {
@@ -519,13 +519,13 @@
     font-size: 14px;
     color: var(--ink-soft);
     margin: 0;
-    line-height: 1.6;
+    line-height: 1.5;
   }
 
   .info-row {
     display: flex;
     gap: 8px;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
   }
   .info {
     flex: 1;
@@ -534,16 +534,9 @@
     padding: 12px 10px;
     text-align: center;
   }
-  .info .v { font-size: 16px; font-weight: 700; color: var(--leaf-deep); }
-  .info .l { font-size: 11px; color: var(--ink-soft); margin-top: 2px; }
+  .info .v { font-size: 18px; font-weight: 700; color: var(--leaf-deep); }
+  .info .l { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
 
-  .rewards-title {
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--leaf-deep);
-    margin: 4px 0 12px;
-    letter-spacing: -0.01em;
-  }
   .grade-badge {
     display: inline-flex;
     align-items: center;
@@ -557,7 +550,7 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.12);
   }
   .grade-badge .grade-mult {
-    font-size: 10px;
+    font-size: 12px;
     background: rgba(255,255,255,0.55);
     padding: 2px 6px;
     border-radius: 5px;
@@ -603,25 +596,25 @@
     color: white;
     box-shadow: 0 4px 16px rgba(74, 107, 63, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
-  .btn-primary .label { display: flex; flex-direction: column; gap: 2px; }
-  .btn-primary .main { font-size: 15px; font-weight: 700; }
-  .btn-primary .sub { font-size: 11px; opacity: 0.85; font-weight: 400; }
-  .btn-primary .amount { font-size: 22px; font-weight: 800; }
+  .btn-reward .label { display: flex; flex-direction: column; gap: 2px; }
+  .btn-primary .main { font-size: 14px; font-weight: 700; }
+  .btn-primary .sub { font-size: 12px; opacity: 0.8; font-weight: 400; }
+  .btn-primary .amount { font-size: 18px; font-weight: 800; }
 
   .btn-secondary {
     background: var(--paper);
     color: var(--ink-soft);
     border: 1px solid rgba(155,142,124,0.2);
   }
-  .btn-secondary .main { font-size: 14px; font-weight: 500; }
-  .btn-secondary .amount { font-size: 15px; font-weight: 600; }
+  .btn-secondary .main { font-size: 14px; font-weight: 600; }
+  .btn-secondary .sub { font-size: 12px; opacity: 0.7; font-weight: 400; }
+  .btn-secondary .amount { font-size: 18px; font-weight: 700; }
 
   .footer-note {
     text-align: center;
-    font-size: 11px;
+    font-size: 12px;
     color: var(--greige);
   }
-  .footer-note .lucky { color: var(--moss); font-weight: 500; }
 
   /* sparkles */
   .sparkle {
@@ -1373,14 +1366,14 @@ function renderResultSheet() {
       <div class="result-headline">
         <div class="eyebrow">${formatDate()}</div>
         <h2>${won
-          ? `<span class="num">${seconds}초</span>만에 발견했어요`
-          : '아직 행운이 숨어있어요'}</h2>
+          ? `<span class="num">${seconds}초</span> 만에 찾았어요`
+          : '아쉽게 놓쳤어요'}</h2>
         ${won && view.foundGrade && view.foundGrade !== 'common'
           ? `<div class="grade-badge grade-${view.foundGrade}">${gradeInfo(view.foundGrade).emoji} ${gradeInfo(view.foundGrade).name} <span class="grade-mult">x${gradeInfo(view.foundGrade).mult}</span></div>`
           : ''}
         <p>${won
-          ? '오늘 좋은 일이 생길 거예요 🍀'
-          : '광고를 보면 10초 더 시도할 수 있어요'}</p>
+          ? '오늘 좋은 일이 생길 거예요'
+          : '광고 보고 10초 더 도전할 수 있어요'}</p>
       </div>
 
       <div class="info-row">
@@ -1389,21 +1382,19 @@ function renderResultSheet() {
         <div class="info"><div class="v">${s.bestTime ? s.bestTime + '초' : '-'}</div><div class="l">최고 기록</div></div>
       </div>
 
-      ${won ? `<div class="rewards-title">🍀 행운 받기</div>` : ''}
-
       <div class="rewards">
         ${won ? `
           <button class="btn-reward btn-primary" data-action="reward-ad">
             <div class="label">
-              <div class="main">📺 광고 보고 행운 받기</div>
-              <div class="sub">짧은 광고 영상을 시청해요</div>
+              <div class="main">광고 보고 받기</div>
+              <div class="sub">짧은 영상 시청</div>
             </div>
             <div class="amount">${adReward}원</div>
           </button>
           <button class="btn-reward btn-secondary" data-action="reward-skip">
             <div class="label">
-              <div class="main">행운만 받기</div>
-              <div class="sub">도감에만 등록 · 포인트 없음</div>
+              <div class="main">도감에만 기록</div>
+              <div class="sub">광고 없이 등록</div>
             </div>
             <div class="amount">0원</div>
           </button>
@@ -1411,21 +1402,24 @@ function renderResultSheet() {
           ${!view.extendedTime ? `
           <button class="btn-reward btn-primary" data-action="extend-ad">
             <div class="label">
-              <div class="main">📺 광고 보고 10초 더</div>
-              <div class="sub">한 번 더 시도해요</div>
+              <div class="main">광고 보고 10초 더</div>
+              <div class="sub">한 번 더 도전</div>
             </div>
-            <div class="amount">+30s</div>
+            <div class="amount">+10초</div>
           </button>
           ` : ''}
           <button class="btn-reward btn-secondary" data-action="reward-skip">
-            <div class="label"><div class="main">그만하기</div></div>
+            <div class="label">
+              <div class="main">그만하기</div>
+              <div class="sub">결과 닫기</div>
+            </div>
             <div class="amount">0원</div>
           </button>
         `}
       </div>
 
       <div class="footer-note">
-        <span class="lucky">🍀</span> 발견한 네잎클로버는 도감에 자동으로 기록돼요
+        발견한 클로버는 도감에 기록돼요
       </div>
     </div>
   </div>`;
