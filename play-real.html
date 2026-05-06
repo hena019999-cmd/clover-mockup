@@ -1540,13 +1540,13 @@ function startGame() {
       if (isLucky) {
         positions.push({
           x: cx, y: cy, isLucky: true,
-          scale: 0.55 + Math.random() * 0.1,
+          scale: 0.85 + Math.random() * 0.1,
           rot: Math.random() * 30 - 15,
         });
       } else {
         positions.push({
           x: cx, y: cy, isLucky: false,
-          scale: 0.5 + Math.random() * 0.12,
+          scale: 0.8 + Math.random() * 0.15,
           rot: Math.random() * 360 - 180,
           c1: palette[Math.floor(Math.random() * palette.length)],
           c2: palette[Math.floor(Math.random() * palette.length)],
