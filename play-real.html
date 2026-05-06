@@ -544,6 +544,38 @@
     margin: 4px 0 12px;
     letter-spacing: -0.01em;
   }
+  .grade-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0 0 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  }
+  .grade-badge .grade-mult {
+    font-size: 10px;
+    background: rgba(255,255,255,0.55);
+    padding: 2px 6px;
+    border-radius: 5px;
+    font-weight: 800;
+  }
+  .grade-badge.grade-golden {
+    background: linear-gradient(135deg, #FFE694, #D4AF37);
+    color: #5C4519;
+  }
+  .grade-badge.grade-rainbow {
+    background: linear-gradient(135deg, #FFB3D1, #B8A6F0, #95D6F0, #A8E6B8, #FFE38A);
+    color: #4A2D6B;
+  }
+  .grade-badge.grade-king {
+    background: linear-gradient(135deg, #FFD2E0, #FF6B9D);
+    color: white;
+    box-shadow: 0 2px 16px rgba(255, 107, 157, 0.4);
+  }
   .rewards {
     display: flex;
     flex-direction: column;
@@ -782,10 +814,24 @@
     line-height: 1.3;
   }
   .col-item.found {
-    background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(143,188,143,0.1));
-    border: 1px solid rgba(212,175,55,0.3);
+    background: linear-gradient(135deg, rgba(143,188,143,0.18), rgba(143,188,143,0.08));
+    border: 1px solid rgba(143,188,143,0.35);
     color: var(--leaf-deep);
     font-weight: 600;
+  }
+  .col-item.col-golden {
+    background: linear-gradient(135deg, rgba(255, 230, 148, 0.45), rgba(212, 175, 55, 0.25));
+    border: 1px solid rgba(212, 175, 55, 0.5);
+  }
+  .col-item.col-rainbow {
+    background: linear-gradient(135deg, #FFD2E0, #B8A6F0 50%, #A8E6B8);
+    border: 1px solid rgba(184, 166, 240, 0.6);
+  }
+  .col-item.col-king {
+    background: linear-gradient(135deg, #FFD080, #FF6B9D);
+    border: 1px solid rgba(255, 107, 157, 0.6);
+    color: white;
+    box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
   }
   .col-empty {
     text-align: center;
@@ -1194,38 +1240,84 @@ function fourLeafSvg(scale, rot) {
   </svg>`;
 }
 
-// Big clover SVG for result modal — matches home/intro logo design exactly
-function resultCloverSvg(won) {
+// Big clover SVG for result modal — matches home/intro logo design exactly, varies by grade
+function resultCloverSvg(won, grade = 'common') {
   // V5 path scaled 3.5x (same as home logo)
   const PATH_3X = "M 0 0 C -14 -7 -35 -21 -35 -42 C -35 -56 -21 -63 -7 -56 C 0 -49 0 -35 0 -28 C 0 -35 0 -49 7 -56 C 21 -63 35 -56 35 -42 C 35 -21 14 -7 0 0 Z";
   const vMark = (lighter) => `<path d="M -16 -35 Q 0 -28 16 -35" stroke="${lighter}" stroke-width="2.8" fill="none" opacity="0.6" stroke-linecap="round"/>`;
 
+  // Grade palette: each leaflet's gradient stops + V-mark + stem
+  const palettes = {
+    common: {
+      stem: ['#578830', '#A8D680'],
+      leaves: [
+        ['#C8E4A4', '#AFDC82', '#88B860', '#C8E4A4'],
+        ['#B8DD92', '#9CD06E', '#78AA50', '#B8DD92'],
+        ['#A8D680', '#88C25A', '#669A40', '#A8D680'],
+        ['#B8DD92', '#9CD06E', '#78AA50', '#B8DD92'],
+      ],
+      crown: '',
+    },
+    golden: {
+      stem: ['#A87830', '#F0D080'],
+      leaves: [
+        ['#FFE694', '#E8C268', '#A87830', '#FFE694'],
+        ['#F0D080', '#D4AF37', '#8E6F2C', '#F0D080'],
+        ['#FFD060', '#C9A04A', '#7A5520', '#FFD060'],
+        ['#F0D080', '#D4AF37', '#8E6F2C', '#F0D080'],
+      ],
+      crown: '',
+    },
+    rainbow: {
+      stem: ['#7A5AB5', '#C8A8FF'],
+      leaves: [
+        ['#FFD2E0', '#FF80B0', '#C04880', '#FFD2E0'],   // pink
+        ['#D8C8FF', '#A088FF', '#5040A0', '#D8C8FF'],   // purple
+        ['#A8E0FF', '#5BB8E8', '#1F70A8', '#A8E0FF'],   // sky blue
+        ['#B8F0C8', '#5BD088', '#208048', '#B8F0C8'],   // green
+      ],
+      crown: '',
+    },
+    king: {
+      stem: ['#A03060', '#FFB8D0'],
+      leaves: [
+        ['#FFE694', '#FF80B0', '#A03060', '#FFE694'],
+        ['#FFD080', '#FF6B9D', '#902850', '#FFD080'],
+        ['#FFE694', '#FF80B0', '#A03060', '#FFE694'],
+        ['#FFD080', '#FF6B9D', '#902850', '#FFD080'],
+      ],
+      // Crown SVG above the clover
+      crown: `<g transform="translate(0,-78)">
+        <path d="M -22 0 L -16 -14 L -8 -4 L 0 -16 L 8 -4 L 16 -14 L 22 0 L 18 4 L -18 4 Z"
+              fill="#FFD060" stroke="#A87830" stroke-width="1.5"/>
+        <circle cx="-16" cy="-12" r="2" fill="#FF6B9D"/>
+        <circle cx="0" cy="-14" r="2.2" fill="#FF6B9D"/>
+        <circle cx="16" cy="-12" r="2" fill="#FF6B9D"/>
+      </g>`,
+    },
+  };
+
   if (won) {
+    const p = palettes[grade] || palettes.common;
+    const idSuffix = grade;
+    const gradients = p.leaves.map((leaf, i) => `
+      <radialGradient id="resG-${idSuffix}-${i}" cx="0.35" cy="0.35" r="0.9">
+        <stop offset="0%" stop-color="${leaf[0]}"/>
+        <stop offset="60%" stop-color="${leaf[1]}"/>
+        <stop offset="100%" stop-color="${leaf[2]}"/>
+      </radialGradient>
+    `).join('');
+
     return `<svg width="120" height="120" viewBox="0 0 200 200">
-      <defs>
-        <radialGradient id="resG-9CD06E" cx="0.35" cy="0.35" r="0.9">
-          <stop offset="0%" stop-color="#B8DD92"/>
-          <stop offset="60%" stop-color="#9CD06E"/>
-          <stop offset="100%" stop-color="#78AA50"/>
-        </radialGradient>
-        <radialGradient id="resG-AFDC82" cx="0.35" cy="0.35" r="0.9">
-          <stop offset="0%" stop-color="#C8E4A4"/>
-          <stop offset="60%" stop-color="#AFDC82"/>
-          <stop offset="100%" stop-color="#88B860"/>
-        </radialGradient>
-        <radialGradient id="resG-88C25A" cx="0.35" cy="0.35" r="0.9">
-          <stop offset="0%" stop-color="#A8D680"/>
-          <stop offset="60%" stop-color="#88C25A"/>
-          <stop offset="100%" stop-color="#669A40"/>
-        </radialGradient>
-      </defs>
+      <defs>${gradients}</defs>
+      ${p.crown ? `<g transform="translate(100,100)">${p.crown}</g>` : ''}
       <g transform="translate(100,100)">
-        <path d="M 0 0 Q 10 48 -4 92" fill="none" stroke="#578830" stroke-width="3.5" stroke-linecap="round" opacity="0.95"/>
-        <path d="M 0 0 Q 10 48 -4 92" fill="none" stroke="#A8D680" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/>
-        <g transform="rotate(0)"><path d="${PATH_3X}" fill="url(#resG-AFDC82)"/>${vMark('#C8E4A4')}</g>
-        <g transform="rotate(90)"><path d="${PATH_3X}" fill="url(#resG-9CD06E)"/>${vMark('#B8DD92')}</g>
-        <g transform="rotate(180)"><path d="${PATH_3X}" fill="url(#resG-88C25A)"/>${vMark('#A8D680')}</g>
-        <g transform="rotate(-90)"><path d="${PATH_3X}" fill="url(#resG-9CD06E)"/>${vMark('#B8DD92')}</g>
+        <path d="M 0 0 Q 10 48 -4 92" fill="none" stroke="${p.stem[0]}" stroke-width="3.5" stroke-linecap="round" opacity="0.95"/>
+        <path d="M 0 0 Q 10 48 -4 92" fill="none" stroke="${p.stem[1]}" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/>
+        <g transform="rotate(0)"><path d="${PATH_3X}" fill="url(#resG-${idSuffix}-0)"/>${vMark(p.leaves[0][3])}</g>
+        <g transform="rotate(90)"><path d="${PATH_3X}" fill="url(#resG-${idSuffix}-1)"/>${vMark(p.leaves[1][3])}</g>
+        <g transform="rotate(180)"><path d="${PATH_3X}" fill="url(#resG-${idSuffix}-2)"/>${vMark(p.leaves[2][3])}</g>
+        <g transform="rotate(-90)"><path d="${PATH_3X}" fill="url(#resG-${idSuffix}-3)"/>${vMark(p.leaves[3][3])}</g>
       </g>
     </svg>`;
   }
@@ -1265,7 +1357,8 @@ function resultCloverSvg(won) {
 function renderResultSheet() {
   const won = view.phase === 'result';
   const seconds = view.foundAt;
-  const baseReward = won ? rewardForTime(seconds, view.extendedTime) : 1;
+  const gradeMult = won ? gradeInfo(view.foundGrade).mult : 1;
+  const baseReward = won ? rewardForTime(seconds, view.extendedTime) * gradeMult : 1;
   const adReward = baseReward * 5;
   const s = persistedState;
 
@@ -1285,7 +1378,7 @@ function renderResultSheet() {
       <div class="result-hero">
         <div class="clover-card">
           <div class="stamp ${won ? '' : 'fail'}">${won ? 'FOUND' : 'MISS'}</div>
-          ${resultCloverSvg(won)}
+          ${resultCloverSvg(won, view.foundGrade)}
         </div>
       </div>
 
@@ -1294,6 +1387,9 @@ function renderResultSheet() {
         <h2>${won
           ? `<span class="num">${seconds}초</span>만에 발견했어요`
           : '아직 행운이 숨어있어요'}</h2>
+        ${won && view.foundGrade && view.foundGrade !== 'common'
+          ? `<div class="grade-badge grade-${view.foundGrade}">${gradeInfo(view.foundGrade).emoji} ${gradeInfo(view.foundGrade).name} <span class="grade-mult">x${gradeInfo(view.foundGrade).mult}</span></div>`
+          : ''}
         <p>${won
           ? '오늘 좋은 일이 생길 거예요 🍀'
           : '광고를 보면 10초 더 시도할 수 있어요'}</p>
@@ -1368,14 +1464,16 @@ function renderCollection() {
       </div>
       ${items.length === 0
         ? `<div class="col-empty">🌱<br/>아직 발견한 네잎클로버이 없어요<br/>오늘의 행운을 찾아보세요</div>`
-        : `<div class="collection-grid">${items.map(it => `
-            <div class="col-item found">
+        : `<div class="collection-grid">${items.map(it => {
+            const g = gradeInfo(it.grade || 'common');
+            return `<div class="col-item found col-${it.grade || 'common'}">
               <div>
-                <div style="font-size:18px;">🍀</div>
+                <div style="font-size:18px;">${g.emoji}</div>
                 <div>${it.date.slice(5)}</div>
                 <div style="opacity:0.6;font-size:10px;">${it.time}초</div>
               </div>
-            </div>`).join('')}</div>`
+            </div>`;
+          }).join('')}</div>`
       }
       <button class="col-close" data-action="close-collection">닫기</button>
     </div>
@@ -1417,10 +1515,10 @@ function startGame() {
   persistedState.ticket -= 1;
   saveState(persistedState);
 
-  // Generate clover field: 15x20 = 300 cells (C11 햇살 흙) — bigger clovers, denser look
+  // Generate clover field: 18x26 = 468 cells, smaller clovers
   const palette = ['#88C25A', '#9CD06E', '#AFDC82', '#74AC48'];
-  const COLS = 15;
-  const ROWS = 20;
+  const COLS = 18;
+  const ROWS = 26;
   const cellW = 100 / COLS;
   const cellH = 100 / ROWS;
   const positions = [];
@@ -1442,13 +1540,13 @@ function startGame() {
       if (isLucky) {
         positions.push({
           x: cx, y: cy, isLucky: true,
-          scale: 0.85 + Math.random() * 0.1,
+          scale: 0.55 + Math.random() * 0.1,
           rot: Math.random() * 30 - 15,
         });
       } else {
         positions.push({
           x: cx, y: cy, isLucky: false,
-          scale: 0.8 + Math.random() * 0.15,
+          scale: 0.5 + Math.random() * 0.12,
           rot: Math.random() * 360 - 180,
           c1: palette[Math.floor(Math.random() * palette.length)],
           c2: palette[Math.floor(Math.random() * palette.length)],
@@ -1550,12 +1648,31 @@ function timeUp() {
   render();
 }
 
+// Roll grade based on probability (rare > rarer)
+function rollGrade() {
+  const r = Math.random();
+  if (r < 0.001) return 'king';      // 0.1%
+  if (r < 0.010) return 'rainbow';   // 0.9%
+  if (r < 0.050) return 'golden';    // 4%
+  return 'common';                    // 95%
+}
+
+function gradeInfo(g) {
+  return ({
+    common:  { name: '일반 클로버', mult: 1,  emoji: '🍀', color: '#88C25A' },
+    golden:  { name: '골든 클로버', mult: 2,  emoji: '✨', color: '#D4AF37' },
+    rainbow: { name: '무지개 클로버', mult: 5, emoji: '🌈', color: '#9D7FF0' },
+    king:    { name: '클로버 왕', mult: 10, emoji: '👑', color: '#FF6B9D' },
+  })[g] || { name: '일반 클로버', mult: 1, emoji: '🍀', color: '#88C25A' };
+}
+
 function found() {
   if (view.phase !== 'playing') return;
   if (view.timerId) clearInterval(view.timerId);
   view.timerId = null;
   const elapsed = Math.max(1, Math.round((Date.now() - view.startedAt) / 1000));
   view.foundAt = elapsed;
+  view.foundGrade = rollGrade();
   view.phase = 'result';
   render();
 }
@@ -1565,9 +1682,10 @@ function claimReward(useAd) {
   let reward = 1;
   if (won) {
     reward = rewardForTime(view.foundAt, view.extendedTime);
+    reward *= gradeInfo(view.foundGrade).mult;  // grade multiplier
     if (useAd) reward *= 5;
   } else {
-    reward = 1; // 포기하기
+    reward = 1;
   }
 
   // Update persisted state
@@ -1592,7 +1710,7 @@ function claimReward(useAd) {
     }
     persistedState.streakLastDate = TODAY;
     // Add to collection
-    persistedState.collection.push({ date: TODAY, time: view.foundAt });
+    persistedState.collection.push({ date: TODAY, time: view.foundAt, grade: view.foundGrade || 'common' });
   }
   saveState(persistedState);
 
