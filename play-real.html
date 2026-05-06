@@ -607,17 +607,6 @@
   .btn-primary .main { font-size: 15px; font-weight: 700; }
   .btn-primary .sub { font-size: 11px; opacity: 0.85; font-weight: 400; }
   .btn-primary .amount { font-size: 22px; font-weight: 800; }
-  .btn-primary .amount .x5 {
-    display: inline-block;
-    background: var(--gold);
-    color: var(--leaf-deep);
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 6px;
-    margin-left: 4px;
-    vertical-align: middle;
-  }
 
   .btn-secondary {
     background: var(--paper);
@@ -1358,8 +1347,7 @@ function renderResultSheet() {
   const won = view.phase === 'result';
   const seconds = view.foundAt;
   const gradeMult = won ? gradeInfo(view.foundGrade).mult : 1;
-  const baseReward = won ? rewardForTime(seconds, view.extendedTime) * gradeMult : 1;
-  const adReward = baseReward * 5;
+  const adReward = won ? rewardForTime(seconds, view.extendedTime) * gradeMult : 0;
   const s = persistedState;
 
   const sparkles = won ? `
@@ -1407,10 +1395,10 @@ function renderResultSheet() {
         ${won ? `
           <button class="btn-reward btn-primary" data-action="reward-ad">
             <div class="label">
-              <div class="main">📺 광고 보고 5배 받기</div>
+              <div class="main">📺 광고 보고 행운 받기</div>
               <div class="sub">짧은 광고 영상을 시청해요</div>
             </div>
-            <div class="amount">${adReward}원<span class="x5">x5</span></div>
+            <div class="amount">${adReward}원</div>
           </button>
           <button class="btn-reward btn-secondary" data-action="reward-skip">
             <div class="label">
@@ -1683,14 +1671,9 @@ function found() {
 function claimReward(useAd) {
   const won = view.phase === 'result';
   let reward = 0;
-  if (useAd) {
-    if (won) {
-      reward = rewardForTime(view.foundAt, view.extendedTime);
-      reward *= gradeInfo(view.foundGrade).mult;
-      reward *= 5;
-    } else {
-      reward = 0;
-    }
+  if (useAd && won) {
+    reward = rewardForTime(view.foundAt, view.extendedTime);
+    reward *= gradeInfo(view.foundGrade).mult;
   } else {
     reward = 0; // No ad → no points
   }
