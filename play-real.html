@@ -903,7 +903,6 @@ let persistedState = loadState();
 let view = {
   phase: 'home',           // 'home' | 'playing' | 'result' | 'failed'
   showCollection: false,
-  showQuitConfirm: false,
   // Game runtime
   timeLeft: 30,
   timerId: null,
@@ -935,7 +934,6 @@ function renderRoot() {
 
   return main
     + (view.showCollection ? renderCollection() : '')
-    + (view.showQuitConfirm ? renderQuitConfirm() : '')
     + (view.adActive ? renderAdModal() : '')
     + (view.toast ? `<div class="toast">${escapeHtml(view.toast)}</div>` : '');
 }
@@ -1060,7 +1058,6 @@ function renderGame() {
         <div class="ring"></div>
         <div class="time">${timeStr}</div>
       </div>
-      <button class="quit-btn" data-action="confirm-quit">포기하기</button>
     </div>
 
     <div class="grass-bg">${renderGrass(view.grassBg || [])}</div>
@@ -1325,7 +1322,7 @@ function renderResultSheet() {
           </button>
           ` : ''}
           <button class="btn-reward btn-secondary" data-action="reward-skip">
-            <div class="label"><div class="main">포기하기</div></div>
+            <div class="label"><div class="main">그만하기</div></div>
             <div class="amount">1원</div>
           </button>
         `}
@@ -1379,20 +1376,6 @@ function renderCollection() {
 /* ============================================================
    QUIT CONFIRM
 ============================================================ */
-function renderQuitConfirm() {
-  return `
-  <div class="confirm-bg" data-action="cancel-quit">
-    <div class="confirm" onclick="event.stopPropagation()">
-      <h3>포기할까요?</h3>
-      <p>지금 포기하면 도전권 1장이<br/>그대로 차감돼요.</p>
-      <div class="confirm-actions">
-        <button class="keep" data-action="cancel-quit">계속하기</button>
-        <button class="yes" data-action="quit-game">포기</button>
-      </div>
-    </div>
-  </div>`;
-}
-
 /* ============================================================
    AD MODAL
 ============================================================ */
@@ -1743,20 +1726,6 @@ function handleAction(action, e) {
       break;
     case 'close-collection':
       view.showCollection = false;
-      render();
-      break;
-    case 'confirm-quit':
-      view.showQuitConfirm = true;
-      render();
-      break;
-    case 'cancel-quit':
-      view.showQuitConfirm = false;
-      render();
-      break;
-    case 'quit-game':
-      view.showQuitConfirm = false;
-      view.phase = 'failed';
-      if (view.timerId) clearInterval(view.timerId);
       render();
       break;
   }
