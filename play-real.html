@@ -1296,7 +1296,7 @@ function renderResultSheet() {
       </div>
 
       <div class="info-row">
-        <div class="info"><div class="v">${s.totalFound}${won ? '+1' : ''}</div><div class="l">총 발견</div></div>
+        <div class="info"><div class="v">${won ? s.totalFound + 1 : s.totalFound}</div><div class="l">총 발견</div></div>
         <div class="info"><div class="v">${s.streak}일</div><div class="l">연속 발견</div></div>
         <div class="info"><div class="v">${s.bestTime ? s.bestTime + '초' : '-'}</div><div class="l">최고 기록</div></div>
       </div>
