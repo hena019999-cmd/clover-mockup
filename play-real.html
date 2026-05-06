@@ -537,6 +537,13 @@
   .info .v { font-size: 18px; font-weight: 700; color: var(--leaf-deep); }
   .info .l { font-size: 12px; color: var(--ink-soft); margin-top: 2px; }
 
+  .rewards-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--leaf-deep);
+    margin: 4px 0 12px;
+    letter-spacing: -0.01em;
+  }
   .grade-badge {
     display: inline-flex;
     align-items: center;
@@ -615,6 +622,7 @@
     font-size: 12px;
     color: var(--greige);
   }
+  .footer-note .lucky { color: var(--moss); font-weight: 500; }
 
   /* sparkles */
   .sparkle {
@@ -1366,14 +1374,14 @@ function renderResultSheet() {
       <div class="result-headline">
         <div class="eyebrow">${formatDate()}</div>
         <h2>${won
-          ? `<span class="num">${seconds}초</span> 만에 찾았어요`
-          : '아쉽게 놓쳤어요'}</h2>
+          ? `<span class="num">${seconds}초</span>만에 발견했어요`
+          : '아직 행운이 숨어있어요'}</h2>
         ${won && view.foundGrade && view.foundGrade !== 'common'
           ? `<div class="grade-badge grade-${view.foundGrade}">${gradeInfo(view.foundGrade).emoji} ${gradeInfo(view.foundGrade).name} <span class="grade-mult">x${gradeInfo(view.foundGrade).mult}</span></div>`
           : ''}
         <p>${won
-          ? '오늘 좋은 일이 생길 거예요'
-          : '광고 보고 10초 더 도전할 수 있어요'}</p>
+          ? '오늘 좋은 일이 생길 거예요 🍀'
+          : '광고를 보면 10초 더 시도할 수 있어요'}</p>
       </div>
 
       <div class="info-row">
@@ -1382,19 +1390,21 @@ function renderResultSheet() {
         <div class="info"><div class="v">${s.bestTime ? s.bestTime + '초' : '-'}</div><div class="l">최고 기록</div></div>
       </div>
 
+      ${won ? `<div class="rewards-title">🍀 행운 받기</div>` : ''}
+
       <div class="rewards">
         ${won ? `
           <button class="btn-reward btn-primary" data-action="reward-ad">
             <div class="label">
-              <div class="main">광고 보고 받기</div>
-              <div class="sub">짧은 영상 시청</div>
+              <div class="main">📺 광고 보고 행운 받기</div>
+              <div class="sub">짧은 광고 영상을 시청해요</div>
             </div>
             <div class="amount">${adReward}원</div>
           </button>
           <button class="btn-reward btn-secondary" data-action="reward-skip">
             <div class="label">
-              <div class="main">도감에만 기록</div>
-              <div class="sub">광고 없이 등록</div>
+              <div class="main">행운만 받기</div>
+              <div class="sub">도감에만 등록 · 포인트 없음</div>
             </div>
             <div class="amount">0원</div>
           </button>
@@ -1402,24 +1412,21 @@ function renderResultSheet() {
           ${!view.extendedTime ? `
           <button class="btn-reward btn-primary" data-action="extend-ad">
             <div class="label">
-              <div class="main">광고 보고 10초 더</div>
-              <div class="sub">한 번 더 도전</div>
+              <div class="main">📺 광고 보고 10초 더</div>
+              <div class="sub">한 번 더 시도해요</div>
             </div>
             <div class="amount">+10초</div>
           </button>
           ` : ''}
           <button class="btn-reward btn-secondary" data-action="reward-skip">
-            <div class="label">
-              <div class="main">그만하기</div>
-              <div class="sub">결과 닫기</div>
-            </div>
+            <div class="label"><div class="main">그만하기</div></div>
             <div class="amount">0원</div>
           </button>
         `}
       </div>
 
       <div class="footer-note">
-        발견한 클로버는 도감에 기록돼요
+        <span class="lucky">🍀</span> 발견한 네잎클로버는 도감에 자동으로 기록돼요
       </div>
     </div>
   </div>`;
