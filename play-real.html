@@ -959,7 +959,7 @@ function renderHome() {
     <div class="hero">
       <div class="eyebrow">${formatDate()}</div>
       <h1>오늘의 행운을<br/>찾아보세요</h1>
-      <p>풀숲 어딘가에 숨어있는 네잎클로버.<br/>30초의 잔잔한 몰입을 시작해요.</p>
+      <p>풀숲 어딘가에 숨어있는 네잎클로버.<br/>10초의 잔잔한 몰입을 시작해요.</p>
     </div>
 
     <div class="illust">
@@ -1292,7 +1292,7 @@ function renderResultSheet() {
           : '아직 행운이 숨어있어요'}</h2>
         <p>${won
           ? '오늘 좋은 일이 생길 거예요 🍀'
-          : '광고를 보면 30초 더 시도할 수 있어요'}</p>
+          : '광고를 보면 10초 더 시도할 수 있어요'}</p>
       </div>
 
       <div class="info-row">
@@ -1318,7 +1318,7 @@ function renderResultSheet() {
           ${!view.extendedTime ? `
           <button class="btn-reward btn-primary" data-action="extend-ad">
             <div class="label">
-              <div class="main">📺 광고 보고 30초 더</div>
+              <div class="main">📺 광고 보고 10초 더</div>
               <div class="sub">한 번 더 시도해요</div>
             </div>
             <div class="amount">+30s</div>
@@ -1340,8 +1340,8 @@ function renderResultSheet() {
 
 function rewardForTime(s, extended) {
   if (extended) return 1;  // post-extension always 1원 base
-  if (s <= 10) return 5;
-  if (s <= 20) return 3;
+  if (s <= 3) return 5;
+  if (s <= 6) return 3;
   return 2;
 }
 
@@ -1404,7 +1404,7 @@ function renderAdModal() {
   };
   const descs = {
     ticket: '광고 시청 후 도전권 1장이 지급돼요',
-    extend: '광고 시청 후 30초가 추가돼요',
+    extend: '광고 시청 후 10초가 추가돼요',
     reward5x: '광고 시청 후 5배 보상이 지급돼요',
   };
   return `
@@ -1520,7 +1520,7 @@ function startGame() {
 
   // State
   view.phase = 'playing';
-  view.timeLeft = 30;
+  view.timeLeft = 10;
   view.startedAt = Date.now();
   view.foundAt = null;
   view.extendedTime = false;
@@ -1613,7 +1613,7 @@ function claimReward(useAd) {
 
 function extendTime() {
   if (view.phase !== 'failed') return;
-  view.timeLeft = 30;
+  view.timeLeft = 10;
   view.phase = 'playing';
   view.extendedTime = true;
   view.startedAt = Date.now() - (view.extendedTime ? 0 : 0); // restart relative
